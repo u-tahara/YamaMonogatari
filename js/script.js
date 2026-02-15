@@ -1,36 +1,41 @@
-import { HIT_EVENT_NAME, dispatchHitEvent } from './hit-event.js';
-import { MISS_EVENT_NAME, dispatchMissEvent } from './miss-event.js';
+import { dispatchHitEvent } from './hit-event.js';
+import { dispatchMissEvent } from './miss-event.js';
 
 const slotNumbers = document.querySelectorAll('.js-slot-number');
 const SPIN_INTERVAL_MS = 50;
 const START_BUTTON_INDEX = 13;
 const STOP_BUTTON_INDEXES = [6, 0, 1]; // 左, 真ん中, 右
 const SPIN_START_EVENT_NAME = 'slot:spin-start';
+const SLOT_COUNT = slotNumbers.length;
 
 const getRandomSlotNumber = () => Math.floor(Math.random() * 9) + 1;
 
 const judgeSpinResult = () => Math.random() < 0.1;
 
-const dispatchSpinResultEvent = () => {
-  const isHit = judgeSpinResult();
-  const detail = { isHit };
+const isAllSameNumber = (numbers) => numbers.every((number) => number === numbers[0]);
 
-  window.dispatchEvent(
-    new CustomEvent(SPIN_START_EVENT_NAME, {
-      detail,
-    }),
-  );
+const createHitNumbers = () => {
+  const hitNumber = getRandomSlotNumber();
+  return Array.from({ length: SLOT_COUNT }, () => hitNumber);
+};
 
-  if (isHit) {
-    dispatchHitEvent(detail);
-    return;
+const createMissNumbers = () => {
+  if (SLOT_COUNT === 0) {
+    return [];
   }
 
-  dispatchMissEvent(detail);
+  let missNumbers = Array.from({ length: SLOT_COUNT }, () => getRandomSlotNumber());
+
+  while (isAllSameNumber(missNumbers)) {
+    missNumbers = Array.from({ length: SLOT_COUNT }, () => getRandomSlotNumber());
+  }
+
+  return missNumbers;
 };
 
 let spinIntervalId = null;
 let slotStopped = Array.from({ length: slotNumbers.length }, () => false);
+let spinResultNumbers = [];
 let previousButtonPressed = {
   start: false,
   stop: STOP_BUTTON_INDEXES.map(() => false),
@@ -61,7 +66,26 @@ const startSpin = () => {
   }
 
   slotStopped = slotStopped.map(() => false);
-  dispatchSpinResultEvent();
+  const isHit = judgeSpinResult();
+  spinResultNumbers = isHit ? createHitNumbers() : createMissNumbers();
+
+  const detail = {
+    isHit,
+    numbers: spinResultNumbers,
+  };
+
+  window.dispatchEvent(
+    new CustomEvent(SPIN_START_EVENT_NAME, {
+      detail,
+    }),
+  );
+
+  if (isHit) {
+    dispatchHitEvent(detail);
+  } else {
+    dispatchMissEvent(detail);
+  }
+
   spinSlotNumbers();
   spinIntervalId = setInterval(spinSlotNumbers, SPIN_INTERVAL_MS);
 };
@@ -73,6 +97,12 @@ const stopSlotByButtonOrder = (buttonOrder) => {
 
   if (buttonOrder >= slotStopped.length || slotStopped[buttonOrder]) {
     return;
+  }
+
+  const slotNumber = slotNumbers[buttonOrder];
+
+  if (slotNumber && spinResultNumbers[buttonOrder] !== undefined) {
+    slotNumber.textContent = String(spinResultNumbers[buttonOrder]);
   }
 
   slotStopped[buttonOrder] = true;
