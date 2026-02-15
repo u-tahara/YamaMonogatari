@@ -1,9 +1,33 @@
+import { HIT_EVENT_NAME, dispatchHitEvent } from './hit-event.js';
+import { MISS_EVENT_NAME, dispatchMissEvent } from './miss-event.js';
+
 const slotNumbers = document.querySelectorAll('.js-slot-number');
 const SPIN_INTERVAL_MS = 50;
 const START_BUTTON_INDEX = 13;
 const STOP_BUTTON_INDEXES = [6, 0, 1]; // 左, 真ん中, 右
+const SPIN_START_EVENT_NAME = 'slot:spin-start';
 
 const getRandomSlotNumber = () => Math.floor(Math.random() * 9) + 1;
+
+const judgeSpinResult = () => Math.random() < 0.5;
+
+const dispatchSpinResultEvent = () => {
+  const isHit = judgeSpinResult();
+  const detail = { isHit };
+
+  window.dispatchEvent(
+    new CustomEvent(SPIN_START_EVENT_NAME, {
+      detail,
+    }),
+  );
+
+  if (isHit) {
+    dispatchHitEvent(detail);
+    return;
+  }
+
+  dispatchMissEvent(detail);
+};
 
 let spinIntervalId = null;
 let slotStopped = Array.from({ length: slotNumbers.length }, () => false);
@@ -37,6 +61,7 @@ const startSpin = () => {
   }
 
   slotStopped = slotStopped.map(() => false);
+  dispatchSpinResultEvent();
   spinSlotNumbers();
   spinIntervalId = setInterval(spinSlotNumbers, SPIN_INTERVAL_MS);
 };
