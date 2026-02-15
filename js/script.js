@@ -9,7 +9,7 @@ const SPIN_START_EVENT_NAME = 'slot:spin-start';
 
 const getRandomSlotNumber = () => Math.floor(Math.random() * 9) + 1;
 
-const judgeSpinResult = () => Math.random() < 0.5;
+const judgeSpinResult = () => Math.random() < 0.1;
 
 const dispatchSpinResultEvent = () => {
   const isHit = judgeSpinResult();
