@@ -6,3 +6,24 @@
 @import url('./object/component/components.css');
 @import url('./object/project/pages.css');
 @import url('./object/utility/utilities.css');
+
+.c-reach-popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 100;
+  padding: 12px 24px;
+  border: 2px solid #ffffff;
+  border-radius: 8px;
+  background-color: rgba(0, 0, 0, 0.8);
+  color: #ffef6a;
+  font-size: 32px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  pointer-events: none;
+}
+
+.c-reach-popup[hidden] {
+  display: none;
+}

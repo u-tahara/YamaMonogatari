@@ -2,9 +2,12 @@ import { dispatchHitEvent } from './hit-event.js';
 import { dispatchMissEvent } from './miss-event.js';
 
 const slotNumbers = document.querySelectorAll('.js-slot-number');
+const reachPopup = document.querySelector('.js-reach-popup');
 const SPIN_INTERVAL_MS = 50;
 const STOP_CYCLE_INTERVAL_MS = 120;
 const STOP_MIN_CYCLES = 6;
+const REACH_POPUP_DELAY_MS = 300;
+const REACH_POPUP_VISIBLE_MS = 1000;
 const START_BUTTON_INDEX = 13;
 const STOP_BUTTON_INDEXES = [6, 0, 1]; // 左, 真ん中, 右
 const LEFT_SLOT_INDEX = 0;
@@ -44,10 +47,54 @@ let spinIntervalId = null;
 let slotStopped = Array.from({ length: slotNumbers.length }, () => false);
 let slotStopping = Array.from({ length: slotNumbers.length }, () => false);
 let spinResultNumbers = [];
-let hasShownReachAlert = false;
+let hasShownReachPopup = false;
+let centerStopLocked = false;
+let reachPopupTimeoutId = null;
+let reachPopupHideTimeoutId = null;
 let previousButtonPressed = {
   start: false,
   stop: STOP_BUTTON_INDEXES.map(() => false),
+};
+
+const clearReachPopupTimer = () => {
+  if (reachPopupTimeoutId !== null) {
+    window.clearTimeout(reachPopupTimeoutId);
+    reachPopupTimeoutId = null;
+  }
+
+  if (reachPopupHideTimeoutId !== null) {
+    window.clearTimeout(reachPopupHideTimeoutId);
+    reachPopupHideTimeoutId = null;
+  }
+};
+
+const hideReachPopup = () => {
+  if (reachPopup) {
+    reachPopup.hidden = true;
+  }
+};
+
+const showReachPopupWithDelay = () => {
+  if (!reachPopup) {
+    centerStopLocked = false;
+    hasShownReachPopup = true;
+    return;
+  }
+
+  centerStopLocked = true;
+
+  reachPopupTimeoutId = window.setTimeout(() => {
+    reachPopup.hidden = false;
+    reachPopupTimeoutId = null;
+
+    reachPopupHideTimeoutId = window.setTimeout(() => {
+      hideReachPopup();
+      centerStopLocked = false;
+      reachPopupHideTimeoutId = null;
+    }, REACH_POPUP_VISIBLE_MS);
+  }, REACH_POPUP_DELAY_MS);
+
+  hasShownReachPopup = true;
 };
 
 const spinSlotNumbers = () => {
@@ -76,7 +123,10 @@ const startSpin = () => {
 
   slotStopped = slotStopped.map(() => false);
   slotStopping = slotStopping.map(() => false);
-  hasShownReachAlert = false;
+  hasShownReachPopup = false;
+  centerStopLocked = false;
+  clearReachPopupTimer();
+  hideReachPopup();
   const isHit = judgeSpinResult();
   spinResultNumbers = isHit ? createHitNumbers() : createMissNumbers();
 
@@ -119,15 +169,14 @@ const completeSlotStop = (buttonOrder) => {
   slotStopping[buttonOrder] = false;
   slotStopped[buttonOrder] = true;
 
-  const canShowReachAlert =
-    !hasShownReachAlert &&
+  const canShowReachPopup =
+    !hasShownReachPopup &&
     buttonOrder !== CENTER_SLOT_INDEX &&
     !slotStopped[CENTER_SLOT_INDEX] &&
     isReachState();
 
-  if (canShowReachAlert) {
-    window.alert('リーチ');
-    hasShownReachAlert = true;
+  if (canShowReachPopup) {
+    showReachPopupWithDelay();
   }
 
   const isAllSlotsStopped = slotStopped.every(Boolean);
@@ -191,6 +240,10 @@ const stopSlotByButtonOrder = (buttonOrder) => {
   }
 
   if (slotStopping.some(Boolean)) {
+    return;
+  }
+
+  if (buttonOrder === CENTER_SLOT_INDEX && centerStopLocked) {
     return;
   }
 
