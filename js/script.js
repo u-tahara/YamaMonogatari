@@ -3,8 +3,8 @@ import { dispatchMissEvent } from './miss-event.js';
 
 const slotNumbers = document.querySelectorAll('.js-slot-number');
 const SPIN_INTERVAL_MS = 50;
-const STOP_DELAY_MS = 450;
-const STOP_STEP_DELAYS_MS = [120, 180, 260];
+const STOP_SECOND_PREVIOUS_HOLD_MS = 400;
+const STOP_PREVIOUS_HOLD_MS = 1000;
 const START_BUTTON_INDEX = 13;
 const STOP_BUTTON_INDEXES = [6, 0, 1]; // 左, 真ん中, 右
 const SPIN_START_EVENT_NAME = 'slot:spin-start';
@@ -135,24 +135,26 @@ const stopSlotWithDelay = (buttonOrder, slotNumber, targetNumber) => {
     return;
   }
 
-  let totalDelay = STOP_DELAY_MS;
+  const [secondPreviousNumber, previousNumber, finalNumber] = stopSequence;
 
-  stopSequence.forEach((number, sequenceIndex) => {
-    const stepDelay = STOP_STEP_DELAYS_MS[sequenceIndex] ?? STOP_STEP_DELAYS_MS.at(-1) ?? 0;
-    totalDelay += stepDelay;
+  slotNumber.textContent = String(secondPreviousNumber);
+
+  window.setTimeout(() => {
+    if (!slotStopping[buttonOrder]) {
+      return;
+    }
+
+    slotNumber.textContent = String(previousNumber);
 
     window.setTimeout(() => {
       if (!slotStopping[buttonOrder]) {
         return;
       }
 
-      slotNumber.textContent = String(number);
-
-      if (sequenceIndex === stopSequence.length - 1) {
-        completeSlotStop(buttonOrder);
-      }
-    }, totalDelay);
-  });
+      slotNumber.textContent = String(finalNumber);
+      completeSlotStop(buttonOrder);
+    }, STOP_PREVIOUS_HOLD_MS);
+  }, STOP_SECOND_PREVIOUS_HOLD_MS);
 };
 
 const stopSlotByButtonOrder = (buttonOrder) => {
