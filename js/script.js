@@ -7,6 +7,9 @@ const STOP_CYCLE_INTERVAL_MS = 120;
 const STOP_MIN_CYCLES = 6;
 const START_BUTTON_INDEX = 13;
 const STOP_BUTTON_INDEXES = [6, 0, 1]; // 左, 真ん中, 右
+const LEFT_SLOT_INDEX = 0;
+const CENTER_SLOT_INDEX = 1;
+const RIGHT_SLOT_INDEX = 2;
 const SPIN_START_EVENT_NAME = 'slot:spin-start';
 const SLOT_COUNT = slotNumbers.length;
 const SLOT_NUMBER_MIN = 1;
@@ -41,6 +44,7 @@ let spinIntervalId = null;
 let slotStopped = Array.from({ length: slotNumbers.length }, () => false);
 let slotStopping = Array.from({ length: slotNumbers.length }, () => false);
 let spinResultNumbers = [];
+let hasShownReachAlert = false;
 let previousButtonPressed = {
   start: false,
   stop: STOP_BUTTON_INDEXES.map(() => false),
@@ -72,6 +76,7 @@ const startSpin = () => {
 
   slotStopped = slotStopped.map(() => false);
   slotStopping = slotStopping.map(() => false);
+  hasShownReachAlert = false;
   const isHit = judgeSpinResult();
   spinResultNumbers = isHit ? createHitNumbers() : createMissNumbers();
 
@@ -96,9 +101,34 @@ const startSpin = () => {
   spinIntervalId = setInterval(spinSlotNumbers, SPIN_INTERVAL_MS);
 };
 
+const isReachState = () => {
+  const isLeftStopped = slotStopped[LEFT_SLOT_INDEX];
+  const isRightStopped = slotStopped[RIGHT_SLOT_INDEX];
+
+  if (!isLeftStopped || !isRightStopped) {
+    return false;
+  }
+
+  const leftNumber = slotNumbers[LEFT_SLOT_INDEX]?.textContent;
+  const rightNumber = slotNumbers[RIGHT_SLOT_INDEX]?.textContent;
+
+  return leftNumber !== undefined && leftNumber === rightNumber;
+};
+
 const completeSlotStop = (buttonOrder) => {
   slotStopping[buttonOrder] = false;
   slotStopped[buttonOrder] = true;
+
+  const canShowReachAlert =
+    !hasShownReachAlert &&
+    buttonOrder !== CENTER_SLOT_INDEX &&
+    !slotStopped[CENTER_SLOT_INDEX] &&
+    isReachState();
+
+  if (canShowReachAlert) {
+    window.alert('リーチ');
+    hasShownReachAlert = true;
+  }
 
   const isAllSlotsStopped = slotStopped.every(Boolean);
 
