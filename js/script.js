@@ -3,9 +3,10 @@ import { dispatchMissEvent } from './miss-event.js';
 
 const slotNumbers = document.querySelectorAll('.js-slot-number');
 const reachPopup = document.querySelector('.js-reach-popup');
-const SPIN_INTERVAL_MS = 50;
-const STOP_CYCLE_INTERVAL_MS = 120;
-const STOP_MIN_CYCLES = 6;
+const SPIN_INTERVAL_MS = 35;
+const STOP_CYCLE_INTERVAL_MS = 80;
+const STOP_MIN_CYCLES = 4;
+const PRE_TARGET_HOLD_TICKS = 3;
 const REACH_POPUP_DELAY_MS = 300;
 const REACH_POPUP_VISIBLE_MS = 1000;
 const START_BUTTON_INDEX = 13;
@@ -198,6 +199,19 @@ const getNextSlotNumber = (currentNumber) => {
   return currentNumber >= SLOT_NUMBER_MAX ? SLOT_NUMBER_MIN : currentNumber + 1;
 };
 
+const getPreviousSlotNumber = (currentNumber) => {
+  if (
+    typeof currentNumber !== 'number' ||
+    currentNumber < SLOT_NUMBER_MIN ||
+    currentNumber > SLOT_NUMBER_MAX
+  ) {
+    return SLOT_NUMBER_MAX;
+  }
+
+  return currentNumber <= SLOT_NUMBER_MIN ? SLOT_NUMBER_MAX : currentNumber - 1;
+};
+
+
 const stopSlotWithCycle = (buttonOrder, slotNumber, targetNumber) => {
   if (
     typeof targetNumber !== 'number' ||
@@ -214,6 +228,9 @@ const stopSlotWithCycle = (buttonOrder, slotNumber, targetNumber) => {
     ? getRandomSlotNumber()
     : displayedNumber;
   let cycleCount = 0;
+  const preTargetNumber = getPreviousSlotNumber(targetNumber);
+  let hasStartedPreTargetHold = false;
+  let preTargetHoldCount = 0;
 
   const stopIntervalId = window.setInterval(() => {
     if (!slotStopping[buttonOrder]) {
@@ -221,11 +238,27 @@ const stopSlotWithCycle = (buttonOrder, slotNumber, targetNumber) => {
       return;
     }
 
+    if (hasStartedPreTargetHold && preTargetHoldCount < PRE_TARGET_HOLD_TICKS) {
+      preTargetHoldCount += 1;
+      return;
+    }
+
     currentNumber = getNextSlotNumber(currentNumber);
     cycleCount += 1;
     slotNumber.textContent = String(currentNumber);
 
-    const canStop = cycleCount >= STOP_MIN_CYCLES && currentNumber === targetNumber;
+    const shouldStartPreTargetHold =
+      !hasStartedPreTargetHold &&
+      cycleCount >= STOP_MIN_CYCLES &&
+      currentNumber === preTargetNumber;
+
+    if (shouldStartPreTargetHold) {
+      hasStartedPreTargetHold = true;
+      preTargetHoldCount = 0;
+      return;
+    }
+
+    const canStop = hasStartedPreTargetHold && currentNumber === targetNumber;
 
     if (canStop) {
       window.clearInterval(stopIntervalId);
