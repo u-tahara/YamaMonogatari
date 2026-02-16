@@ -35,8 +35,8 @@
 }
 
 .l-main__slot-window {
-    --reel-cell-height: 10rem;
-    --reel-peek-height: 2.2rem;
+    --reel-cell-height: 12rem;
+    --reel-peek-height: 5rem;
     position: relative;
     width: min(24vw, 220px);
     height: calc(var(--reel-cell-height) + (var(--reel-peek-height) * 2));
