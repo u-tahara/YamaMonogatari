@@ -48,7 +48,7 @@ let previousButtonPressed = {
 
 const spinSlotNumbers = () => {
   slotNumbers.forEach((slotNumber, index) => {
-    if (slotStopped[index]) {
+    if (slotStopped[index] || slotStopping[index]) {
       return;
     }
 
