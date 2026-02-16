@@ -1,9 +1,12 @@
 import { dispatchHitEvent } from './hit-event.js';
 import { dispatchMissEvent } from './miss-event.js';
 
-const slotNumbers = document.querySelectorAll('.js-slot-number');
+const slotReels = document.querySelectorAll('.js-slot-reel');
 const reachPopup = document.querySelector('.js-reach-popup');
-const SPIN_INTERVAL_MS = 35;
+const REEL_STEP_DURATION_MS = 60;
+const REEL_REST_TRANSLATE_Y = 'translateY(calc((-1 * var(--reel-cell-height)) + var(--reel-peek-height)))';
+const REEL_STEP_TRANSLATE_Y = 'translateY(calc((-2 * var(--reel-cell-height)) + var(--reel-peek-height)))';
+const SPIN_INTERVAL_MS = 80;
 const STOP_CYCLE_INTERVAL_MS = 80;
 const STOP_MIN_CYCLES = 4;
 const PRE_TARGET_HOLD_TICKS = 3;
@@ -15,7 +18,7 @@ const LEFT_SLOT_INDEX = 0;
 const CENTER_SLOT_INDEX = 1;
 const RIGHT_SLOT_INDEX = 2;
 const SPIN_START_EVENT_NAME = 'slot:spin-start';
-const SLOT_COUNT = slotNumbers.length;
+const SLOT_COUNT = slotReels.length;
 const SLOT_NUMBER_MIN = 1;
 const SLOT_NUMBER_MAX = 9;
 
@@ -45,16 +48,94 @@ const createMissNumbers = () => {
 };
 
 let spinIntervalId = null;
-let slotStopped = Array.from({ length: slotNumbers.length }, () => false);
-let slotStopping = Array.from({ length: slotNumbers.length }, () => false);
+let slotStopped = Array.from({ length: slotReels.length }, () => false);
+let slotStopping = Array.from({ length: slotReels.length }, () => false);
 let spinResultNumbers = [];
 let hasShownReachPopup = false;
 let centerStopLocked = false;
 let reachPopupTimeoutId = null;
 let reachPopupHideTimeoutId = null;
+let currentDisplayedNumbers = Array.from({ length: slotReels.length }, () => getRandomSlotNumber());
+let reelStepQueues = Array.from({ length: slotReels.length }, () => Promise.resolve());
 let previousButtonPressed = {
   start: false,
   stop: STOP_BUTTON_INDEXES.map(() => false),
+};
+
+const getNextSlotNumber = (currentNumber) => {
+  if (
+    typeof currentNumber !== 'number' ||
+    currentNumber < SLOT_NUMBER_MIN ||
+    currentNumber > SLOT_NUMBER_MAX
+  ) {
+    return SLOT_NUMBER_MIN;
+  }
+
+  return currentNumber >= SLOT_NUMBER_MAX ? SLOT_NUMBER_MIN : currentNumber + 1;
+};
+
+const getPreviousSlotNumber = (currentNumber) => {
+  if (
+    typeof currentNumber !== 'number' ||
+    currentNumber < SLOT_NUMBER_MIN ||
+    currentNumber > SLOT_NUMBER_MAX
+  ) {
+    return SLOT_NUMBER_MAX;
+  }
+
+  return currentNumber <= SLOT_NUMBER_MIN ? SLOT_NUMBER_MAX : currentNumber - 1;
+};
+
+const renderReel = (slotIndex) => {
+  const reel = slotReels[slotIndex];
+
+  if (!reel) {
+    return;
+  }
+
+  const cells = reel.querySelectorAll('.js-slot-cell');
+  const currentNumber = currentDisplayedNumbers[slotIndex];
+  const previousNumber = getPreviousSlotNumber(currentNumber);
+  const nextNumber = getNextSlotNumber(currentNumber);
+
+  if (cells[0]) {
+    cells[0].textContent = String(previousNumber);
+  }
+
+  if (cells[1]) {
+    cells[1].textContent = String(currentNumber);
+  }
+
+  if (cells[2]) {
+    cells[2].textContent = String(nextNumber);
+  }
+
+  reel.style.transition = 'none';
+  reel.style.transform = REEL_REST_TRANSLATE_Y;
+};
+
+const stepReelOnce = (slotIndex) =>
+  new Promise((resolve) => {
+    const reel = slotReels[slotIndex];
+
+    if (!reel) {
+      resolve();
+      return;
+    }
+
+    reel.style.transition = `transform ${REEL_STEP_DURATION_MS}ms linear`;
+    reel.style.transform = REEL_STEP_TRANSLATE_Y;
+
+    window.setTimeout(() => {
+      currentDisplayedNumbers[slotIndex] = getNextSlotNumber(currentDisplayedNumbers[slotIndex]);
+      renderReel(slotIndex);
+      resolve();
+    }, REEL_STEP_DURATION_MS);
+  });
+
+const enqueueReelStep = (slotIndex) => {
+  reelStepQueues[slotIndex] = reelStepQueues[slotIndex].then(() => stepReelOnce(slotIndex));
+  return reelStepQueues[slotIndex];
 };
 
 const clearReachPopupTimer = () => {
@@ -99,12 +180,12 @@ const showReachPopupWithDelay = () => {
 };
 
 const spinSlotNumbers = () => {
-  slotNumbers.forEach((slotNumber, index) => {
+  slotReels.forEach((_, index) => {
     if (slotStopped[index] || slotStopping[index]) {
       return;
     }
 
-    slotNumber.textContent = String(getRandomSlotNumber());
+    enqueueReelStep(index);
   });
 };
 
@@ -118,7 +199,7 @@ const stopSpin = () => {
 };
 
 const startSpin = () => {
-  if (spinIntervalId || slotNumbers.length === 0) {
+  if (spinIntervalId || slotReels.length === 0) {
     return;
   }
 
@@ -160,8 +241,8 @@ const isReachState = () => {
     return false;
   }
 
-  const leftNumber = slotNumbers[LEFT_SLOT_INDEX]?.textContent;
-  const rightNumber = slotNumbers[RIGHT_SLOT_INDEX]?.textContent;
+  const leftNumber = currentDisplayedNumbers[LEFT_SLOT_INDEX];
+  const rightNumber = currentDisplayedNumbers[RIGHT_SLOT_INDEX];
 
   return leftNumber !== undefined && leftNumber === rightNumber;
 };
@@ -187,66 +268,36 @@ const completeSlotStop = (buttonOrder) => {
   }
 };
 
-const getNextSlotNumber = (currentNumber) => {
-  if (
-    typeof currentNumber !== 'number' ||
-    currentNumber < SLOT_NUMBER_MIN ||
-    currentNumber > SLOT_NUMBER_MAX
-  ) {
-    return SLOT_NUMBER_MIN;
-  }
+const wait = (ms) => new Promise((resolve) => {
+  window.setTimeout(resolve, ms);
+});
 
-  return currentNumber >= SLOT_NUMBER_MAX ? SLOT_NUMBER_MIN : currentNumber + 1;
-};
-
-const getPreviousSlotNumber = (currentNumber) => {
-  if (
-    typeof currentNumber !== 'number' ||
-    currentNumber < SLOT_NUMBER_MIN ||
-    currentNumber > SLOT_NUMBER_MAX
-  ) {
-    return SLOT_NUMBER_MAX;
-  }
-
-  return currentNumber <= SLOT_NUMBER_MIN ? SLOT_NUMBER_MAX : currentNumber - 1;
-};
-
-
-const stopSlotWithCycle = (buttonOrder, slotNumber, targetNumber) => {
+const stopSlotWithCycle = async (buttonOrder, targetNumber) => {
   if (
     typeof targetNumber !== 'number' ||
     targetNumber < SLOT_NUMBER_MIN ||
     targetNumber > SLOT_NUMBER_MAX
   ) {
-    slotNumber.textContent = String(targetNumber);
     completeSlotStop(buttonOrder);
     return;
   }
 
-  const displayedNumber = Number(slotNumber.textContent);
-  let currentNumber = Number.isNaN(displayedNumber)
-    ? getRandomSlotNumber()
-    : displayedNumber;
   let cycleCount = 0;
   const preTargetNumber = getPreviousSlotNumber(targetNumber);
   let hasStartedPreTargetHold = false;
   let preTargetHoldCount = 0;
 
-  const stopIntervalId = window.setInterval(() => {
-    if (!slotStopping[buttonOrder]) {
-      window.clearInterval(stopIntervalId);
-      return;
-    }
-
+  while (slotStopping[buttonOrder]) {
     if (hasStartedPreTargetHold && preTargetHoldCount < PRE_TARGET_HOLD_TICKS) {
       preTargetHoldCount += 1;
-      return;
+      await wait(STOP_CYCLE_INTERVAL_MS);
+      continue;
     }
 
-    currentNumber = getNextSlotNumber(currentNumber);
+    await enqueueReelStep(buttonOrder);
     cycleCount += 1;
-    slotNumber.textContent = String(currentNumber);
 
+    const currentNumber = currentDisplayedNumbers[buttonOrder];
     const shouldStartPreTargetHold =
       !hasStartedPreTargetHold &&
       cycleCount >= STOP_MIN_CYCLES &&
@@ -255,16 +306,19 @@ const stopSlotWithCycle = (buttonOrder, slotNumber, targetNumber) => {
     if (shouldStartPreTargetHold) {
       hasStartedPreTargetHold = true;
       preTargetHoldCount = 0;
-      return;
+      await wait(STOP_CYCLE_INTERVAL_MS);
+      continue;
     }
 
     const canStop = hasStartedPreTargetHold && currentNumber === targetNumber;
 
     if (canStop) {
-      window.clearInterval(stopIntervalId);
       completeSlotStop(buttonOrder);
+      return;
     }
-  }, STOP_CYCLE_INTERVAL_MS);
+
+    await wait(STOP_CYCLE_INTERVAL_MS);
+  }
 };
 
 const stopSlotByButtonOrder = (buttonOrder) => {
@@ -288,11 +342,9 @@ const stopSlotByButtonOrder = (buttonOrder) => {
     return;
   }
 
-  const slotNumber = slotNumbers[buttonOrder];
-
-  if (slotNumber && spinResultNumbers[buttonOrder] !== undefined) {
+  if (spinResultNumbers[buttonOrder] !== undefined) {
     slotStopping[buttonOrder] = true;
-    stopSlotWithCycle(buttonOrder, slotNumber, spinResultNumbers[buttonOrder]);
+    stopSlotWithCycle(buttonOrder, spinResultNumbers[buttonOrder]);
     return;
   }
 
@@ -338,5 +390,9 @@ const watchControllerInput = () => {
 
   requestAnimationFrame(watchControllerInput);
 };
+
+slotReels.forEach((_, index) => {
+  renderReel(index);
+});
 
 watchControllerInput();
