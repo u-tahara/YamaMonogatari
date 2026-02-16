@@ -160,6 +160,10 @@ const stopSlotByButtonOrder = (buttonOrder) => {
     return;
   }
 
+  if (slotStopping.some(Boolean)) {
+    return;
+  }
+
   if (
     buttonOrder >= slotStopped.length ||
     slotStopped[buttonOrder] ||
