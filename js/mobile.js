@@ -1,3 +1,4 @@
+// ユーザーエージェント情報からスマホ・タブレット端末かを判定します。
 const isSmartphoneOrTablet = () => {
   const userAgent = navigator.userAgent || '';
   const isIPhone = /iPhone/i.test(userAgent);

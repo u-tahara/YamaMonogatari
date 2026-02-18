@@ -22,17 +22,22 @@ const SLOT_COUNT = slotReels.length;
 const SLOT_NUMBER_MIN = 1;
 const SLOT_NUMBER_MAX = 9;
 
+// 1〜9の範囲でランダムなスロット数字を返します。
 const getRandomSlotNumber = () => Math.floor(Math.random() * 9) + 1;
 
+// 当たり判定を行い、一定確率で true を返します。
 const judgeSpinResult = () => Math.random() < 0.1;
 
+// 配列内の数字がすべて同じかどうかを判定します。
 const isAllSameNumber = (numbers) => numbers.every((number) => number === numbers[0]);
 
+// 3リールすべて同じ数字になる当たり用の配列を生成します。
 const createHitNumbers = () => {
   const hitNumber = getRandomSlotNumber();
   return Array.from({ length: SLOT_COUNT }, () => hitNumber);
 };
 
+// 3リールのどこかが異なる外れ用の数字配列を生成します。
 const createMissNumbers = () => {
   if (SLOT_COUNT === 0) {
     return [];
@@ -62,6 +67,7 @@ let previousButtonPressed = {
   stop: STOP_BUTTON_INDEXES.map(() => false),
 };
 
+// 現在値の次の数字（9の次は1）を返します。
 const getNextSlotNumber = (currentNumber) => {
   if (
     typeof currentNumber !== 'number' ||
@@ -74,6 +80,7 @@ const getNextSlotNumber = (currentNumber) => {
   return currentNumber >= SLOT_NUMBER_MAX ? SLOT_NUMBER_MIN : currentNumber + 1;
 };
 
+// 現在値の前の数字（1の前は9）を返します。
 const getPreviousSlotNumber = (currentNumber) => {
   if (
     typeof currentNumber !== 'number' ||
@@ -86,6 +93,7 @@ const getPreviousSlotNumber = (currentNumber) => {
   return currentNumber <= SLOT_NUMBER_MIN ? SLOT_NUMBER_MAX : currentNumber - 1;
 };
 
+// 指定リールの表示セルを現在値・前後値で描画します。
 const renderReel = (slotIndex) => {
   const reel = slotReels[slotIndex];
 
@@ -114,6 +122,7 @@ const renderReel = (slotIndex) => {
   reel.style.transform = REEL_REST_TRANSLATE_Y;
 };
 
+// リールを1ステップだけ回転させ、表示数字を進めます。
 const stepReelOnce = (slotIndex) =>
   new Promise((resolve) => {
     const reel = slotReels[slotIndex];
@@ -133,11 +142,13 @@ const stepReelOnce = (slotIndex) =>
     }, REEL_STEP_DURATION_MS);
   });
 
+// リールごとの処理キューに1ステップ回転を積みます。
 const enqueueReelStep = (slotIndex) => {
   reelStepQueues[slotIndex] = reelStepQueues[slotIndex].then(() => stepReelOnce(slotIndex));
   return reelStepQueues[slotIndex];
 };
 
+// リーチポップアップ関連のタイマーをすべて解除します。
 const clearReachPopupTimer = () => {
   if (reachPopupTimeoutId !== null) {
     window.clearTimeout(reachPopupTimeoutId);
@@ -150,12 +161,14 @@ const clearReachPopupTimer = () => {
   }
 };
 
+// リーチポップアップを非表示にします。
 const hideReachPopup = () => {
   if (reachPopup) {
     reachPopup.hidden = true;
   }
 };
 
+// 遅延付きでリーチポップアップを表示し、一定時間後に閉じます。
 const showReachPopupWithDelay = () => {
   if (!reachPopup) {
     centerStopLocked = false;
@@ -179,6 +192,7 @@ const showReachPopupWithDelay = () => {
   hasShownReachPopup = true;
 };
 
+// 停止していないリールだけを1ステップずつ回転させます。
 const spinSlotNumbers = () => {
   slotReels.forEach((_, index) => {
     if (slotStopped[index] || slotStopping[index]) {
@@ -189,6 +203,7 @@ const spinSlotNumbers = () => {
   });
 };
 
+// スロット回転用のインターバルを停止します。
 const stopSpin = () => {
   if (!spinIntervalId) {
     return;
@@ -198,6 +213,7 @@ const stopSpin = () => {
   spinIntervalId = null;
 };
 
+// 回転初期化・当たり外れ決定・イベント通知を行って回転を開始します。
 const startSpin = () => {
   if (spinIntervalId || slotReels.length === 0) {
     return;
@@ -233,6 +249,7 @@ const startSpin = () => {
   spinIntervalId = setInterval(spinSlotNumbers, SPIN_INTERVAL_MS);
 };
 
+// 左右リールが停止かつ同じ数字で、リーチ状態かを判定します。
 const isReachState = () => {
   const isLeftStopped = slotStopped[LEFT_SLOT_INDEX];
   const isRightStopped = slotStopped[RIGHT_SLOT_INDEX];
@@ -247,6 +264,7 @@ const isReachState = () => {
   return leftNumber !== undefined && leftNumber === rightNumber;
 };
 
+// 指定リールの停止を確定し、必要ならリーチ表示や全停止判定を行います。
 const completeSlotStop = (buttonOrder) => {
   slotStopping[buttonOrder] = false;
   slotStopped[buttonOrder] = true;
@@ -268,10 +286,12 @@ const completeSlotStop = (buttonOrder) => {
   }
 };
 
+// 指定ミリ秒待機する Promise を返します。
 const wait = (ms) => new Promise((resolve) => {
   window.setTimeout(resolve, ms);
 });
 
+// 指定リールを演出付きで目標数字まで回し、停止確定します。
 const stopSlotWithCycle = async (buttonOrder, targetNumber) => {
   if (
     typeof targetNumber !== 'number' ||
@@ -321,6 +341,7 @@ const stopSlotWithCycle = async (buttonOrder, targetNumber) => {
   }
 };
 
+// ボタン順に応じてリール停止処理を開始します。
 const stopSlotByButtonOrder = (buttonOrder) => {
   if (!spinIntervalId) {
     return;
@@ -351,14 +372,17 @@ const stopSlotByButtonOrder = (buttonOrder) => {
   slotStopped[buttonOrder] = true;
 };
 
+// ゲームパッドのスタート入力が押下状態かを返します。
 const isStartPressed = (gamepad) =>
   Boolean(
     gamepad?.buttons?.[START_BUTTON_INDEX]?.pressed ||
       (gamepad?.axes?.[1] ?? 0) > 0.5,
   );
 
+// 指定ボタンが押下状態かを返します。
 const isButtonPressed = (gamepad, buttonIndex) => Boolean(gamepad?.buttons?.[buttonIndex]?.pressed);
 
+// ゲームパッド入力を監視し、開始・停止操作を処理し続けます。
 const watchControllerInput = () => {
   const gamepads = navigator.getGamepads ? navigator.getGamepads() : [];
   const activeGamepad = Array.from(gamepads).find(Boolean);
