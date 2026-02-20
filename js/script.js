@@ -15,6 +15,7 @@ const REACH_POPUP_VISIBLE_MS = 1000;
 const START_BUTTON_INDEX = 13;
 const STOP_BUTTON_INDEXES = [6, 1, 0]; // 左, 真ん中, 右
 const STOP_ARROW_KEYS = ['ArrowLeft', 'ArrowDown', 'ArrowRight']; // 左, 真ん中, 右
+const START_SPIN_KEYS = [' ', 'Spacebar'];
 const LEFT_SLOT_INDEX = 0;
 const CENTER_SLOT_INDEX = 1;
 const RIGHT_SLOT_INDEX = 2;
@@ -87,6 +88,7 @@ let previousButtonPressed = {
   stop: STOP_BUTTON_INDEXES.map(() => false),
 };
 let previousArrowKeyPressed = STOP_ARROW_KEYS.map(() => false);
+let previousStartKeyPressed = false;
 
 // 現在値の次の数字（9の次は1）を返します。
 const getNextSlotNumber = (currentNumber) => {
@@ -444,6 +446,32 @@ const watchArrowKeyInput = (event) => {
   stopSlotByButtonOrder(buttonOrder);
 };
 
+// スペースキー入力でリール回転開始操作を行います。
+const watchStartKeyInput = (event) => {
+  if (!START_SPIN_KEYS.includes(event.key)) {
+    return;
+  }
+
+  if (event.repeat || previousStartKeyPressed) {
+    return;
+  }
+
+  previousStartKeyPressed = true;
+
+  if (!spinIntervalId) {
+    startSpin();
+  }
+};
+
+// スペースキー入力の押下状態を解除します。
+const releaseStartKeyInput = (event) => {
+  if (!START_SPIN_KEYS.includes(event.key)) {
+    return;
+  }
+
+  previousStartKeyPressed = false;
+};
+
 // 矢印キー入力の押下状態を解除します。
 const releaseArrowKeyInput = (event) => {
   if (!isArrowKeyPressed(event.key)) {
@@ -507,4 +535,6 @@ slotReels.forEach((_, index) => {
 watchControllerInput();
 
 window.addEventListener('keydown', watchArrowKeyInput);
+window.addEventListener('keydown', watchStartKeyInput);
 window.addEventListener('keyup', releaseArrowKeyInput);
+window.addEventListener('keyup', releaseStartKeyInput);
