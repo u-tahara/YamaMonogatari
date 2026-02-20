@@ -119,7 +119,6 @@ const renderReel = (slotIndex) => {
   }
 
   reel.style.transition = 'none';
-  reel.style.transform = REEL_REST_TRANSLATE_Y;
 };
 
 // リールを1ステップだけ回転させ、表示数字を進めます。
@@ -133,7 +132,6 @@ const stepReelOnce = (slotIndex) =>
     }
 
     reel.style.transition = `transform ${REEL_STEP_DURATION_MS}ms linear`;
-    reel.style.transform = REEL_STEP_TRANSLATE_Y;
 
     window.setTimeout(() => {
       currentDisplayedNumbers[slotIndex] = getNextSlotNumber(currentDisplayedNumbers[slotIndex]);
