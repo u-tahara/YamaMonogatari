@@ -26,7 +26,7 @@ const SLOT_NUMBER_MAX = 9;
 const getRandomSlotNumber = () => Math.floor(Math.random() * 9) + 1;
 
 // 当たり判定を行い、一定確率で true を返します。
-const judgeSpinResult = () => Math.random() < 0.1;
+const judgeSpinResult = () => Math.random() < 1 / 13.7;
 
 // 配列内の数字がすべて同じかどうかを判定します。
 const isAllSameNumber = (numbers) => numbers.every((number) => number === numbers[0]);
