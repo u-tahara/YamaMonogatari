@@ -20,6 +20,7 @@ const RIGHT_SLOT_INDEX = 2;
 const SPIN_START_EVENT_NAME = 'slot:spin-start';
 const REACH_POPUP_FINISHED_EVENT_NAME = 'slot:reach-popup-finished';
 const REACH_HIT_EFFECT_FINISHED_EVENT_NAME = 'slot:reach-hit-effect-finished';
+const LEVER_ON_EFFECT_FINISHED_EVENT_NAME = 'slot:lever-on-effect-finished';
 const SLOT_COUNT = slotReels.length;
 const SLOT_NUMBER_MIN = 1;
 const SLOT_NUMBER_MAX = 9;
@@ -75,6 +76,7 @@ let spinResultNumbers = [];
 let currentSpinDetail = null;
 let hasShownReachPopup = false;
 let centerStopLocked = false;
+let areReelsStopEnabled = true;
 let reachPopupTimeoutId = null;
 let reachPopupHideTimeoutId = null;
 let currentDisplayedNumbers = Array.from({ length: slotReels.length }, () => getRandomSlotNumber());
@@ -251,6 +253,7 @@ const startSpin = () => {
   slotStopping = slotStopping.map(() => false);
   hasShownReachPopup = false;
   centerStopLocked = false;
+  areReelsStopEnabled = false;
   clearReachPopupTimer();
   hideReachPopup();
   const isHit = judgeSpinResult();
@@ -271,7 +274,12 @@ const startSpin = () => {
 
   if (isHit) {
     dispatchHitEvent(detail);
+
+    if (spinResultNumbers[0] === PREMIUM_HIT_NUMBER) {
+      areReelsStopEnabled = true;
+    }
   } else {
+    areReelsStopEnabled = true;
     dispatchMissEvent(detail);
   }
 
@@ -368,6 +376,10 @@ const stopSlotByButtonOrder = (buttonOrder) => {
     return;
   }
 
+  if (!areReelsStopEnabled) {
+    return;
+  }
+
   if (slotStopping.some(Boolean)) {
     return;
   }
@@ -407,6 +419,10 @@ const isButtonPressed = (gamepad, buttonIndex) => Boolean(gamepad?.buttons?.[but
 
 window.addEventListener(REACH_HIT_EFFECT_FINISHED_EVENT_NAME, () => {
   centerStopLocked = false;
+});
+
+window.addEventListener(LEVER_ON_EFFECT_FINISHED_EVENT_NAME, () => {
+  areReelsStopEnabled = true;
 });
 const watchControllerInput = () => {
   const gamepads = navigator.getGamepads ? navigator.getGamepads() : [];
