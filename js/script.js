@@ -21,6 +21,8 @@ const SPIN_START_EVENT_NAME = 'slot:spin-start';
 const SLOT_COUNT = slotReels.length;
 const SLOT_NUMBER_MIN = 1;
 const SLOT_NUMBER_MAX = 9;
+const PREMIUM_HIT_NUMBER = 7;
+const PREMIUM_HIT_PROBABILITY = 0.1;
 
 // 1〜9の範囲でランダムなスロット数字を返します。
 const getRandomSlotNumber = () => Math.floor(Math.random() * 9) + 1;
@@ -33,7 +35,19 @@ const isAllSameNumber = (numbers) => numbers.every((number) => number === number
 
 // 3リールすべて同じ数字になる当たり用の配列を生成します。
 const createHitNumbers = () => {
-  const hitNumber = getRandomSlotNumber();
+  const hitNumber = (() => {
+    if (Math.random() < PREMIUM_HIT_PROBABILITY) {
+      return PREMIUM_HIT_NUMBER;
+    }
+
+    const nonPremiumNumbers = Array.from(
+      { length: SLOT_NUMBER_MAX - SLOT_NUMBER_MIN + 1 },
+      (_, index) => SLOT_NUMBER_MIN + index,
+    ).filter((number) => number !== PREMIUM_HIT_NUMBER);
+
+    return nonPremiumNumbers[Math.floor(Math.random() * nonPremiumNumbers.length)];
+  })();
+
   return Array.from({ length: SLOT_COUNT }, () => hitNumber);
 };
 
