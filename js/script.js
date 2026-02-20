@@ -14,6 +14,7 @@ const REACH_POPUP_DELAY_MS = 300;
 const REACH_POPUP_VISIBLE_MS = 1000;
 const START_BUTTON_INDEX = 13;
 const STOP_BUTTON_INDEXES = [6, 1, 0]; // 左, 真ん中, 右
+const STOP_ARROW_KEYS = ['ArrowLeft', 'ArrowDown', 'ArrowRight']; // 左, 真ん中, 右
 const LEFT_SLOT_INDEX = 0;
 const CENTER_SLOT_INDEX = 1;
 const RIGHT_SLOT_INDEX = 2;
@@ -85,6 +86,7 @@ let previousButtonPressed = {
   start: false,
   stop: STOP_BUTTON_INDEXES.map(() => false),
 };
+let previousArrowKeyPressed = STOP_ARROW_KEYS.map(() => false);
 
 // 現在値の次の数字（9の次は1）を返します。
 const getNextSlotNumber = (currentNumber) => {
@@ -415,6 +417,48 @@ const isStartPressed = (gamepad) =>
 // 指定ボタンが押下状態かを返します。
 const isButtonPressed = (gamepad, buttonIndex) => Boolean(gamepad?.buttons?.[buttonIndex]?.pressed);
 
+// 指定キーが押下状態かを返します。
+const isArrowKeyPressed = (key) => {
+  const arrowKeyIndex = STOP_ARROW_KEYS.indexOf(key);
+
+  return arrowKeyIndex !== -1;
+};
+
+// 矢印キー入力でリール停止操作を行います。
+const watchArrowKeyInput = (event) => {
+  if (!isArrowKeyPressed(event.key)) {
+    return;
+  }
+
+  const buttonOrder = STOP_ARROW_KEYS.indexOf(event.key);
+
+  if (buttonOrder === -1) {
+    return;
+  }
+
+  if (event.repeat || previousArrowKeyPressed[buttonOrder]) {
+    return;
+  }
+
+  previousArrowKeyPressed[buttonOrder] = true;
+  stopSlotByButtonOrder(buttonOrder);
+};
+
+// 矢印キー入力の押下状態を解除します。
+const releaseArrowKeyInput = (event) => {
+  if (!isArrowKeyPressed(event.key)) {
+    return;
+  }
+
+  const buttonOrder = STOP_ARROW_KEYS.indexOf(event.key);
+
+  if (buttonOrder === -1) {
+    return;
+  }
+
+  previousArrowKeyPressed[buttonOrder] = false;
+};
+
 // ゲームパッド入力を監視し、開始・停止操作を処理し続けます。
 
 window.addEventListener(REACH_HIT_EFFECT_FINISHED_EVENT_NAME, () => {
@@ -461,3 +505,6 @@ slotReels.forEach((_, index) => {
 });
 
 watchControllerInput();
+
+window.addEventListener('keydown', watchArrowKeyInput);
+window.addEventListener('keyup', releaseArrowKeyInput);
