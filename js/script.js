@@ -8,8 +8,8 @@ const REEL_REST_TRANSLATE_Y = 'translateY(calc((-1 * var(--reel-cell-height)) + 
 const REEL_STEP_TRANSLATE_Y = 'translateY(calc((-2 * var(--reel-cell-height)) + var(--reel-peek-height)))';
 const SPIN_INTERVAL_MS = 80;
 const STOP_CYCLE_INTERVAL_MS = 80;
+const STOP_SLOW_CYCLE_INTERVAL_MS = 220;
 const STOP_MIN_CYCLES = 4;
-const PRE_TARGET_HOLD_TICKS = 6;
 const REACH_POPUP_DELAY_MS = 300;
 const REACH_POPUP_VISIBLE_MS = 1000;
 const START_BUTTON_INDEX = 13;
@@ -301,41 +301,32 @@ const stopSlotWithCycle = async (buttonOrder, targetNumber) => {
   }
 
   let cycleCount = 0;
+  let isSlowMode = false;
   const preTargetNumber = getPreviousSlotNumber(targetNumber);
-  let hasStartedPreTargetHold = false;
-  let preTargetHoldCount = 0;
+  const slowModeStartNumber = getPreviousSlotNumber(preTargetNumber);
 
   while (slotStopping[buttonOrder]) {
-    if (hasStartedPreTargetHold && preTargetHoldCount < PRE_TARGET_HOLD_TICKS) {
-      preTargetHoldCount += 1;
-      await wait(STOP_CYCLE_INTERVAL_MS);
-      continue;
-    }
-
     await enqueueReelStep(buttonOrder);
     cycleCount += 1;
 
     const currentNumber = currentDisplayedNumbers[buttonOrder];
-    const shouldStartPreTargetHold =
-      !hasStartedPreTargetHold &&
+    const shouldStartSlowMode =
+      !isSlowMode &&
       cycleCount >= STOP_MIN_CYCLES &&
-      currentNumber === preTargetNumber;
+      currentNumber === slowModeStartNumber;
 
-    if (shouldStartPreTargetHold) {
-      hasStartedPreTargetHold = true;
-      preTargetHoldCount = 0;
-      await wait(STOP_CYCLE_INTERVAL_MS);
-      continue;
+    if (shouldStartSlowMode) {
+      isSlowMode = true;
     }
 
-    const canStop = hasStartedPreTargetHold && currentNumber === targetNumber;
+    const canStop = isSlowMode && currentNumber === targetNumber;
 
     if (canStop) {
       completeSlotStop(buttonOrder);
       return;
     }
 
-    await wait(STOP_CYCLE_INTERVAL_MS);
+    await wait(isSlowMode ? STOP_SLOW_CYCLE_INTERVAL_MS : STOP_CYCLE_INTERVAL_MS);
   }
 };
 
