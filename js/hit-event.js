@@ -1,5 +1,5 @@
-import { routeNonPremiumHit } from './hit-branch/route-non-premium-hit.js';
-import { routeNonPremiumReachHit } from './hit-branch/route-non-premium-reach-hit.js';
+import { routeNonPremiumHit } from './hit-branch/route-non-premium-hit/index.js';
+import { routeNonPremiumReachHit } from './hit-branch/route-non-premium-reach-hit/index.js';
 
 export const HIT_EVENT_NAME = 'slot:hit';
 const REACH_POPUP_FINISHED_EVENT_NAME = 'slot:reach-popup-finished';
