@@ -18,6 +18,8 @@ const LEFT_SLOT_INDEX = 0;
 const CENTER_SLOT_INDEX = 1;
 const RIGHT_SLOT_INDEX = 2;
 const SPIN_START_EVENT_NAME = 'slot:spin-start';
+const REACH_POPUP_FINISHED_EVENT_NAME = 'slot:reach-popup-finished';
+const REACH_HIT_EFFECT_FINISHED_EVENT_NAME = 'slot:reach-hit-effect-finished';
 const SLOT_COUNT = slotReels.length;
 const SLOT_NUMBER_MIN = 1;
 const SLOT_NUMBER_MAX = 9;
@@ -70,6 +72,7 @@ let spinIntervalId = null;
 let slotStopped = Array.from({ length: slotReels.length }, () => false);
 let slotStopping = Array.from({ length: slotReels.length }, () => false);
 let spinResultNumbers = [];
+let currentSpinDetail = null;
 let hasShownReachPopup = false;
 let centerStopLocked = false;
 let reachPopupTimeoutId = null;
@@ -180,11 +183,24 @@ const hideReachPopup = () => {
   }
 };
 
+// リーチポップアップ演出の完了イベントを通知します。
+const dispatchReachPopupFinishedEvent = () => {
+  if (!currentSpinDetail?.isHit) {
+    return;
+  }
+
+  window.dispatchEvent(
+    new CustomEvent(REACH_POPUP_FINISHED_EVENT_NAME, {
+      detail: currentSpinDetail,
+    }),
+  );
+};
+
 // 遅延付きでリーチポップアップを表示し、一定時間後に閉じます。
 const showReachPopupWithDelay = () => {
   if (!reachPopup) {
-    centerStopLocked = false;
     hasShownReachPopup = true;
+    dispatchReachPopupFinishedEvent();
     return;
   }
 
@@ -196,8 +212,8 @@ const showReachPopupWithDelay = () => {
 
     reachPopupHideTimeoutId = window.setTimeout(() => {
       hideReachPopup();
-      centerStopLocked = false;
       reachPopupHideTimeoutId = null;
+      dispatchReachPopupFinishedEvent();
     }, REACH_POPUP_VISIBLE_MS);
   }, REACH_POPUP_DELAY_MS);
 
@@ -244,6 +260,8 @@ const startSpin = () => {
     isHit,
     numbers: spinResultNumbers,
   };
+
+  currentSpinDetail = detail;
 
   window.dispatchEvent(
     new CustomEvent(SPIN_START_EVENT_NAME, {
@@ -386,6 +404,10 @@ const isStartPressed = (gamepad) =>
 const isButtonPressed = (gamepad, buttonIndex) => Boolean(gamepad?.buttons?.[buttonIndex]?.pressed);
 
 // ゲームパッド入力を監視し、開始・停止操作を処理し続けます。
+
+window.addEventListener(REACH_HIT_EFFECT_FINISHED_EVENT_NAME, () => {
+  centerStopLocked = false;
+});
 const watchControllerInput = () => {
   const gamepads = navigator.getGamepads ? navigator.getGamepads() : [];
   const activeGamepad = Array.from(gamepads).find(Boolean);
