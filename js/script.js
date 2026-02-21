@@ -21,6 +21,7 @@ const START_SPIN_KEYS = [' ', 'Spacebar'];
 const LEFT_SLOT_INDEX = 0;
 const CENTER_SLOT_INDEX = 1;
 const RIGHT_SLOT_INDEX = 2;
+const FIXED_STOP_SEQUENCE = [LEFT_SLOT_INDEX, RIGHT_SLOT_INDEX, CENTER_SLOT_INDEX]; // 左 → 右 → 真ん中
 const SPIN_START_EVENT_NAME = 'slot:spin-start';
 const REACH_POPUP_FINISHED_EVENT_NAME = 'slot:reach-popup-finished';
 const REACH_HIT_EFFECT_FINISHED_EVENT_NAME = 'slot:reach-hit-effect-finished';
@@ -341,6 +342,10 @@ const isReachState = () => {
   return leftNumber !== undefined && leftNumber === rightNumber;
 };
 
+// 固定停止順のうち、次に停止できるリール番号を返します。
+const getNextRequiredStopSlotIndex = () =>
+  FIXED_STOP_SEQUENCE.find((slotIndex) => !slotStopped[slotIndex] && !slotStopping[slotIndex]);
+
 // 指定リールの停止を確定し、必要ならリーチ表示や全停止判定を行います。
 const completeSlotStop = (buttonOrder) => {
   slotStopping[buttonOrder] = false;
@@ -356,7 +361,7 @@ const completeSlotStop = (buttonOrder) => {
     showReachPopupWithDelay();
   }
 
-  if (buttonOrder === RIGHT_SLOT_INDEX && currentSpinDetail?.isHit) {
+  if (buttonOrder === CENTER_SLOT_INDEX && currentSpinDetail?.isHit) {
     showHitPopup();
   }
 
@@ -424,6 +429,12 @@ const stopSlotByButtonOrder = (buttonOrder) => {
   }
 
   if (slotStopping.some(Boolean)) {
+    return;
+  }
+
+  const nextRequiredStopSlotIndex = getNextRequiredStopSlotIndex();
+
+  if (nextRequiredStopSlotIndex === undefined || buttonOrder !== nextRequiredStopSlotIndex) {
     return;
   }
 
