@@ -1,40 +1,11 @@
-const LEVER_ON_EFFECT_FINISHED_EVENT_NAME = 'slot:lever-on-effect-finished';
-const EFFECT_VISIBLE_MS = 1000;
+import { runLeverOnCutInEffect } from '../../../lever-on-cutin-effect.js';
 
-// カットイン演出（青）分岐の処理です。
+// カットイン演出（blue）分岐の処理です。
 export const runCutInBlueBranch = (detail) => {
-  const signboardImage = document.querySelector('.js-signboard-hit-effect');
-  const cutinImage = document.querySelector('.js-lever-on-cutin-hit-effect');
-
-  if (signboardImage) {
-    signboardImage.hidden = true;
-  }
-
-  if (!cutinImage) {
-    window.dispatchEvent(
-      new CustomEvent(LEVER_ON_EFFECT_FINISHED_EVENT_NAME, {
-        detail: {
-          ...detail,
-          effectType: 'cutin-blue',
-        },
-      }),
-    );
-    return;
-  }
-
-  cutinImage.hidden = false;
-
-  window.setTimeout(() => {
-    cutinImage.hidden = true;
-    window.dispatchEvent(
-      new CustomEvent(LEVER_ON_EFFECT_FINISHED_EVENT_NAME, {
-        detail: {
-          ...detail,
-          effectType: 'cutin-blue',
-        },
-      }),
-    );
-  }, EFFECT_VISIBLE_MS);
-
-  console.log('当たり演出: カットイン（青）');
+  runLeverOnCutInEffect({
+    detail,
+    effectType: 'cutin-blue',
+    color: 'blue',
+    logMessage: '当たり演出: カットイン（青）',
+  });
 };
