@@ -1,8 +1,13 @@
+import { routeMissNoReach } from './miss-branch/route-miss-no-reach/index.js';
+
 export const MISS_EVENT_NAME = 'slot:miss';
+const LEVER_ON_EFFECT_FINISHED_EVENT_NAME = 'slot:lever-on-effect-finished';
 const SLOT_NUMBER_MIN = 1;
 const SLOT_NUMBER_MAX = 9;
 const PREMIUM_HIT_NUMBER = 7;
 const MISS_REACH_PROBABILITY = 0.3;
+const LEFT_SLOT_INDEX = 0;
+const RIGHT_SLOT_INDEX = 2;
 
 // 1〜9の範囲でランダムなスロット数字を返します。
 const getRandomSlotNumber = () =>
@@ -65,6 +70,33 @@ export const createMissNumbers = (slotCount) => {
 
 window.addEventListener(MISS_EVENT_NAME, () => {
   console.log('外れ');
+});
+
+// 外れ時にリーチなし演出を実行可能か判定します。
+const isMissNoReach = (detail) => {
+  const numbers = detail?.numbers;
+
+  if (!Array.isArray(numbers) || numbers.length < 3) {
+    return false;
+  }
+
+  return numbers[LEFT_SLOT_INDEX] !== numbers[RIGHT_SLOT_INDEX];
+};
+
+window.addEventListener(MISS_EVENT_NAME, (event) => {
+  if (isMissNoReach(event.detail)) {
+    routeMissNoReach(event.detail);
+    return;
+  }
+
+  window.dispatchEvent(
+    new CustomEvent(LEVER_ON_EFFECT_FINISHED_EVENT_NAME, {
+      detail: {
+        ...event.detail,
+        effectType: 'miss-reach-or-other',
+      },
+    }),
+  );
 });
 
 // 外れイベントを発火し、必要な詳細情報を通知します。
