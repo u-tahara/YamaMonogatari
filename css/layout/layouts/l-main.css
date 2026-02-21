@@ -7,6 +7,41 @@
     position: relative;
 }
 
+.l-main__background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    object-fit: fill;
+    z-index: -1;
+}
+
+.l-main__bird {
+    position: fixed;
+    top: -3%;
+    width: 22%;
+    height: auto;
+    z-index: 121;
+}
+.l-main__bird--left {
+    left: -5%;
+    transform: scaleX(-1);
+}
+.l-main__bird--right {
+    right: -5%;
+}
+
+.l-main__frontground {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    object-fit: fill;
+    z-index: 120;
+}
+
 .l-main__title {
     width: 300px;
 }
@@ -23,7 +58,7 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 80%;
+    width: 70%;
     height: 100%;
     display: flex;
     align-items: center;
