@@ -40,31 +40,11 @@
     position: relative;
     display: grid;
     width: var(--reel-cell-height);
-    height: calc(12rem * 3 + 40px);
+    height: calc(var(--reel-cell-height) * 3 + 40px);
     border-radius: 12px;
     pointer-events: none;
 }
 
-.l-main__slot-window::before,
-.l-main__slot-window::after {
-    content: '';
-    position: absolute;
-    left: 0;
-    width: 100%;
-    height: 40%;
-    z-index: 2;
-    pointer-events: none;
-}
-
-.l-main__slot-window::before {
-    top: 0;
-    background: linear-gradient(to bottom, rgba(245, 247, 251, 0.95),rgba(245, 247, 251, 0.7), rgba(245, 247, 251, 0));
-}
-
-.l-main__slot-window::after {
-    bottom: 0;
-    background: linear-gradient(to top, rgba(245, 247, 251, 0.95),rgba(245, 247, 251, 0.7), rgba(245, 247, 251, 0));
-}
 
 .l-main__slot-reel {
     pointer-events: none;
@@ -79,12 +59,14 @@
     height: var(--reel-cell-height);
     display: grid;
     place-items: center;
-    font-size: clamp(4rem, 12vw, 10rem);
-    font-weight: 800;
-    line-height: 1;
-    color: #1f2937;
     user-select: none;
     text-align: center;
+}
+
+.l-main__slot-cell:not(:nth-child(2)) .l-main__slot-number-image {
+    width: 80%;
+    height: 80%;
+    opacity: 0.3;
 }
 
 .l-main__slot-number-image {
