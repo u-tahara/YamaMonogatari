@@ -20,9 +20,11 @@
 .l-main__bird {
     position: fixed;
     top: -3%;
-    width: 22%;
+    width: 27%;
     height: auto;
     z-index: 121;
+    opacity: 1;
+    transition: opacity 10s ease-out;
 }
 .l-main__bird--left {
     left: -5%;
@@ -40,54 +42,6 @@
 .l-main__bird--right.is-lever-on-cutin-active {
     animation: bird-right-lever-on-cutin 3000ms cubic-bezier(0.4, 0, 1, 1) forwards;
     will-change: right, opacity;
-}
-
-@keyframes bird-left-lever-on-cutin {
-    0% {
-        left: -5%;
-        opacity: 1;
-    }
-    33.333% {
-        left: calc(50% - 11%);
-        opacity: 1;
-    }
-    66.666% {
-        left: calc(50% - 11%);
-        opacity: 1;
-    }
-    99% {
-        left: calc(-22% - 40px);
-        opacity: 1;
-    }
-    99.001%,
-    100% {
-        left: -5%;
-        opacity: 0;
-    }
-}
-
-@keyframes bird-right-lever-on-cutin {
-    0% {
-        right: -5%;
-        opacity: 1;
-    }
-    33.333% {
-        right: calc(50% - 11%);
-        opacity: 1;
-    }
-    66.666% {
-        right: calc(50% - 11%);
-        opacity: 1;
-    }
-    99% {
-        right: calc(-22% - 40px);
-        opacity: 1;
-    }
-    99.001%,
-    100% {
-        right: -5%;
-        opacity: 0;
-    }
 }
 
 .l-main__frontground {
@@ -127,6 +81,7 @@
     background: #fff;
     border-radius: 30px;
     border: 8px solid #000;
+    overflow: hidden;
 }
 
 .l-main__slot {
