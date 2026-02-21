@@ -22,6 +22,7 @@ const RIGHT_SLOT_INDEX = 2;
 const SPIN_START_EVENT_NAME = 'slot:spin-start';
 const REACH_POPUP_FINISHED_EVENT_NAME = 'slot:reach-popup-finished';
 const REACH_HIT_EFFECT_FINISHED_EVENT_NAME = 'slot:reach-hit-effect-finished';
+const REACH_MISS_EFFECT_FINISHED_EVENT_NAME = 'slot:reach-miss-effect-finished';
 const LEVER_ON_EFFECT_FINISHED_EVENT_NAME = 'slot:lever-on-effect-finished';
 const SLOT_COUNT = slotReels.length;
 const SLOT_NUMBER_MIN = 1;
@@ -191,7 +192,7 @@ const hideReachPopup = () => {
 
 // リーチポップアップ演出の完了イベントを通知します。
 const dispatchReachPopupFinishedEvent = () => {
-  if (!currentSpinDetail?.isHit) {
+  if (!currentSpinDetail) {
     return;
   }
 
@@ -490,6 +491,10 @@ const releaseArrowKeyInput = (event) => {
 // ゲームパッド入力を監視し、開始・停止操作を処理し続けます。
 
 window.addEventListener(REACH_HIT_EFFECT_FINISHED_EVENT_NAME, () => {
+  centerStopLocked = false;
+});
+
+window.addEventListener(REACH_MISS_EFFECT_FINISHED_EVENT_NAME, () => {
   centerStopLocked = false;
 });
 

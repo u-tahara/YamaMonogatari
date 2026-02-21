@@ -1,7 +1,9 @@
 import { routeMissNoReach } from './miss-branch/route-miss-no-reach/index.js';
+import { routeMissReach } from './miss-branch/route-miss-reach/index.js';
 
 export const MISS_EVENT_NAME = 'slot:miss';
 const LEVER_ON_EFFECT_FINISHED_EVENT_NAME = 'slot:lever-on-effect-finished';
+const REACH_POPUP_FINISHED_EVENT_NAME = 'slot:reach-popup-finished';
 const SLOT_NUMBER_MIN = 1;
 const SLOT_NUMBER_MAX = 9;
 const PREMIUM_HIT_NUMBER = 7;
@@ -83,6 +85,17 @@ const isMissNoReach = (detail) => {
   return numbers[LEFT_SLOT_INDEX] !== numbers[RIGHT_SLOT_INDEX];
 };
 
+// 外れ時にリーチ演出を実行可能か判定します。
+const isMissReach = (detail) => {
+  const numbers = detail?.numbers;
+
+  if (!Array.isArray(numbers) || numbers.length < 3) {
+    return false;
+  }
+
+  return numbers[LEFT_SLOT_INDEX] === numbers[RIGHT_SLOT_INDEX];
+};
+
 window.addEventListener(MISS_EVENT_NAME, (event) => {
   if (isMissNoReach(event.detail)) {
     routeMissNoReach(event.detail);
@@ -97,6 +110,14 @@ window.addEventListener(MISS_EVENT_NAME, (event) => {
       },
     }),
   );
+});
+
+window.addEventListener(REACH_POPUP_FINISHED_EVENT_NAME, (event) => {
+  if (event.detail?.isHit || !isMissReach(event.detail)) {
+    return;
+  }
+
+  routeMissReach(event.detail);
 });
 
 // 外れイベントを発火し、必要な詳細情報を通知します。
