@@ -6,8 +6,6 @@ const slotReels = document.querySelectorAll('.js-slot-reel');
 const reachPopup = document.querySelector('.js-reach-popup');
 const hitPopup = document.querySelector('.js-hit-popup');
 const REEL_STEP_DURATION_MS = 60;
-const REEL_REST_TRANSLATE_Y = 'translateY(calc((-1 * var(--reel-cell-height)) + var(--reel-peek-height)))';
-const REEL_STEP_TRANSLATE_Y = 'translateY(calc((-2 * var(--reel-cell-height)) + var(--reel-peek-height)))';
 const SPIN_INTERVAL_MS = 80;
 const STOP_CYCLE_INTERVAL_MS = Math.max(0, SPIN_INTERVAL_MS - REEL_STEP_DURATION_MS);
 const STOP_SLOW_CYCLE_INTERVAL_MS = 160;
@@ -43,7 +41,7 @@ const SLOT_NUMBER_IMAGE_NAMES = {
   6: 'six',
   7: 'seven',
   8: 'eight',
-  9: 'five',
+  9: 'nine',
 };
 const PREMIUM_HIT_NUMBER = 7;
 const PREMIUM_HIT_PROBABILITY = 0.1;
