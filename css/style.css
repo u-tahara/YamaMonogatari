@@ -27,3 +27,24 @@
 .c-reach-popup[hidden] {
   display: none;
 }
+
+.c-hit-popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 110;
+  padding: 12px 24px;
+  border: 2px solid #ffffff;
+  border-radius: 8px;
+  background-color: rgba(188, 0, 45, 0.9);
+  color: #ffffff;
+  font-size: 36px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  pointer-events: none;
+}
+
+.c-hit-popup[hidden] {
+  display: none;
+}
