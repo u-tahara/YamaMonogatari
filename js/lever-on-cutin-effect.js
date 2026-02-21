@@ -1,5 +1,7 @@
 const LEVER_ON_EFFECT_FINISHED_EVENT_NAME = 'slot:lever-on-effect-finished';
+const LEVER_ON_CUTIN_CENTER_EVENT_NAME = 'slot:lever-on-cutin-center';
 const EFFECT_VISIBLE_MS = 3000;
+const BIRD_CENTER_REACHED_MS = 750;
 const BIRD_RESET_FADE_IN_MS = 300;
 
 const wait = (ms) =>
@@ -28,6 +30,19 @@ const animateBird = async (birdImage) => {
   birdImage.style.opacity = '';
 };
 
+const notifyBirdCenterReached = async ({ detail, effectType }) => {
+  await wait(BIRD_CENTER_REACHED_MS);
+
+  window.dispatchEvent(
+    new CustomEvent(LEVER_ON_CUTIN_CENTER_EVENT_NAME, {
+      detail: {
+        ...detail,
+        effectType,
+      },
+    }),
+  );
+};
+
 // レバーオン向けカットイン演出を実行します。
 export const runLeverOnCutInEffect = async ({ detail, effectType, color, logMessage }) => {
   const signboardImage = document.querySelector('.js-signboard-hit-effect');
@@ -54,7 +69,11 @@ export const runLeverOnCutInEffect = async ({ detail, effectType, color, logMess
   cutinImage.src = `./img/bird-cutin/${color}.png`;
   cutinImage.hidden = false;
 
-  await Promise.all([animateBird(leftBirdImage), animateBird(rightBirdImage)]);
+  await Promise.all([
+    animateBird(leftBirdImage),
+    animateBird(rightBirdImage),
+    notifyBirdCenterReached({ detail, effectType }),
+  ]);
 
   cutinImage.hidden = true;
 
