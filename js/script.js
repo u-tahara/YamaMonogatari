@@ -555,6 +555,14 @@ window.addEventListener(REACH_MISS_EFFECT_FINISHED_EVENT_NAME, () => {
   centerStopLocked = false;
 });
 
+window.addEventListener(REACH_POPUP_FINISHED_EVENT_NAME, (event) => {
+  const hitNumber = event.detail?.numbers?.[0];
+
+  if (event.detail?.isHit && hitNumber === PREMIUM_HIT_NUMBER) {
+    centerStopLocked = false;
+  }
+});
+
 window.addEventListener(LEVER_ON_EFFECT_FINISHED_EVENT_NAME, () => {
   areReelsStopEnabled = true;
 });
