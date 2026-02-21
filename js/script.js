@@ -1,5 +1,5 @@
 import { dispatchHitEvent } from './hit-event.js';
-import { dispatchMissEvent } from './miss-event.js';
+import { createMissNumbers, dispatchMissEvent } from './miss-event.js';
 
 const slotReels = document.querySelectorAll('.js-slot-reel');
 const reachPopup = document.querySelector('.js-reach-popup');
@@ -39,16 +39,11 @@ const SLOT_NUMBER_IMAGE_NAMES = {
 };
 const PREMIUM_HIT_NUMBER = 7;
 const PREMIUM_HIT_PROBABILITY = 0.1;
-const MISS_REACH_PROBABILITY = 0.3;
-
 // 1〜9の範囲でランダムなスロット数字を返します。
 const getRandomSlotNumber = () => Math.floor(Math.random() * 9) + 1;
 
 // 当たり判定を行い、一定確率で true を返します。
 const judgeSpinResult = () => Math.random() < 1 / 13.7;
-
-// 配列内の数字がすべて同じかどうかを判定します。
-const isAllSameNumber = (numbers) => numbers.every((number) => number === numbers[0]);
 
 // 3リールすべて同じ数字になる当たり用の配列を生成します。
 const createHitNumbers = () => {
@@ -66,58 +61,6 @@ const createHitNumbers = () => {
   })();
 
   return Array.from({ length: SLOT_COUNT }, () => hitNumber);
-};
-
-// 外れ時にリーチ演出を発生させるかどうかを確率で判定します。
-const shouldShowMissReach = () => Math.random() < MISS_REACH_PROBABILITY;
-
-// 外れ時のリーチ用（左右同数・中央のみ不一致）の数字配列を生成します。
-const createMissReachNumbers = () => {
-  const reachCandidates = Array.from(
-    { length: SLOT_NUMBER_MAX - SLOT_NUMBER_MIN + 1 },
-    (_, index) => SLOT_NUMBER_MIN + index,
-  ).filter((number) => number !== PREMIUM_HIT_NUMBER);
-
-  const reachNumber = reachCandidates[Math.floor(Math.random() * reachCandidates.length)];
-
-  let centerNumber = getRandomSlotNumber();
-
-  while (centerNumber === reachNumber) {
-    centerNumber = getRandomSlotNumber();
-  }
-
-  return [reachNumber, centerNumber, reachNumber];
-};
-
-// 外れ時の非リーチ用（左右不一致）の数字配列を生成します。
-const createMissNoReachNumbers = () => {
-  let leftNumber = getRandomSlotNumber();
-  let rightNumber = getRandomSlotNumber();
-
-  while (leftNumber === rightNumber) {
-    rightNumber = getRandomSlotNumber();
-  }
-
-  return [leftNumber, getRandomSlotNumber(), rightNumber];
-};
-
-// 3リールのどこかが異なる外れ用の数字配列を生成します。
-const createMissNumbers = () => {
-  if (SLOT_COUNT === 0) {
-    return [];
-  }
-
-  if (SLOT_COUNT === 3) {
-    return shouldShowMissReach() ? createMissReachNumbers() : createMissNoReachNumbers();
-  }
-
-  let missNumbers = Array.from({ length: SLOT_COUNT }, () => getRandomSlotNumber());
-
-  while (isAllSameNumber(missNumbers)) {
-    missNumbers = Array.from({ length: SLOT_COUNT }, () => getRandomSlotNumber());
-  }
-
-  return missNumbers;
 };
 
 let spinIntervalId = null;
@@ -318,7 +261,7 @@ const startSpin = () => {
   clearReachPopupTimer();
   hideReachPopup();
   const isHit = judgeSpinResult();
-  spinResultNumbers = isHit ? createHitNumbers() : createMissNumbers();
+  spinResultNumbers = isHit ? createHitNumbers() : createMissNumbers(SLOT_COUNT);
 
   const detail = {
     isHit,
