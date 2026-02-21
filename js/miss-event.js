@@ -1,8 +1,8 @@
 import { routeMissNoReach } from './miss-branch/route-miss-no-reach/index.js';
 import { routeMissReach } from './miss-branch/route-miss-reach/index.js';
+import { routeMissReachLeverOn } from './miss-branch/route-miss-reach-lever-on/index.js';
 
 export const MISS_EVENT_NAME = 'slot:miss';
-const LEVER_ON_EFFECT_FINISHED_EVENT_NAME = 'slot:lever-on-effect-finished';
 const REACH_POPUP_FINISHED_EVENT_NAME = 'slot:reach-popup-finished';
 const SLOT_NUMBER_MIN = 1;
 const SLOT_NUMBER_MAX = 9;
@@ -102,14 +102,7 @@ window.addEventListener(MISS_EVENT_NAME, (event) => {
     return;
   }
 
-  window.dispatchEvent(
-    new CustomEvent(LEVER_ON_EFFECT_FINISHED_EVENT_NAME, {
-      detail: {
-        ...event.detail,
-        effectType: 'miss-reach-or-other',
-      },
-    }),
-  );
+  routeMissReachLeverOn(event.detail);
 });
 
 window.addEventListener(REACH_POPUP_FINISHED_EVENT_NAME, (event) => {
