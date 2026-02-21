@@ -4,7 +4,7 @@ const EFFECT_VISIBLE_MS = 1000;
 // 看板演出（好機）分岐の処理です。
 export const runSignboardChanceBranch = (detail) => {
   const signboardImage = document.querySelector('.js-signboard-hit-effect');
-  const cutinImage = document.querySelector('.js-cutin-hit-effect');
+  const cutinImage = document.querySelector('.js-lever-on-cutin-hit-effect');
 
   if (cutinImage) {
     cutinImage.hidden = true;

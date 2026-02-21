@@ -4,7 +4,7 @@ const EFFECT_VISIBLE_MS = 3000;
 // リーチ後スズ背景演出の分岐先処理です。
 export const runReachSuzuBackgroundBranch = (detail) => {
   const suzuBackgroundImage = document.querySelector('.js-reach-suzu-background-effect');
-  const cutinImage = document.querySelector('.js-cutin-hit-effect');
+  const cutinImage = document.querySelector('.js-reach-cutin-hit-effect');
   const signboardImage = document.querySelector('.js-signboard-hit-effect');
   const characterGroupVideo = document.querySelector('.js-reach-character-group-effect');
 

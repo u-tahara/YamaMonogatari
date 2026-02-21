@@ -3,7 +3,7 @@ const REACH_HIT_EFFECT_FINISHED_EVENT_NAME = 'slot:reach-hit-effect-finished';
 // リーチ後キャラ群演出（多）分岐の処理です。
 export const runReachCharacterGroupManyBranch = (detail) => {
   const characterGroupVideo = document.querySelector('.js-reach-character-group-effect');
-  const cutinImage = document.querySelector('.js-cutin-hit-effect');
+  const cutinImage = document.querySelector('.js-reach-cutin-hit-effect');
   const signboardImage = document.querySelector('.js-signboard-hit-effect');
 
   if (cutinImage) {

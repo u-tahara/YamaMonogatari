@@ -3,7 +3,7 @@ const EFFECT_VISIBLE_MS = 1000;
 
 // リーチ後カットイン演出（赤）分岐の処理です。
 export const runReachCutInRedBranch = (detail) => {
-  const cutinImage = document.querySelector('.js-cutin-hit-effect');
+  const cutinImage = document.querySelector('.js-reach-cutin-hit-effect');
   const signboardImage = document.querySelector('.js-signboard-hit-effect');
   const characterGroupVideo = document.querySelector('.js-reach-character-group-effect');
 
