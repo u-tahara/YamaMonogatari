@@ -1,6 +1,7 @@
 const LEVER_ON_AUDIO_EVENT_NAME = 'slot:lever-on';
 const STOP_BUTTON_AUDIO_EVENT_NAME = 'slot:stop-button-pressed';
 const REEL_STOP_AUDIO_EVENT_NAME = 'slot:reel-stop-confirmed';
+const EFFECT_AUDIO_VOLUME = 0.35;
 
 const bgmAudio = new Audio('./audio/bgm.mp3');
 bgmAudio.loop = true;
@@ -9,6 +10,10 @@ bgmAudio.volume = 0.5;
 const leverAudio = new Audio('./audio/lever.mp3');
 const buttonAudio = new Audio('./audio/button.mp3');
 const stopAudio = new Audio('./audio/stop.mp3');
+
+[leverAudio, buttonAudio, stopAudio].forEach((effectAudio) => {
+  effectAudio.volume = EFFECT_AUDIO_VOLUME;
+});
 
 const playBgm = () => {
   bgmAudio
