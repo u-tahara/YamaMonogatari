@@ -4,10 +4,10 @@ import { runMissCutInGreenBranch } from './green-branch.js';
 import { runMissCutInRedBranch } from './red-branch.js';
 import { runMissCutInGoldBranch } from './gold-branch.js';
 
-const CUT_IN_WHITE_RATE = 0.05;
-const CUT_IN_BLUE_RATE = 0.15;
-const CUT_IN_GREEN_RATE = 0.4;
-const CUT_IN_RED_RATE = 0.35;
+const CUT_IN_WHITE_RATE = 0.35;
+const CUT_IN_BLUE_RATE = 0.3;
+const CUT_IN_GREEN_RATE = 0.3;
+const CUT_IN_RED_RATE = 0.04;
 
 // カットイン演出内の分岐を行います。
 export const routeMissCutInBranch = (detail) => {
