@@ -3,6 +3,7 @@ import { createMissNumbers, dispatchMissEvent } from './miss-event.js';
 
 const slotReels = document.querySelectorAll('.js-slot-reel');
 const reachPopup = document.querySelector('.js-reach-popup');
+const hitPopup = document.querySelector('.js-hit-popup');
 const REEL_STEP_DURATION_MS = 60;
 const REEL_REST_TRANSLATE_Y = 'translateY(calc((-1 * var(--reel-cell-height)) + var(--reel-peek-height)))';
 const REEL_STEP_TRANSLATE_Y = 'translateY(calc((-2 * var(--reel-cell-height)) + var(--reel-peek-height)))';
@@ -12,6 +13,7 @@ const STOP_SLOW_CYCLE_INTERVAL_MS = 160;
 const STOP_MIN_CYCLES = 4;
 const REACH_POPUP_DELAY_MS = 300;
 const REACH_POPUP_VISIBLE_MS = 1000;
+const HIT_POPUP_VISIBLE_MS = 1000;
 const START_BUTTON_INDEX = 13;
 const STOP_BUTTON_INDEXES = [6, 1, 0]; // 左, 真ん中, 右
 const STOP_ARROW_KEYS = ['ArrowLeft', 'ArrowDown', 'ArrowRight']; // 左, 真ん中, 右
@@ -74,6 +76,7 @@ let centerStopLocked = false;
 let areReelsStopEnabled = true;
 let reachPopupTimeoutId = null;
 let reachPopupHideTimeoutId = null;
+let hitPopupHideTimeoutId = null;
 let currentDisplayedNumbers = Array.from({ length: slotReels.length }, () => getRandomSlotNumber());
 let reelStepQueues = Array.from({ length: slotReels.length }, () => Promise.resolve());
 let previousButtonPressed = {
@@ -170,6 +173,36 @@ const enqueueReelStep = (slotIndex) => {
   return reelStepQueues[slotIndex];
 };
 
+
+// 当たりポップアップ関連のタイマーを解除し、非表示にします。
+const resetHitPopup = () => {
+  if (hitPopupHideTimeoutId !== null) {
+    window.clearTimeout(hitPopupHideTimeoutId);
+    hitPopupHideTimeoutId = null;
+  }
+
+  if (hitPopup) {
+    hitPopup.hidden = true;
+  }
+};
+
+// 当たり時にポップアップを表示し、一定時間後に非表示にします。
+const showHitPopup = () => {
+  if (!hitPopup) {
+    return;
+  }
+
+  if (hitPopupHideTimeoutId !== null) {
+    window.clearTimeout(hitPopupHideTimeoutId);
+  }
+
+  hitPopup.hidden = false;
+
+  hitPopupHideTimeoutId = window.setTimeout(() => {
+    hitPopup.hidden = true;
+    hitPopupHideTimeoutId = null;
+  }, HIT_POPUP_VISIBLE_MS);
+};
 // リーチポップアップ関連のタイマーをすべて解除します。
 const clearReachPopupTimer = () => {
   if (reachPopupTimeoutId !== null) {
@@ -261,6 +294,7 @@ const startSpin = () => {
   areReelsStopEnabled = false;
   clearReachPopupTimer();
   hideReachPopup();
+  resetHitPopup();
   const isHit = judgeSpinResult();
   spinResultNumbers = isHit ? createHitNumbers() : createMissNumbers(SLOT_COUNT);
 
@@ -320,6 +354,10 @@ const completeSlotStop = (buttonOrder) => {
 
   if (canShowReachPopup) {
     showReachPopupWithDelay();
+  }
+
+  if (buttonOrder === RIGHT_SLOT_INDEX && currentSpinDetail?.isHit) {
+    showHitPopup();
   }
 
   const isAllSlotsStopped = slotStopped.every(Boolean);
