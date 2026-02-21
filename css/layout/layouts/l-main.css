@@ -86,3 +86,11 @@
     user-select: none;
     text-align: center;
 }
+
+.l-main__slot-number-image {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    user-select: none;
+    pointer-events: none;
+}

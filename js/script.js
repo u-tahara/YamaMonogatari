@@ -26,6 +26,17 @@ const LEVER_ON_EFFECT_FINISHED_EVENT_NAME = 'slot:lever-on-effect-finished';
 const SLOT_COUNT = slotReels.length;
 const SLOT_NUMBER_MIN = 1;
 const SLOT_NUMBER_MAX = 9;
+const SLOT_NUMBER_IMAGE_NAMES = {
+  1: 'one',
+  2: 'two',
+  3: 'three',
+  4: 'four',
+  5: 'five',
+  6: 'six',
+  7: 'seven',
+  8: 'eight',
+  9: 'five',
+};
 const PREMIUM_HIT_NUMBER = 7;
 const PREMIUM_HIT_PROBABILITY = 0.1;
 
@@ -129,17 +140,25 @@ const renderReel = (slotIndex) => {
   const previousNumber = getPreviousSlotNumber(currentNumber);
   const nextNumber = getNextSlotNumber(currentNumber);
 
-  if (cells[0]) {
-    cells[0].textContent = String(previousNumber);
-  }
+  const renderCellNumberImage = (cell, number) => {
+    const imageName = SLOT_NUMBER_IMAGE_NAMES[number];
 
-  if (cells[1]) {
-    cells[1].textContent = String(currentNumber);
-  }
+    if (!cell || !imageName) {
+      return;
+    }
 
-  if (cells[2]) {
-    cells[2].textContent = String(nextNumber);
-  }
+    cell.innerHTML = '';
+
+    const numberImage = document.createElement('img');
+    numberImage.className = 'l-main__slot-number-image';
+    numberImage.src = `./img/number/${imageName}.png`;
+    numberImage.alt = String(number);
+    cell.append(numberImage);
+  };
+
+  renderCellNumberImage(cells[0], previousNumber);
+  renderCellNumberImage(cells[1], currentNumber);
+  renderCellNumberImage(cells[2], nextNumber);
 
   reel.style.transition = 'none';
 };
