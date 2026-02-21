@@ -27,20 +27,3 @@
 .c-reach-popup[hidden] {
   display: none;
 }
-
-
-.c-hit-effect-image {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  z-index: 110;
-  max-width: min(60vw, 420px);
-  width: 100%;
-  height: auto;
-  pointer-events: none;
-}
-
-.c-hit-effect-image[hidden] {
-  display: none;
-}

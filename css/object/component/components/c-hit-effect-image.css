@@ -1,0 +1,30 @@
+.c-hit-effect-image {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 110;
+  width: 50vw;
+  height: auto;
+  pointer-events: none;
+}
+
+.c-hit-effect-image[hidden] {
+  display: none;
+}
+
+.c-hit-effect-image--signboard {
+  width: 30vw;
+}
+.c-hit-effect-image--lever-on-cutin {
+    width: 30vw;
+}
+.c-hit-effect-image--reach-cutin {
+    width: 30vw;
+}
+.c-hit-effect-image--character-group {
+    width: 40vw;
+}
+.c-hit-effect-image--suzu-background {
+    width: 100vw;
+}

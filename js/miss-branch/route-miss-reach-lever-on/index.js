@@ -2,8 +2,8 @@ import { runMissReachLeverOnSignboardBranch } from './branches/signboard-branch.
 import { runMissReachLeverOnCutInBranch } from './branches/cutin-branch.js';
 import { runMissReachLeverOnNoEffectBranch } from './branches/no-effect-branch.js';
 
-const SIGNBOARD_RATE = 0.25;
-const CUT_IN_RATE = 0.7;
+const SIGNBOARD_RATE = 0.2;
+const CUT_IN_RATE = 0.25;
 
 // 外れ時のリーチ分岐向けレバーオン演出を分岐します。
 export const routeMissReachLeverOn = (detail) => {

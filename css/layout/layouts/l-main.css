@@ -4,6 +4,7 @@
     width: 100vw;
     height: 100vh;
     align-items: center;
+    position: relative;
 }
 
 .l-main__title {
@@ -11,7 +12,10 @@
 }
 
 .l-main__logo {
-    width: 100%;
+    width: 350px;
+    position: fixed;
+    top: -5%;
+    left: 0;
 }
 
 .l-main__container {

@@ -4,7 +4,7 @@ import { runMissSignboardSlightlyHotBranch } from '../../route-miss-no-reach/sig
 import { runMissSignboardChanceBranch } from '../../route-miss-no-reach/signboard/chance-branch.js';
 
 const SIGNBOARD_VERY_HOT_RATE = 0.01;
-const SIGNBOARD_HOT_RATE = 0.01;
+const SIGNBOARD_HOT_RATE = 0.1;
 const SIGNBOARD_SLIGHTLY_HOT_RATE = 0.3;
 
 // 外れ時リーチ分岐のレバーオン向け看板演出内の分岐を行います。
