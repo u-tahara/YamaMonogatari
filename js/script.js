@@ -1,5 +1,6 @@
 import { dispatchHitEvent } from './hit-event.js';
 import { createMissNumbers, dispatchMissEvent } from './miss-event.js';
+import './audio-controller.js';
 
 const slotReels = document.querySelectorAll('.js-slot-reel');
 const reachPopup = document.querySelector('.js-reach-popup');
@@ -27,6 +28,9 @@ const REACH_POPUP_FINISHED_EVENT_NAME = 'slot:reach-popup-finished';
 const REACH_HIT_EFFECT_FINISHED_EVENT_NAME = 'slot:reach-hit-effect-finished';
 const REACH_MISS_EFFECT_FINISHED_EVENT_NAME = 'slot:reach-miss-effect-finished';
 const LEVER_ON_EFFECT_FINISHED_EVENT_NAME = 'slot:lever-on-effect-finished';
+const LEVER_ON_AUDIO_EVENT_NAME = 'slot:lever-on';
+const STOP_BUTTON_AUDIO_EVENT_NAME = 'slot:stop-button-pressed';
+const REEL_STOP_AUDIO_EVENT_NAME = 'slot:reel-stop-confirmed';
 const SLOT_COUNT = slotReels.length;
 const SLOT_NUMBER_MIN = 1;
 const SLOT_NUMBER_MAX = 9;
@@ -288,6 +292,8 @@ const startSpin = () => {
     return;
   }
 
+  window.dispatchEvent(new Event(LEVER_ON_AUDIO_EVENT_NAME));
+
   slotStopped = slotStopped.map(() => false);
   slotStopping = slotStopping.map(() => false);
   hasShownReachPopup = false;
@@ -350,6 +356,8 @@ const getNextRequiredStopSlotIndex = () =>
 const completeSlotStop = (buttonOrder) => {
   slotStopping[buttonOrder] = false;
   slotStopped[buttonOrder] = true;
+
+  window.dispatchEvent(new Event(REEL_STOP_AUDIO_EVENT_NAME));
 
   const canShowReachPopup =
     !hasShownReachPopup &&
@@ -449,6 +457,8 @@ const stopSlotByButtonOrder = (buttonOrder) => {
   ) {
     return;
   }
+
+  window.dispatchEvent(new Event(STOP_BUTTON_AUDIO_EVENT_NAME));
 
   if (spinResultNumbers[buttonOrder] !== undefined) {
     slotStopping[buttonOrder] = true;
