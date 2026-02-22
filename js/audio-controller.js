@@ -5,6 +5,7 @@ const REEL_STOP_AUDIO_EVENT_NAME = 'slot:reel-stop-confirmed';
 const EFFECT_AUDIO_VOLUME = 0.3;
 const HELP_AUDIO_DEFAULT_VOLUME = 1;
 const LEVER_ON_CUTIN_MOVIE_DEFAULT_VOLUME = 0.3;
+const REACH_CHARACTER_GROUP_DEFAULT_VOLUME = 0.3;
 
 const bgmAudio = new Audio('./audio/bgm.mp3');
 bgmAudio.loop = true;
@@ -30,6 +31,20 @@ const setLeverOnCutinMovieVolume = (volume) => {
   return cutinMovie.volume;
 };
 
+const setReachCharacterGroupVolume = (volume) => {
+  const normalizedVolume = Number.isFinite(volume) ? Math.min(1, Math.max(0, volume)) : REACH_CHARACTER_GROUP_DEFAULT_VOLUME;
+  const characterGroupMovie = document.querySelector('.js-reach-character-group-effect');
+
+  if (!characterGroupMovie) {
+    return normalizedVolume;
+  }
+
+  characterGroupMovie.muted = false;
+  characterGroupMovie.volume = normalizedVolume;
+
+  return characterGroupMovie.volume;
+};
+
 const setHelpAudioVolume = (volume) => {
   const normalizedVolume = Number.isFinite(volume) ? Math.min(1, Math.max(0, volume)) : HELP_AUDIO_DEFAULT_VOLUME;
 
@@ -40,12 +55,14 @@ const setHelpAudioVolume = (volume) => {
 
 window.setHelpAudioVolume = setHelpAudioVolume;
 window.setLeverOnCutinMovieVolume = setLeverOnCutinMovieVolume;
+window.setReachCharacterGroupVolume = setReachCharacterGroupVolume;
 
 [leverAudio, buttonAudio, stopAudio].forEach((effectAudio) => {
   effectAudio.volume = EFFECT_AUDIO_VOLUME;
 });
 setHelpAudioVolume(HELP_AUDIO_DEFAULT_VOLUME);
 setLeverOnCutinMovieVolume(LEVER_ON_CUTIN_MOVIE_DEFAULT_VOLUME);
+setReachCharacterGroupVolume(REACH_CHARACTER_GROUP_DEFAULT_VOLUME);
 
 const playBgm = () => {
   bgmAudio
