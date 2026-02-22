@@ -47,6 +47,7 @@ const notifyBirdCenterReached = async ({ detail, effectType }) => {
 export const runLeverOnCutInEffect = async ({ detail, effectType, color, logMessage }) => {
   const signboardImage = document.querySelector('.js-signboard-hit-effect');
   const cutinImage = document.querySelector('.js-lever-on-cutin-hit-effect');
+  const cutinMovie = document.querySelector('.js-lever-on-cutin-movie-effect');
   const leftBirdImage = document.querySelector('.js-main-bird-left');
   const rightBirdImage = document.querySelector('.js-main-bird-right');
 
@@ -69,6 +70,13 @@ export const runLeverOnCutInEffect = async ({ detail, effectType, color, logMess
   cutinImage.src = `./img/bird-cutin/${color}.png`;
   cutinImage.hidden = false;
 
+  if (cutinMovie) {
+    cutinMovie.src = `./movie/${color}.mov`;
+    cutinMovie.hidden = false;
+    cutinMovie.currentTime = 0;
+    cutinMovie.play().catch(() => {});
+  }
+
   await Promise.all([
     animateBird(leftBirdImage),
     animateBird(rightBirdImage),
@@ -76,6 +84,12 @@ export const runLeverOnCutInEffect = async ({ detail, effectType, color, logMess
   ]);
 
   cutinImage.hidden = true;
+
+  if (cutinMovie) {
+    cutinMovie.pause();
+    cutinMovie.currentTime = 0;
+    cutinMovie.hidden = true;
+  }
 
   window.dispatchEvent(
     new CustomEvent(LEVER_ON_EFFECT_FINISHED_EVENT_NAME, {
