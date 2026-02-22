@@ -23,10 +23,15 @@
         top: 60%;
         opacity: 0;
     }
-    85% {
+    84% {
         left: -20%;
         top: -3%;
         opacity: 0;
+    }
+    85% {
+        left: -20%;
+        top: -3%;
+        opacity: 1;
     }
     100% {
         left: -5%;
@@ -59,10 +64,15 @@
         top: 60%;
         opacity: 0;
     }
-    85% {
+    84% {
         right: -20%;
         top: -3%;
         opacity: 0;
+    }
+    85% {
+        right: -20%;
+        top: -3%;
+        opacity: 1;
     }
     100% {
         right: -5%;

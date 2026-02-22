@@ -3,7 +3,7 @@ const LEVER_ON_CUTIN_CENTER_EVENT_NAME = 'slot:lever-on-cutin-center';
 const EFFECT_VISIBLE_MS = 3000;
 const BIRD_CENTER_REACHED_MS = 850;
 const BIRD_RESET_FADE_IN_MS = 300;
-const LEVER_ON_CUTIN_MOVIE_PLAYBACK_RATE = 1.2;
+const LEVER_ON_CUTIN_MOVIE_PLAYBACK_RATE = 1.3;
 
 const wait = (ms) =>
   new Promise((resolve) => {
@@ -73,8 +73,8 @@ export const runLeverOnCutInEffect = async ({ detail, effectType, color, logMess
 
   if (cutinMovie) {
     cutinMovie.pause();
-    cutinMovie.currentTime = 0;
     cutinMovie.hidden = true;
+    cutinMovie.currentTime = 0;
   }
 
   window.dispatchEvent(
