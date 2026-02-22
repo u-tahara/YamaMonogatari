@@ -56,3 +56,14 @@
     object-fit: fill;
     z-index: 130;
 }
+
+
+.c-hit-effect-image--premium-blackout-movie,
+.c-hit-effect-image--premium-change-movie {
+    opacity: 1;
+    transition: opacity 320ms linear;
+}
+
+.js-premium-movie-fade-out {
+    opacity: 0;
+}

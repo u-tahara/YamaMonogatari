@@ -15,6 +15,8 @@ const REEL_STEP_DURATION_MS = 60;
 const SPIN_INTERVAL_MS = 80;
 const STOP_CYCLE_INTERVAL_MS = Math.max(0, SPIN_INTERVAL_MS - REEL_STEP_DURATION_MS);
 const STOP_SLOW_CYCLE_INTERVAL_MS = 160;
+const PREMIUM_STOP_CYCLE_INTERVAL_MS = 260;
+const PREMIUM_ALIGN_START_NUMBER = 5;
 const STOP_MIN_CYCLES = 4;
 const REACH_POPUP_DELAY_MS = 300;
 const REACH_POPUP_VISIBLE_MS = 1000;
@@ -58,6 +60,12 @@ const getRandomSlotNumber = () => Math.floor(Math.random() * 9) + 1;
 const judgeSpinResult = () => Math.random() < 1 / 13.7;
 
 // 3リールすべて同じ数字になる当たり用の配列を生成します。
+
+const isPremiumHitNumbers = (numbers) =>
+  Array.isArray(numbers) &&
+  numbers.length === SLOT_COUNT &&
+  numbers.every((number) => number === PREMIUM_HIT_NUMBER);
+
 const createHitNumbers = () => {
   const hitNumber = (() => {
     if (Math.random() < PREMIUM_HIT_PROBABILITY) {
@@ -111,14 +119,35 @@ const premiumHitMovieController = createPremiumHitMovieController({
 const completePremiumHit = () => {
   stopSpin();
   slotStopping = slotStopping.map(() => false);
-  slotStopped = slotStopped.map(() => true);
-  currentDisplayedNumbers = currentDisplayedNumbers.map(() => PREMIUM_HIT_NUMBER);
+  slotStopped = slotStopped.map(() => false);
+  areReelsStopEnabled = false;
+
+  currentDisplayedNumbers = currentDisplayedNumbers.map(() => PREMIUM_ALIGN_START_NUMBER);
 
   slotReels.forEach((_, index) => {
     renderReel(index);
   });
 
-  showHitPopup();
+  const runPremiumAlignSequence = async () => {
+    for (let stepCount = 0; stepCount < 2; stepCount += 1) {
+      await Promise.all(slotReels.map((_, index) => enqueueReelStep(index)));
+      await wait(PREMIUM_STOP_CYCLE_INTERVAL_MS);
+    }
+
+    slotStopping = slotStopping.map(() => false);
+    slotStopped = slotStopped.map(() => true);
+    currentDisplayedNumbers = currentDisplayedNumbers.map(() => PREMIUM_HIT_NUMBER);
+
+    slotReels.forEach((_, index) => {
+      renderReel(index);
+    });
+
+    if (isPremiumHitNumbers(currentDisplayedNumbers)) {
+      showHitPopup();
+    }
+  };
+
+  runPremiumAlignSequence();
 };
 
 
@@ -354,7 +383,7 @@ const startSpin = () => {
   if (isHit) {
     dispatchHitEvent(detail);
 
-    if (spinResultNumbers[0] === PREMIUM_HIT_NUMBER) {
+    if (isPremiumHitNumbers(spinResultNumbers)) {
       premiumHitMovieController.run();
     } else {
       areReelsStopEnabled = true;
@@ -404,7 +433,12 @@ const completeSlotStop = (buttonOrder) => {
   }
 
   if (buttonOrder === CENTER_SLOT_INDEX && currentSpinDetail?.isHit) {
-    showHitPopup();
+    const isPremiumHit = isPremiumHitNumbers(spinResultNumbers);
+    const isSevenAligned = currentDisplayedNumbers.every((number) => number === PREMIUM_HIT_NUMBER);
+
+    if (!isPremiumHit || isSevenAligned) {
+      showHitPopup();
+    }
   }
 
   const isAllSlotsStopped = slotStopped.every(Boolean);
@@ -470,7 +504,7 @@ const stopSlotByButtonOrder = (buttonOrder) => {
     return;
   }
 
-  if (currentSpinDetail?.isHit && spinResultNumbers[LEFT_SLOT_INDEX] === PREMIUM_HIT_NUMBER) {
+  if (currentSpinDetail?.isHit && isPremiumHitNumbers(spinResultNumbers)) {
     return;
   }
 
@@ -491,7 +525,7 @@ const stopSlotByButtonOrder = (buttonOrder) => {
   const shouldRunReachHitMovie =
     buttonOrder === CENTER_SLOT_INDEX &&
     currentSpinDetail?.isHit &&
-    spinResultNumbers[LEFT_SLOT_INDEX] !== PREMIUM_HIT_NUMBER &&
+    !isPremiumHitNumbers(spinResultNumbers) &&
     !reachHitMovieSequenceController.isRunning();
 
   if (shouldRunReachHitMovie) {

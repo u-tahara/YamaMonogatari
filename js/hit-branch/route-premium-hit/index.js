@@ -5,6 +5,12 @@ export const createPremiumHitMovieController = ({
   onCompleted,
 }) => {
   let isRunning = false;
+  const PREMIUM_FADE_OUT_DURATION_MS = 320;
+  const PREMIUM_FADE_OUT_CLASS_NAME = 'js-premium-movie-fade-out';
+
+  const wait = (ms) => new Promise((resolve) => {
+    window.setTimeout(resolve, ms);
+  });
 
   const normalizeMovie = (movieElement) => {
     if (!movieElement) {
@@ -13,6 +19,7 @@ export const createPremiumHitMovieController = ({
 
     movieElement.pause();
     movieElement.currentTime = 0;
+    movieElement.classList.remove(PREMIUM_FADE_OUT_CLASS_NAME);
     movieElement.hidden = true;
   };
 
@@ -24,6 +31,29 @@ export const createPremiumHitMovieController = ({
     movieElement.play().catch(() => {
       // ユーザー操作制限時は次の操作で再試行されます。
     });
+  };
+
+  const fadeOutAndHideMovie = async (movieElement) => {
+    if (!movieElement) {
+      return;
+    }
+
+    movieElement.classList.add(PREMIUM_FADE_OUT_CLASS_NAME);
+    await wait(PREMIUM_FADE_OUT_DURATION_MS);
+    movieElement.classList.remove(PREMIUM_FADE_OUT_CLASS_NAME);
+    movieElement.pause();
+    movieElement.currentTime = 0;
+    movieElement.hidden = true;
+  };
+
+  const showMovie = (movieElement) => {
+    if (!movieElement) {
+      return;
+    }
+
+    movieElement.classList.remove(PREMIUM_FADE_OUT_CLASS_NAME);
+    movieElement.hidden = false;
+    movieElement.currentTime = 0;
   };
 
   const reset = () => {
@@ -39,8 +69,7 @@ export const createPremiumHitMovieController = ({
 
     isRunning = true;
 
-    blackoutMovie.currentTime = 0;
-    blackoutMovie.hidden = false;
+    showMovie(blackoutMovie);
     safePlayMovie(blackoutMovie);
 
     await new Promise((resolve) => {
@@ -56,12 +85,9 @@ export const createPremiumHitMovieController = ({
       return false;
     }
 
-    blackoutMovie.pause();
-    blackoutMovie.currentTime = 0;
-    blackoutMovie.hidden = true;
+    await fadeOutAndHideMovie(blackoutMovie);
 
-    changeMovie.currentTime = 0;
-    changeMovie.hidden = false;
+    showMovie(changeMovie);
     safePlayMovie(changeMovie);
 
     await new Promise((resolve) => {
@@ -77,9 +103,7 @@ export const createPremiumHitMovieController = ({
       return false;
     }
 
-    changeMovie.pause();
-    changeMovie.currentTime = 0;
-    changeMovie.hidden = true;
+    await fadeOutAndHideMovie(changeMovie);
     isRunning = false;
 
     if (typeof onCompleted === 'function') {
