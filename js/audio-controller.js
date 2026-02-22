@@ -8,6 +8,8 @@ const LEVER_ON_CUTIN_MOVIE_DEFAULT_VOLUME = 0.3;
 const REACH_CHARACTER_GROUP_DEFAULT_VOLUME = 1;
 const REACH_CHANGE_MOVIE_DEFAULT_VOLUME = 0.6;
 const PUSH_BUTTON_MOVIE_DEFAULT_VOLUME = 0.2;
+const PREMIUM_BLACKOUT_MOVIE_DEFAULT_VOLUME = 0.4;
+const PREMIUM_CHANGE_MOVIE_DEFAULT_VOLUME = 0.5;
 
 const bgmAudio = new Audio('./audio/bgm.mp3');
 bgmAudio.loop = true;
@@ -76,6 +78,35 @@ const setPushButtonMovieVolume = (volume) => {
   return pushButtonMovie.volume;
 };
 
+
+const setPremiumBlackoutMovieVolume = (volume) => {
+  const normalizedVolume = Number.isFinite(volume) ? Math.min(1, Math.max(0, volume)) : PREMIUM_BLACKOUT_MOVIE_DEFAULT_VOLUME;
+  const premiumBlackoutMovie = document.querySelector('.js-premium-blackout-movie');
+
+  if (!premiumBlackoutMovie) {
+    return normalizedVolume;
+  }
+
+  premiumBlackoutMovie.muted = false;
+  premiumBlackoutMovie.volume = normalizedVolume;
+
+  return premiumBlackoutMovie.volume;
+};
+
+const setPremiumChangeMovieVolume = (volume) => {
+  const normalizedVolume = Number.isFinite(volume) ? Math.min(1, Math.max(0, volume)) : PREMIUM_CHANGE_MOVIE_DEFAULT_VOLUME;
+  const premiumChangeMovie = document.querySelector('.js-premium-change-movie');
+
+  if (!premiumChangeMovie) {
+    return normalizedVolume;
+  }
+
+  premiumChangeMovie.muted = false;
+  premiumChangeMovie.volume = normalizedVolume;
+
+  return premiumChangeMovie.volume;
+};
+
 const setHelpAudioVolume = (volume) => {
   const normalizedVolume = Number.isFinite(volume) ? Math.min(1, Math.max(0, volume)) : HELP_AUDIO_DEFAULT_VOLUME;
 
@@ -89,6 +120,8 @@ window.setLeverOnCutinMovieVolume = setLeverOnCutinMovieVolume;
 window.setReachCharacterGroupVolume = setReachCharacterGroupVolume;
 window.setReachChangeMovieVolume = setReachChangeMovieVolume;
 window.setPushButtonMovieVolume = setPushButtonMovieVolume;
+window.setPremiumBlackoutMovieVolume = setPremiumBlackoutMovieVolume;
+window.setPremiumChangeMovieVolume = setPremiumChangeMovieVolume;
 
 [leverAudio, buttonAudio, stopAudio].forEach((effectAudio) => {
   effectAudio.volume = EFFECT_AUDIO_VOLUME;
@@ -98,6 +131,8 @@ setLeverOnCutinMovieVolume(LEVER_ON_CUTIN_MOVIE_DEFAULT_VOLUME);
 setReachCharacterGroupVolume(REACH_CHARACTER_GROUP_DEFAULT_VOLUME);
 setReachChangeMovieVolume(REACH_CHANGE_MOVIE_DEFAULT_VOLUME);
 setPushButtonMovieVolume(PUSH_BUTTON_MOVIE_DEFAULT_VOLUME);
+setPremiumBlackoutMovieVolume(PREMIUM_BLACKOUT_MOVIE_DEFAULT_VOLUME);
+setPremiumChangeMovieVolume(PREMIUM_CHANGE_MOVIE_DEFAULT_VOLUME);
 
 const playBgm = () => {
   bgmAudio
