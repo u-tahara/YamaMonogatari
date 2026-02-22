@@ -2,6 +2,7 @@
 export const createPremiumHitMovieController = ({
   blackoutMovie,
   changeMovie,
+  onChangeStarted,
   onCompleted,
 }) => {
   let isRunning = false;
@@ -88,10 +89,12 @@ export const createPremiumHitMovieController = ({
       return false;
     }
 
-    await hideMovie(blackoutMovie, { useFadeOut: true });
-
     showMovie(changeMovie);
     safePlayMovie(changeMovie);
+
+    if (typeof onChangeStarted === 'function') {
+      onChangeStarted();
+    }
 
     await new Promise((resolve) => {
       const handleEnded = () => {
@@ -106,7 +109,10 @@ export const createPremiumHitMovieController = ({
       return false;
     }
 
-    await hideMovie(changeMovie, { useFadeOut: true });
+    await Promise.all([
+      hideMovie(blackoutMovie, { useFadeOut: true }),
+      hideMovie(changeMovie, { useFadeOut: true }),
+    ]);
     isRunning = false;
 
     if (typeof onCompleted === 'function') {

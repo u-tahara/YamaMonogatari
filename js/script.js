@@ -15,8 +15,6 @@ const REEL_STEP_DURATION_MS = 60;
 const SPIN_INTERVAL_MS = 80;
 const STOP_CYCLE_INTERVAL_MS = Math.max(0, SPIN_INTERVAL_MS - REEL_STEP_DURATION_MS);
 const STOP_SLOW_CYCLE_INTERVAL_MS = 160;
-const PREMIUM_STOP_CYCLE_INTERVAL_MS = 260;
-const PREMIUM_ALIGN_START_NUMBER = 5;
 const STOP_MIN_CYCLES = 4;
 const REACH_POPUP_DELAY_MS = 300;
 const REACH_POPUP_VISIBLE_MS = 1000;
@@ -112,7 +110,7 @@ const reachHitMovieSequenceController = createReachHitMovieSequenceController({
 const premiumHitMovieController = createPremiumHitMovieController({
   blackoutMovie: premiumBlackoutMovie,
   changeMovie: premiumChangeMovie,
-  onCompleted: () => {
+  onChangeStarted: () => {
     completePremiumHit();
   },
 });
@@ -121,36 +119,19 @@ const completePremiumHit = () => {
   stopSpin();
   reelStepToken += 1;
   reelStepQueues = Array.from({ length: slotReels.length }, () => Promise.resolve());
-  slotStopping = slotStopping.map(() => false);
-  slotStopped = slotStopped.map(() => false);
   areReelsStopEnabled = false;
 
-  currentDisplayedNumbers = currentDisplayedNumbers.map(() => PREMIUM_ALIGN_START_NUMBER);
+  slotStopping = slotStopping.map(() => false);
+  slotStopped = slotStopped.map(() => true);
+  currentDisplayedNumbers = currentDisplayedNumbers.map(() => PREMIUM_HIT_NUMBER);
 
   slotReels.forEach((_, index) => {
     renderReel(index);
   });
 
-  const runPremiumAlignSequence = async () => {
-    for (let stepCount = 0; stepCount < 2; stepCount += 1) {
-      await Promise.all(slotReels.map((_, index) => enqueueReelStep(index)));
-      await wait(PREMIUM_STOP_CYCLE_INTERVAL_MS);
-    }
-
-    slotStopping = slotStopping.map(() => false);
-    slotStopped = slotStopped.map(() => true);
-    currentDisplayedNumbers = currentDisplayedNumbers.map(() => PREMIUM_HIT_NUMBER);
-
-    slotReels.forEach((_, index) => {
-      renderReel(index);
-    });
-
-    if (isPremiumHitNumbers(currentDisplayedNumbers)) {
-      showHitPopup();
-    }
-  };
-
-  runPremiumAlignSequence();
+  if (isPremiumHitNumbers(currentDisplayedNumbers)) {
+    showHitPopup();
+  }
 };
 
 
