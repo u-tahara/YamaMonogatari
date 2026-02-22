@@ -5,7 +5,7 @@ const REEL_STOP_AUDIO_EVENT_NAME = 'slot:reel-stop-confirmed';
 const EFFECT_AUDIO_VOLUME = 0.3;
 const HELP_AUDIO_DEFAULT_VOLUME = 1;
 const LEVER_ON_CUTIN_MOVIE_DEFAULT_VOLUME = 0.3;
-const REACH_CHARACTER_GROUP_DEFAULT_VOLUME = 0.3;
+const REACH_CHARACTER_GROUP_DEFAULT_VOLUME = 1;
 
 const bgmAudio = new Audio('./audio/bgm.mp3');
 bgmAudio.loop = true;

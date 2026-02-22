@@ -26,7 +26,10 @@
     width: 30vw;
 }
 .c-hit-effect-image--character-group {
-    width: 40vw;
+    width: 100%;
+    height: 100%;
+    object-fit: fill;
+    z-index: 110;
 }
 .c-hit-effect-image--suzu-background {
     width: 100vw;

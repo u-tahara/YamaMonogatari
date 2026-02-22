@@ -74,7 +74,10 @@ export const runLeverOnCutInEffect = async ({ detail, effectType, color, logMess
   if (cutinMovie) {
     cutinMovie.pause();
     cutinMovie.hidden = true;
-    cutinMovie.currentTime = 0;
+
+    requestAnimationFrame(() => {
+      cutinMovie.currentTime = 0;
+    });
   }
 
   window.dispatchEvent(
