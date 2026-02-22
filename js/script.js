@@ -1,10 +1,13 @@
 import { dispatchHitEvent } from './hit-event.js';
 import { createMissNumbers, dispatchMissEvent } from './miss-event.js';
 import './audio-controller.js';
+import { createReachHitMovieSequenceController } from './hit-branch/reach-hit-movie-sequence.js';
 
 const slotReels = document.querySelectorAll('.js-slot-reel');
 const reachPopup = document.querySelector('.js-reach-popup');
 const hitPopup = document.querySelector('.js-hit-popup');
+const reachChangeMovie = document.querySelector('.js-reach-change-movie');
+const pushButtonMovie = document.querySelector('.js-push-button-movie');
 const REEL_STEP_DURATION_MS = 60;
 const SPIN_INTERVAL_MS = 80;
 const STOP_CYCLE_INTERVAL_MS = Math.max(0, SPIN_INTERVAL_MS - REEL_STEP_DURATION_MS);
@@ -88,6 +91,11 @@ let previousButtonPressed = {
 };
 let previousArrowKeyPressed = STOP_ARROW_KEYS.map(() => false);
 let previousStartKeyPressed = false;
+
+const reachHitMovieSequenceController = createReachHitMovieSequenceController({
+  reachChangeMovie,
+  pushButtonMovie,
+});
 
 // 現在値の次の数字（9の次は1）を返します。
 const getNextSlotNumber = (currentNumber) => {
@@ -300,6 +308,7 @@ const startSpin = () => {
   clearReachPopupTimer();
   hideReachPopup();
   resetHitPopup();
+  reachHitMovieSequenceController.reset();
   const isHit = judgeSpinResult();
   spinResultNumbers = isHit ? createHitNumbers() : createMissNumbers(SLOT_COUNT);
 
@@ -447,6 +456,31 @@ const stopSlotByButtonOrder = (buttonOrder) => {
     return;
   }
 
+  const shouldRunReachHitMovie =
+    buttonOrder === CENTER_SLOT_INDEX &&
+    currentSpinDetail?.isHit &&
+    spinResultNumbers[LEFT_SLOT_INDEX] !== PREMIUM_HIT_NUMBER &&
+    !reachHitMovieSequenceController.isRunning();
+
+  if (shouldRunReachHitMovie) {
+    window.dispatchEvent(new Event(STOP_BUTTON_AUDIO_EVENT_NAME));
+    reachHitMovieSequenceController.run().then((isCompleted) => {
+      if (!isCompleted) {
+        return;
+      }
+
+      if (
+        spinIntervalId &&
+        slotStopping[buttonOrder] === false &&
+        slotStopped[buttonOrder] === false
+      ) {
+        slotStopping[buttonOrder] = true;
+        stopSlotWithCycle(buttonOrder, spinResultNumbers[buttonOrder]);
+      }
+    });
+    return;
+  }
+
   if (
     buttonOrder >= slotStopped.length ||
     slotStopped[buttonOrder] ||
@@ -465,6 +499,8 @@ const stopSlotByButtonOrder = (buttonOrder) => {
 
   slotStopped[buttonOrder] = true;
 };
+
+
 
 // ゲームパッドのスタート入力が押下状態かを返します。
 const isStartPressed = (gamepad) =>
@@ -485,6 +521,10 @@ const isArrowKeyPressed = (key) => {
 
 // 矢印キー入力でリール停止操作を行います。
 const watchArrowKeyInput = (event) => {
+  if (reachHitMovieSequenceController.handleEnterKeyDown(event)) {
+    return;
+  }
+
   if (!isArrowKeyPressed(event.key)) {
     return;
   }
