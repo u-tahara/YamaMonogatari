@@ -46,7 +46,6 @@ const notifyBirdCenterReached = async ({ detail, effectType }) => {
 // レバーオン向けカットイン演出を実行します。
 export const runLeverOnCutInEffect = async ({ detail, effectType, color, logMessage }) => {
   const signboardImage = document.querySelector('.js-signboard-hit-effect');
-  const cutinImage = document.querySelector('.js-lever-on-cutin-hit-effect');
   const cutinMovie = document.querySelector('.js-lever-on-cutin-movie-effect');
   const leftBirdImage = document.querySelector('.js-main-bird-left');
   const rightBirdImage = document.querySelector('.js-main-bird-right');
@@ -55,20 +54,6 @@ export const runLeverOnCutInEffect = async ({ detail, effectType, color, logMess
     signboardImage.hidden = true;
   }
 
-  if (!cutinImage) {
-    window.dispatchEvent(
-      new CustomEvent(LEVER_ON_EFFECT_FINISHED_EVENT_NAME, {
-        detail: {
-          ...detail,
-          effectType,
-        },
-      }),
-    );
-    return;
-  }
-
-  cutinImage.src = `./img/bird-cutin/${color}.png`;
-  cutinImage.hidden = false;
 
   if (cutinMovie) {
     cutinMovie.src = `./movie/${color}.mov`;
@@ -83,7 +68,6 @@ export const runLeverOnCutInEffect = async ({ detail, effectType, color, logMess
     notifyBirdCenterReached({ detail, effectType }),
   ]);
 
-  cutinImage.hidden = true;
 
   if (cutinMovie) {
     cutinMovie.pause();
