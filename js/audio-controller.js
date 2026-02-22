@@ -6,12 +6,12 @@ const EFFECT_AUDIO_VOLUME = 0.3;
 const HELP_AUDIO_DEFAULT_VOLUME = 1;
 const LEVER_ON_CUTIN_MOVIE_DEFAULT_VOLUME = 0.3;
 const REACH_CHARACTER_GROUP_DEFAULT_VOLUME = 1;
-const REACH_CHANGE_MOVIE_DEFAULT_VOLUME = 1;
-const PUSH_BUTTON_MOVIE_DEFAULT_VOLUME = 1;
+const REACH_CHANGE_MOVIE_DEFAULT_VOLUME = 0.6;
+const PUSH_BUTTON_MOVIE_DEFAULT_VOLUME = 0.2;
 
 const bgmAudio = new Audio('./audio/bgm.mp3');
 bgmAudio.loop = true;
-bgmAudio.volume = 0.1;
+bgmAudio.volume = 0.07;
 
 const leverAudio = new Audio('./audio/lever.mp3');
 const buttonAudio = new Audio('./audio/button.mp3');

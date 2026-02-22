@@ -15,6 +15,28 @@
       <img class="l-main__bird l-main__bird--left js-main-bird-left" src="./img/common/bird.png" alt="鳥装飾">
       <img class="l-main__bird l-main__bird--right js-main-bird-right" src="./img/common/bird.png" alt="鳥装飾">
       <img class="l-main__frontground" src="./img/common/frontground.png" alt="前景画像">
+      <video
+        class="c-hit-effect-image c-hit-effect-image--reach-change-movie js-reach-change-movie"
+        src="./movie/change.webm"
+        aria-label="リーチ後変化演出"
+        playsinline
+        preload="auto"
+        hidden
+      ></video>
+      <video
+        class="c-hit-effect-image c-hit-effect-image--push-button-movie js-push-button-movie"
+        src="./movie/push-button.mp4"
+        aria-label="プッシュボタン演出"
+        playsinline
+        preload="auto"
+        hidden
+      ></video>
+      <img
+        class="c-hit-effect-image c-hit-effect-image--suzu-background js-reach-suzu-background-effect"
+        src="./img/suzu-background/suzu.png"
+        alt="スズ背景演出"
+        hidden
+      >
       <div class="l-main__container">
         <div class="l-main__slot">
           <div class="l-main__slot-window" aria-hidden="true">
@@ -38,61 +60,40 @@
               <div class="l-main__slot-cell js-slot-cell"></div>
             </div>
           </div>
-        </div>
-        <div class="c-reach-popup js-reach-popup" aria-live="polite" hidden>リーチ！</div>
-        <div class="c-hit-popup js-hit-popup" aria-live="polite" hidden>当たり！</div>
-        <img
+
+          <img
           class="c-hit-effect-image c-hit-effect-image--signboard js-signboard-hit-effect"
           src="./img/signboard/signboard.png"
           alt="看板演出"
           hidden
-        >
-        <video
-          class="c-hit-effect-image c-hit-effect-image--lever-on-cutin-movie js-lever-on-cutin-movie-effect"
-          src="./movie/white.webm"
-          aria-label="レバーオンカットイン動画演出"
-          muted
-          playsinline
-          preload="auto"
-          hidden
-        ></video>
-        <img
-          class="c-hit-effect-image c-hit-effect-image--reach-cutin js-reach-cutin-hit-effect"
-          src="./img/smoke-cutin/white.png"
-          alt="リーチ後カットイン演出"
-          hidden
-        >
-        <video
-          class="c-hit-effect-image c-hit-effect-image--character-group js-reach-character-group-effect"
-          src="./movie/character-group.webm"
-          aria-label="キャラ群演出"
-          muted
-          playsinline
-          preload="auto"
-          hidden
-        ></video>
-        <video
-          class="c-hit-effect-image c-hit-effect-image--reach-change-movie js-reach-change-movie"
-          src="./movie/change.webm"
-          aria-label="リーチ後変化演出"
-          playsinline
-          preload="auto"
-          hidden
-        ></video>
-        <video
-          class="c-hit-effect-image c-hit-effect-image--push-button-movie js-push-button-movie"
-          src="./movie/push-button.mp4"
-          aria-label="プッシュボタン演出"
-          playsinline
-          preload="auto"
-          hidden
-        ></video>
-        <img
-          class="c-hit-effect-image c-hit-effect-image--suzu-background js-reach-suzu-background-effect"
-          src="./img/suzu-background/suzu.png"
-          alt="スズ背景演出"
-          hidden
-        >
+          >
+          <video
+            class="c-hit-effect-image c-hit-effect-image--lever-on-cutin-movie js-lever-on-cutin-movie-effect"
+            src="./movie/white.webm"
+            aria-label="レバーオンカットイン動画演出"
+            muted
+            playsinline
+            preload="auto"
+            hidden
+          ></video>
+          <img
+            class="c-hit-effect-image c-hit-effect-image--reach-cutin js-reach-cutin-hit-effect"
+            src="./img/smoke-cutin/white.png"
+            alt="リーチ後カットイン演出"
+            hidden
+          >
+          <video
+            class="c-hit-effect-image c-hit-effect-image--character-group js-reach-character-group-effect"
+            src="./movie/character-group.webm"
+            aria-label="キャラ群演出"
+            muted
+            playsinline
+            preload="auto"
+            hidden
+          ></video>
+        </div>
+        <div class="c-reach-popup js-reach-popup" aria-live="polite" hidden>リーチ！</div>
+        <div class="c-hit-popup js-hit-popup" aria-live="polite" hidden>当たり！</div>
       </div>
     </main>
 

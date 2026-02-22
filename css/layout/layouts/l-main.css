@@ -81,7 +81,6 @@
     background: #fff;
     border-radius: 30px;
     border: 8px solid #000;
-    overflow: hidden;
 }
 
 .l-main__slot {
@@ -90,6 +89,7 @@
     height: 100%;
     align-items: center;
     justify-content: space-around;
+    overflow: hidden;
 }
 
 .l-main__slot-window {
