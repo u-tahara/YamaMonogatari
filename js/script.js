@@ -323,7 +323,6 @@ const startSpin = () => {
       areReelsStopEnabled = true;
     }
   } else {
-    areReelsStopEnabled = true;
     dispatchMissEvent(detail);
   }
 
