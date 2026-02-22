@@ -6,6 +6,8 @@ const EFFECT_AUDIO_VOLUME = 0.3;
 const HELP_AUDIO_DEFAULT_VOLUME = 1;
 const LEVER_ON_CUTIN_MOVIE_DEFAULT_VOLUME = 0.3;
 const REACH_CHARACTER_GROUP_DEFAULT_VOLUME = 1;
+const REACH_CHANGE_MOVIE_DEFAULT_VOLUME = 1;
+const PUSH_BUTTON_MOVIE_DEFAULT_VOLUME = 1;
 
 const bgmAudio = new Audio('./audio/bgm.mp3');
 bgmAudio.loop = true;
@@ -45,6 +47,35 @@ const setReachCharacterGroupVolume = (volume) => {
   return characterGroupMovie.volume;
 };
 
+
+const setReachChangeMovieVolume = (volume) => {
+  const normalizedVolume = Number.isFinite(volume) ? Math.min(1, Math.max(0, volume)) : REACH_CHANGE_MOVIE_DEFAULT_VOLUME;
+  const reachChangeMovie = document.querySelector('.js-reach-change-movie');
+
+  if (!reachChangeMovie) {
+    return normalizedVolume;
+  }
+
+  reachChangeMovie.muted = false;
+  reachChangeMovie.volume = normalizedVolume;
+
+  return reachChangeMovie.volume;
+};
+
+const setPushButtonMovieVolume = (volume) => {
+  const normalizedVolume = Number.isFinite(volume) ? Math.min(1, Math.max(0, volume)) : PUSH_BUTTON_MOVIE_DEFAULT_VOLUME;
+  const pushButtonMovie = document.querySelector('.js-push-button-movie');
+
+  if (!pushButtonMovie) {
+    return normalizedVolume;
+  }
+
+  pushButtonMovie.muted = false;
+  pushButtonMovie.volume = normalizedVolume;
+
+  return pushButtonMovie.volume;
+};
+
 const setHelpAudioVolume = (volume) => {
   const normalizedVolume = Number.isFinite(volume) ? Math.min(1, Math.max(0, volume)) : HELP_AUDIO_DEFAULT_VOLUME;
 
@@ -56,6 +87,8 @@ const setHelpAudioVolume = (volume) => {
 window.setHelpAudioVolume = setHelpAudioVolume;
 window.setLeverOnCutinMovieVolume = setLeverOnCutinMovieVolume;
 window.setReachCharacterGroupVolume = setReachCharacterGroupVolume;
+window.setReachChangeMovieVolume = setReachChangeMovieVolume;
+window.setPushButtonMovieVolume = setPushButtonMovieVolume;
 
 [leverAudio, buttonAudio, stopAudio].forEach((effectAudio) => {
   effectAudio.volume = EFFECT_AUDIO_VOLUME;
@@ -63,6 +96,8 @@ window.setReachCharacterGroupVolume = setReachCharacterGroupVolume;
 setHelpAudioVolume(HELP_AUDIO_DEFAULT_VOLUME);
 setLeverOnCutinMovieVolume(LEVER_ON_CUTIN_MOVIE_DEFAULT_VOLUME);
 setReachCharacterGroupVolume(REACH_CHARACTER_GROUP_DEFAULT_VOLUME);
+setReachChangeMovieVolume(REACH_CHANGE_MOVIE_DEFAULT_VOLUME);
+setPushButtonMovieVolume(PUSH_BUTTON_MOVIE_DEFAULT_VOLUME);
 
 const playBgm = () => {
   bgmAudio

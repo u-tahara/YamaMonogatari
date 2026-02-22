@@ -34,3 +34,17 @@
 .c-hit-effect-image--suzu-background {
     width: 100vw;
 }
+
+.c-hit-effect-image--reach-change-movie {
+    width: 100%;
+    height: 100%;
+    object-fit: fill;
+    z-index: 120;
+}
+
+.c-hit-effect-image--push-button-movie {
+    width: 100%;
+    height: 100%;
+    object-fit: fill;
+    z-index: 121;
+}
