@@ -4,10 +4,10 @@ const EFFECT_VISIBLE_MS = 1000;
 // 看板演出（激熱）分岐の処理です。
 export const runMissSignboardVeryHotBranch = (detail) => {
   const signboardImage = document.querySelector('.js-signboard-hit-effect');
-  const cutinImage = document.querySelector('.js-lever-on-cutin-hit-effect');
+  const cutinMovie = document.querySelector('.js-lever-on-cutin-movie-effect');
 
-  if (cutinImage) {
-    cutinImage.hidden = true;
+  if (cutinMovie) {
+    cutinMovie.hidden = true;
   }
 
   if (!signboardImage) {
