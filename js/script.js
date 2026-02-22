@@ -96,6 +96,7 @@ let reachPopupHideTimeoutId = null;
 let hitPopupHideTimeoutId = null;
 let currentDisplayedNumbers = Array.from({ length: slotReels.length }, () => getRandomSlotNumber());
 let reelStepQueues = Array.from({ length: slotReels.length }, () => Promise.resolve());
+let reelStepToken = 0;
 let previousButtonPressed = {
   start: false,
   stop: STOP_BUTTON_INDEXES.map(() => false),
@@ -118,6 +119,8 @@ const premiumHitMovieController = createPremiumHitMovieController({
 
 const completePremiumHit = () => {
   stopSpin();
+  reelStepToken += 1;
+  reelStepQueues = Array.from({ length: slotReels.length }, () => Promise.resolve());
   slotStopping = slotStopping.map(() => false);
   slotStopped = slotStopped.map(() => false);
   areReelsStopEnabled = false;
@@ -217,6 +220,7 @@ const renderReel = (slotIndex) => {
 const stepReelOnce = (slotIndex) =>
   new Promise((resolve) => {
     const reel = slotReels[slotIndex];
+    const stepToken = reelStepToken;
 
     if (!reel) {
       resolve();
@@ -226,6 +230,11 @@ const stepReelOnce = (slotIndex) =>
     reel.style.transition = `transform ${REEL_STEP_DURATION_MS}ms linear`;
 
     window.setTimeout(() => {
+      if (stepToken !== reelStepToken) {
+        resolve();
+        return;
+      }
+
       currentDisplayedNumbers[slotIndex] = getNextSlotNumber(currentDisplayedNumbers[slotIndex]);
       renderReel(slotIndex);
       resolve();

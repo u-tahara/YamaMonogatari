@@ -33,14 +33,17 @@ export const createPremiumHitMovieController = ({
     });
   };
 
-  const fadeOutAndHideMovie = async (movieElement) => {
+  const hideMovie = async (movieElement, { useFadeOut = true } = {}) => {
     if (!movieElement) {
       return;
     }
 
-    movieElement.classList.add(PREMIUM_FADE_OUT_CLASS_NAME);
-    await wait(PREMIUM_FADE_OUT_DURATION_MS);
-    movieElement.classList.remove(PREMIUM_FADE_OUT_CLASS_NAME);
+    if (useFadeOut) {
+      movieElement.classList.add(PREMIUM_FADE_OUT_CLASS_NAME);
+      await wait(PREMIUM_FADE_OUT_DURATION_MS);
+      movieElement.classList.remove(PREMIUM_FADE_OUT_CLASS_NAME);
+    }
+
     movieElement.pause();
     movieElement.currentTime = 0;
     movieElement.hidden = true;
@@ -85,7 +88,7 @@ export const createPremiumHitMovieController = ({
       return false;
     }
 
-    await fadeOutAndHideMovie(blackoutMovie);
+    await hideMovie(blackoutMovie, { useFadeOut: true });
 
     showMovie(changeMovie);
     safePlayMovie(changeMovie);
@@ -103,7 +106,7 @@ export const createPremiumHitMovieController = ({
       return false;
     }
 
-    await fadeOutAndHideMovie(changeMovie);
+    await hideMovie(changeMovie, { useFadeOut: true });
     isRunning = false;
 
     if (typeof onCompleted === 'function') {
