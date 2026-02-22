@@ -56,7 +56,7 @@ export const runLeverOnCutInEffect = async ({ detail, effectType, color, logMess
 
 
   if (cutinMovie) {
-    cutinMovie.src = `./movie/${color}.mov`;
+    cutinMovie.src = `./movie/${color}.webm`;
     cutinMovie.hidden = false;
     cutinMovie.currentTime = 0;
     cutinMovie.play().catch(() => {});

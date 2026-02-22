@@ -20,6 +20,7 @@
     width: 100%;
     height: 80%;
     object-fit: fill;
+    z-index: 150;
 }
 .c-hit-effect-image--reach-cutin {
     width: 30vw;
