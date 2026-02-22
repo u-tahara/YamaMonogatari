@@ -5,7 +5,7 @@ import { runMissCutInRedBranch } from './red-branch.js';
 import { runMissCutInGoldBranch } from './gold-branch.js';
 
 const CUT_IN_WHITE_RATE = 0.35;
-const CUT_IN_BLUE_RATE = 0.3;
+const CUT_IN_BLUE_RATE = 1;
 const CUT_IN_GREEN_RATE = 0.3;
 const CUT_IN_RED_RATE = 0.04;
 
