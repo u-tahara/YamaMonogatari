@@ -3,7 +3,7 @@ const LEVER_ON_CUTIN_CENTER_EVENT_NAME = 'slot:lever-on-cutin-center';
 const STOP_BUTTON_AUDIO_EVENT_NAME = 'slot:stop-button-pressed';
 const REEL_STOP_AUDIO_EVENT_NAME = 'slot:reel-stop-confirmed';
 const EFFECT_AUDIO_VOLUME = 0.3;
-const HELP_AUDIO_DEFAULT_VOLUME = 0.5;
+const HELP_AUDIO_DEFAULT_VOLUME = 1;
 
 const bgmAudio = new Audio('./audio/bgm.mp3');
 bgmAudio.loop = true;
