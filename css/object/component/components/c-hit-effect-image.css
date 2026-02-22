@@ -48,3 +48,11 @@
     object-fit: fill;
     z-index: 122;
 }
+
+.c-hit-effect-image--premium-blackout-movie,
+.c-hit-effect-image--premium-change-movie {
+    width: 100vw;
+    height: 100vh;
+    object-fit: fill;
+    z-index: 130;
+}

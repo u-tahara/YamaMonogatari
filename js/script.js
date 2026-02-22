@@ -2,12 +2,15 @@ import { dispatchHitEvent } from './hit-event.js';
 import { createMissNumbers, dispatchMissEvent } from './miss-event.js';
 import './audio-controller.js';
 import { createReachHitMovieSequenceController } from './hit-branch/reach-hit-movie-sequence.js';
+import { createPremiumHitMovieController } from './hit-branch/route-premium-hit/index.js';
 
 const slotReels = document.querySelectorAll('.js-slot-reel');
 const reachPopup = document.querySelector('.js-reach-popup');
 const hitPopup = document.querySelector('.js-hit-popup');
 const reachChangeMovie = document.querySelector('.js-reach-change-movie');
 const pushButtonMovie = document.querySelector('.js-push-button-movie');
+const premiumBlackoutMovie = document.querySelector('.js-premium-blackout-movie');
+const premiumChangeMovie = document.querySelector('.js-premium-change-movie');
 const REEL_STEP_DURATION_MS = 60;
 const SPIN_INTERVAL_MS = 80;
 const STOP_CYCLE_INTERVAL_MS = Math.max(0, SPIN_INTERVAL_MS - REEL_STEP_DURATION_MS);
@@ -96,6 +99,28 @@ const reachHitMovieSequenceController = createReachHitMovieSequenceController({
   reachChangeMovie,
   pushButtonMovie,
 });
+
+const premiumHitMovieController = createPremiumHitMovieController({
+  blackoutMovie: premiumBlackoutMovie,
+  changeMovie: premiumChangeMovie,
+  onCompleted: () => {
+    completePremiumHit();
+  },
+});
+
+const completePremiumHit = () => {
+  stopSpin();
+  slotStopping = slotStopping.map(() => false);
+  slotStopped = slotStopped.map(() => true);
+  currentDisplayedNumbers = currentDisplayedNumbers.map(() => PREMIUM_HIT_NUMBER);
+
+  slotReels.forEach((_, index) => {
+    renderReel(index);
+  });
+
+  showHitPopup();
+};
+
 
 // 現在値の次の数字（9の次は1）を返します。
 const getNextSlotNumber = (currentNumber) => {
@@ -309,6 +334,7 @@ const startSpin = () => {
   hideReachPopup();
   resetHitPopup();
   reachHitMovieSequenceController.reset();
+  premiumHitMovieController.reset();
   const isHit = judgeSpinResult();
   spinResultNumbers = isHit ? createHitNumbers() : createMissNumbers(SLOT_COUNT);
 
@@ -329,6 +355,8 @@ const startSpin = () => {
     dispatchHitEvent(detail);
 
     if (spinResultNumbers[0] === PREMIUM_HIT_NUMBER) {
+      premiumHitMovieController.run();
+    } else {
       areReelsStopEnabled = true;
     }
   } else {
@@ -439,6 +467,10 @@ const stopSlotByButtonOrder = (buttonOrder) => {
   }
 
   if (!areReelsStopEnabled) {
+    return;
+  }
+
+  if (currentSpinDetail?.isHit && spinResultNumbers[LEFT_SLOT_INDEX] === PREMIUM_HIT_NUMBER) {
     return;
   }
 
