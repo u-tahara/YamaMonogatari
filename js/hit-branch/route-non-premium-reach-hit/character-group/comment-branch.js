@@ -1,4 +1,5 @@
 const REACH_HIT_EFFECT_FINISHED_EVENT_NAME = 'slot:reach-hit-effect-finished';
+const CHARACTER_GROUP_COMMENT_MOVIE_PATH = './movie/niconico.webm';
 
 // リーチ後キャラ群演出（コメント群）分岐の処理です。
 export const runReachCharacterGroupCommentBranch = (detail) => {
@@ -43,6 +44,11 @@ export const runReachCharacterGroupCommentBranch = (detail) => {
       }),
     );
   };
+
+  if (characterGroupVideo.getAttribute('src') !== CHARACTER_GROUP_COMMENT_MOVIE_PATH) {
+    characterGroupVideo.setAttribute('src', CHARACTER_GROUP_COMMENT_MOVIE_PATH);
+    characterGroupVideo.load();
+  }
 
   characterGroupVideo.currentTime = 0;
   characterGroupVideo.hidden = false;
