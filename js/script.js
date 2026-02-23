@@ -51,6 +51,28 @@ const SLOT_NUMBER_IMAGE_NAMES = {
 };
 const PREMIUM_HIT_NUMBER = 7;
 const PREMIUM_HIT_PROBABILITY = 0.1;
+
+const SIGNBOARD_INITIAL_COUNT = 25;
+const FINISHED_PAGE_PATH = './finished.html';
+const signboardNumber = document.querySelector('.js-signboard-number');
+let remainingSpinCount = SIGNBOARD_INITIAL_COUNT;
+
+const updateSignboardNumber = () => {
+  if (!signboardNumber) {
+    return;
+  }
+
+  signboardNumber.textContent = String(remainingSpinCount);
+};
+
+const decrementSpinCountAfterFinish = () => {
+  remainingSpinCount = Math.max(0, remainingSpinCount - 1);
+  updateSignboardNumber();
+
+  if (remainingSpinCount === 0) {
+    window.location.href = FINISHED_PAGE_PATH;
+  }
+};
 // 1〜9の範囲でランダムなスロット数字を返します。
 const getRandomSlotNumber = () => Math.floor(Math.random() * 9) + 1;
 
@@ -435,6 +457,7 @@ const completeSlotStop = (buttonOrder) => {
 
   if (isAllSlotsStopped) {
     stopSpin();
+    decrementSpinCountAfterFinish();
   }
 };
 
@@ -696,6 +719,8 @@ const watchControllerInput = () => {
 slotReels.forEach((_, index) => {
   renderReel(index);
 });
+
+updateSignboardNumber();
 
 watchControllerInput();
 

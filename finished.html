@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>山物語 | 終了</title>
+  </head>
+  <body>
+    <main>
+      <h1>遊技終了</h1>
+      <p>規定回数が終了しました。</p>
+      <button type="button" class="js-back-to-index-button">index.htmlに戻る</button>
+    </main>
+
+    <script>
+      const backToIndexButton = document.querySelector('.js-back-to-index-button');
+
+      if (backToIndexButton) {
+        backToIndexButton.addEventListener('click', () => {
+          window.location.href = './index.html';
+        });
+      }
+    </script>
+  </body>
+</html>
