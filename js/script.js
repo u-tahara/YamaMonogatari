@@ -4,11 +4,11 @@ import './audio-controller.js';
 import { createReachHitMovieSequenceController } from './hit-branch/reach-hit-movie-sequence.js';
 import { createPremiumHitMovieController } from './hit-branch/route-premium-hit/index.js';
 import { setReachCutinMovieVolume } from './reach-cutin-effect.js';
+import { resetOnemoreEffect, showOnemoreEffect } from './hit-branch/route-non-premium-hit/onemore-effect.js';
 
 const slotReels = document.querySelectorAll('.js-slot-reel');
 const reachPopup = document.querySelector('.js-reach-popup');
 const hitPopup = document.querySelector('.js-hit-popup');
-const onemoreEffect = document.querySelector('.js-onemore-effect');
 const reachChangeMovie = document.querySelector('.js-reach-change-movie');
 const pushButtonMovie = document.querySelector('.js-push-button-movie');
 const premiumBlackoutMovie = document.querySelector('.js-premium-blackout-movie');
@@ -22,7 +22,7 @@ const REACH_POPUP_DELAY_MS = 300;
 const REACH_POPUP_VISIBLE_MS = 1000;
 const HIT_POPUP_VISIBLE_MS = 1000;
 const NON_PREMIUM_HIT_Z_SPIN_DURATION_MS = 900;
-const ONEMORE_EFFECT_DURATION_MS = 1400;
+const NON_PREMIUM_HIT_Z_SPIN_DELAY_MS = 1000;
 const START_BUTTON_INDEX = 13;
 const STOP_BUTTON_INDEXES = [6, 1, 0]; // 左, 真ん中, 右
 const STOP_ARROW_KEYS = ['ArrowLeft', 'ArrowDown', 'ArrowRight']; // 左, 真ん中, 右
@@ -121,7 +121,6 @@ let areReelsStopEnabled = true;
 let reachPopupTimeoutId = null;
 let reachPopupHideTimeoutId = null;
 let hitPopupHideTimeoutId = null;
-let onemoreEffectTimeoutId = null;
 let currentDisplayedNumbers = Array.from({ length: slotReels.length }, () => getRandomSlotNumber());
 let reelStepQueues = Array.from({ length: slotReels.length }, () => Promise.resolve());
 let reelStepToken = 0;
@@ -541,44 +540,6 @@ const wait = (ms) => new Promise((resolve) => {
   window.setTimeout(resolve, ms);
 });
 
-const resetOnemoreEffect = () => {
-  if (onemoreEffectTimeoutId !== null) {
-    window.clearTimeout(onemoreEffectTimeoutId);
-    onemoreEffectTimeoutId = null;
-  }
-
-  if (!onemoreEffect) {
-    return;
-  }
-
-  onemoreEffect.classList.remove('js-onemore-playing');
-  onemoreEffect.hidden = true;
-};
-
-const showOnemoreEffect = () => {
-  if (!onemoreEffect) {
-    return;
-  }
-
-  if (onemoreEffectTimeoutId !== null) {
-    window.clearTimeout(onemoreEffectTimeoutId);
-    onemoreEffectTimeoutId = null;
-  }
-
-  onemoreEffect.classList.remove('js-onemore-playing');
-  onemoreEffect.hidden = false;
-
-  void onemoreEffect.offsetWidth;
-
-  onemoreEffect.classList.add('js-onemore-playing');
-
-  onemoreEffectTimeoutId = window.setTimeout(() => {
-    onemoreEffect.classList.remove('js-onemore-playing');
-    onemoreEffect.hidden = true;
-    onemoreEffectTimeoutId = null;
-  }, ONEMORE_EFFECT_DURATION_MS);
-};
-
 const runNonPremiumHitCelebration = async () => {
   const alignedNumber = currentDisplayedNumbers[CENTER_SLOT_INDEX];
   const alignedIndexes = currentDisplayedNumbers
@@ -588,6 +549,8 @@ const runNonPremiumHitCelebration = async () => {
   if (typeof window.playExcitingAudio === 'function') {
     window.playExcitingAudio();
   }
+
+  await wait(NON_PREMIUM_HIT_Z_SPIN_DELAY_MS);
 
   alignedIndexes.forEach((index) => {
     const reel = slotReels[index];
