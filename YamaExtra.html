@@ -17,13 +17,29 @@
     </main>
 
     <script>
-      const backToIndexButton = document.querySelector('.js-back-to-index-button');
+      const pressedKeys = new Set();
+      const yamaShortcutKeys = new Set(['KeyY', 'KeyA']);
 
-      if (backToIndexButton) {
-        backToIndexButton.addEventListener('click', () => {
+      const navigateToIndexIfShortcutPressed = () => {
+        const isShortcutPressed = [...yamaShortcutKeys].every((keyCode) => pressedKeys.has(keyCode));
+
+        if (isShortcutPressed) {
           window.location.href = './index.html';
-        });
-      }
+        }
+      };
+
+      window.addEventListener('keydown', (event) => {
+        pressedKeys.add(event.code);
+        navigateToIndexIfShortcutPressed();
+      });
+
+      window.addEventListener('keyup', (event) => {
+        pressedKeys.delete(event.code);
+      });
+
+      window.addEventListener('blur', () => {
+        pressedKeys.clear();
+      });
     </script>
   </body>
 </html>
