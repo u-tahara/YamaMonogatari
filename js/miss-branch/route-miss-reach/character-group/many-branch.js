@@ -1,4 +1,5 @@
 const REACH_HIT_EFFECT_FINISHED_EVENT_NAME = 'slot:reach-miss-effect-finished';
+const CHARACTER_GROUP_MANY_MOVIE_PATH = './movie/character-group.webm';
 
 // リーチ後キャラ群演出（多）分岐の処理です。
 export const runReachCharacterGroupManyBranch = (detail) => {
@@ -43,6 +44,11 @@ export const runReachCharacterGroupManyBranch = (detail) => {
       }),
     );
   };
+
+  if (characterGroupVideo.getAttribute('src') !== CHARACTER_GROUP_MANY_MOVIE_PATH) {
+    characterGroupVideo.setAttribute('src', CHARACTER_GROUP_MANY_MOVIE_PATH);
+    characterGroupVideo.load();
+  }
 
   characterGroupVideo.currentTime = 0;
   characterGroupVideo.hidden = false;
