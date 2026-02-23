@@ -46,9 +46,9 @@
 
 .l-main__signboard {
     position: fixed;
-    bottom: -3%;
+    bottom: -8%;
     right: 10%;
-    width: 20%;
+    width: 22%;
     aspect-ratio: 1 / 1;
     z-index: 121;
 }
@@ -59,7 +59,7 @@
 }
 .l-main__signboard-number {
     position: absolute;
-    top: 23%;
+    top: 12%;
     right: 8%;
     width: 20%;
     text-align: center;
