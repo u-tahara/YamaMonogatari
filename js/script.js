@@ -4,7 +4,11 @@ import './audio-controller.js';
 import { createReachHitMovieSequenceController } from './hit-branch/reach-hit-movie-sequence.js';
 import { createPremiumHitMovieController } from './hit-branch/route-premium-hit/index.js';
 import { setReachCutinMovieVolume } from './reach-cutin-effect.js';
-import { resetOnemoreEffect, showOnemoreEffect } from './hit-branch/route-non-premium-hit/onemore-effect.js';
+import {
+  ONEMORE_BONUS_TRIGGERED_EVENT_NAME,
+  resetOnemoreEffect,
+  showOnemoreEffect,
+} from './hit-branch/route-non-premium-hit/onemore-effect.js';
 
 const slotReels = document.querySelectorAll('.js-slot-reel');
 const reachPopup = document.querySelector('.js-reach-popup');
@@ -13,6 +17,7 @@ const reachChangeMovie = document.querySelector('.js-reach-change-movie');
 const pushButtonMovie = document.querySelector('.js-push-button-movie');
 const premiumBlackoutMovie = document.querySelector('.js-premium-blackout-movie');
 const premiumChangeMovie = document.querySelector('.js-premium-change-movie');
+const mainTitle = document.querySelector('.js-main-title');
 const REEL_STEP_DURATION_MS = 60;
 const SPIN_INTERVAL_MS = 80;
 const STOP_CYCLE_INTERVAL_MS = Math.max(0, SPIN_INTERVAL_MS - REEL_STEP_DURATION_MS);
@@ -58,6 +63,8 @@ const PREMIUM_HIT_PROBABILITY = 0.1;
 const PREMIUM_FADE_OUT_COMPLETED_WAIT_MS = 1000;
 const PREMIUM_BOUNCE_TO_REDIRECT_MS = 5000;
 const PREMIUM_REDIRECT_PATH = './YamaExtra.html';
+const MAIN_TITLE_SHAKE_CLASS_NAME = 'js-main-title-shaking';
+const MAIN_TITLE_SHAKE_DURATION_MS = 1200;
 
 const SIGNBOARD_INITIAL_COUNT = 25;
 const FINISHED_PAGE_PATH = './finished.html';
@@ -131,6 +138,8 @@ let previousButtonPressed = {
 let previousArrowKeyPressed = STOP_ARROW_KEYS.map(() => false);
 let previousStartKeyPressed = false;
 let premiumRedirectTimeoutId = null;
+let mainTitleShakeTimeoutId = null;
+let shouldForcePremiumHitOnNextSpin = false;
 
 const reachHitMovieSequenceController = createReachHitMovieSequenceController({
   reachChangeMovie,
@@ -164,6 +173,33 @@ const clearPremiumRedirectTimer = () => {
   window.clearTimeout(premiumRedirectTimeoutId);
   premiumRedirectTimeoutId = null;
 };
+
+const startMainTitleShake = () => {
+  if (!mainTitle) {
+    return;
+  }
+
+  if (mainTitleShakeTimeoutId !== null) {
+    window.clearTimeout(mainTitleShakeTimeoutId);
+    mainTitleShakeTimeoutId = null;
+  }
+
+  mainTitle.classList.remove(MAIN_TITLE_SHAKE_CLASS_NAME);
+  void mainTitle.offsetWidth;
+  mainTitle.classList.add(MAIN_TITLE_SHAKE_CLASS_NAME);
+
+  mainTitleShakeTimeoutId = window.setTimeout(() => {
+    mainTitle.classList.remove(MAIN_TITLE_SHAKE_CLASS_NAME);
+    mainTitleShakeTimeoutId = null;
+  }, MAIN_TITLE_SHAKE_DURATION_MS);
+};
+
+const triggerOnemoreBonus = () => {
+  shouldForcePremiumHitOnNextSpin = true;
+  startMainTitleShake();
+};
+
+window.addEventListener(ONEMORE_BONUS_TRIGGERED_EVENT_NAME, triggerOnemoreBonus);
 
 const startSevenBounce = () => {
   const reels = document.querySelectorAll('.js-slot-reel');
@@ -445,8 +481,15 @@ const startSpin = () => {
   reachHitMovieSequenceController.reset();
   premiumHitMovieController.reset();
   clearPremiumRedirectTimer();
-  const isHit = judgeSpinResult();
-  spinResultNumbers = isHit ? createHitNumbers() : createMissNumbers(SLOT_COUNT);
+  const forcePremiumHit = shouldForcePremiumHitOnNextSpin;
+  shouldForcePremiumHitOnNextSpin = false;
+
+  const isHit = forcePremiumHit || judgeSpinResult();
+  spinResultNumbers = forcePremiumHit
+    ? Array.from({ length: SLOT_COUNT }, () => PREMIUM_HIT_NUMBER)
+    : isHit
+      ? createHitNumbers()
+      : createMissNumbers(SLOT_COUNT);
 
   const detail = {
     isHit,
