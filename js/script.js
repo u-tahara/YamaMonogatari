@@ -3,6 +3,7 @@ import { createMissNumbers, dispatchMissEvent } from './miss-event.js';
 import './audio-controller.js';
 import { createReachHitMovieSequenceController } from './hit-branch/reach-hit-movie-sequence.js';
 import { createPremiumHitMovieController } from './hit-branch/route-premium-hit/index.js';
+import { setReachCutinMovieVolume } from './reach-cutin-effect.js';
 
 const slotReels = document.querySelectorAll('.js-slot-reel');
 const reachPopup = document.querySelector('.js-reach-popup');
@@ -132,6 +133,9 @@ const reachHitMovieSequenceController = createReachHitMovieSequenceController({
   reachChangeMovie,
   pushButtonMovie,
 });
+
+window.setReachCutinMovieVolume = setReachCutinMovieVolume;
+setReachCutinMovieVolume(0.5);
 
 const premiumHitMovieController = createPremiumHitMovieController({
   blackoutMovie: premiumBlackoutMovie,
