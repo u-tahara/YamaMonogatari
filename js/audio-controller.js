@@ -14,6 +14,11 @@ const PUSH_BUTTON_MOVIE_DEFAULT_VOLUME = 0.2;
 const PREMIUM_BLACKOUT_MOVIE_DEFAULT_VOLUME = 0.4;
 const PREMIUM_CHANGE_MOVIE_DEFAULT_VOLUME = 0.5;
 const CHEERS_AUDIO_DEFAULT_VOLUME = 0.6;
+const PUSH_AUDIO_DEFAULT_VOLUME = 0.5;
+const REACH_PUSH_SOUND_DELAY_MS = 1000;
+const BGM_FADE_IN_DEFAULT_DURATION_MS = 1200;
+const BGM_FADE_IN_FRAME_MS = 50;
+const REACH_PUSH_BUTTON_MOVIE_STARTED_EVENT_NAME = 'slot:reach-push-button-movie-started';
 
 const bgmAudio = new Audio('./audio/bgm.mp3');
 bgmAudio.loop = true;
@@ -26,6 +31,10 @@ const helpAudio = new Audio('./audio/help.wav');
 const signboardUpAudio = new Audio('./audio/up.mp3');
 const signboardDownAudio = new Audio('./audio/down.mp3');
 const cheersAudio = new Audio('./audio/cheers.mp3');
+const pushAudio = new Audio('./audio/push.mp3');
+
+let bgmFadeInIntervalId = null;
+let pushAudioTimeoutId = null;
 
 
 const setLeverOnCutinMovieVolume = (volume) => {
@@ -140,11 +149,24 @@ const setCheersAudioVolume = (volume) => {
   return cheersAudio.volume;
 };
 
+const setPushAudioVolume = (volume) => {
+  const normalizedVolume = Number.isFinite(volume) ? Math.min(1, Math.max(0, volume)) : PUSH_AUDIO_DEFAULT_VOLUME;
+
+  pushAudio.volume = normalizedVolume;
+
+  return pushAudio.volume;
+};
+
 const playCheersAudio = () => {
   playEffect(cheersAudio);
 };
 
 const pauseBgm = () => {
+  if (bgmFadeInIntervalId !== null) {
+    window.clearInterval(bgmFadeInIntervalId);
+    bgmFadeInIntervalId = null;
+  }
+
   bgmAudio.pause();
 };
 
@@ -157,6 +179,35 @@ const resumeBgm = () => {
   playBgm();
 };
 
+const resumeBgmWithFadeIn = (durationMs = BGM_FADE_IN_DEFAULT_DURATION_MS) => {
+  const normalizedDurationMs = Number.isFinite(durationMs) && durationMs > 0
+    ? durationMs
+    : BGM_FADE_IN_DEFAULT_DURATION_MS;
+  const targetVolume = 0.07;
+  const stepCount = Math.max(1, Math.ceil(normalizedDurationMs / BGM_FADE_IN_FRAME_MS));
+  const volumeStep = targetVolume / stepCount;
+
+  if (bgmFadeInIntervalId !== null) {
+    window.clearInterval(bgmFadeInIntervalId);
+    bgmFadeInIntervalId = null;
+  }
+
+  bgmAudio.volume = 0;
+  playBgm();
+
+  let currentStep = 0;
+  bgmFadeInIntervalId = window.setInterval(() => {
+    currentStep += 1;
+    bgmAudio.volume = Math.min(targetVolume, volumeStep * currentStep);
+
+    if (currentStep >= stepCount) {
+      window.clearInterval(bgmFadeInIntervalId);
+      bgmFadeInIntervalId = null;
+      bgmAudio.volume = targetVolume;
+    }
+  }, BGM_FADE_IN_FRAME_MS);
+};
+
 window.setHelpAudioVolume = setHelpAudioVolume;
 window.setSignboardAudioVolume = setSignboardAudioVolume;
 window.setLeverOnCutinMovieVolume = setLeverOnCutinMovieVolume;
@@ -166,10 +217,12 @@ window.setPushButtonMovieVolume = setPushButtonMovieVolume;
 window.setPremiumBlackoutMovieVolume = setPremiumBlackoutMovieVolume;
 window.setPremiumChangeMovieVolume = setPremiumChangeMovieVolume;
 window.setCheersAudioVolume = setCheersAudioVolume;
+window.setPushAudioVolume = setPushAudioVolume;
 window.playCheersAudio = playCheersAudio;
 window.pauseBgm = pauseBgm;
 window.stopBgm = stopBgm;
 window.resumeBgm = resumeBgm;
+window.resumeBgmWithFadeIn = resumeBgmWithFadeIn;
 
 [leverAudio, buttonAudio, stopAudio].forEach((effectAudio) => {
   effectAudio.volume = EFFECT_AUDIO_VOLUME;
@@ -183,6 +236,7 @@ setPushButtonMovieVolume(PUSH_BUTTON_MOVIE_DEFAULT_VOLUME);
 setPremiumBlackoutMovieVolume(PREMIUM_BLACKOUT_MOVIE_DEFAULT_VOLUME);
 setPremiumChangeMovieVolume(PREMIUM_CHANGE_MOVIE_DEFAULT_VOLUME);
 setCheersAudioVolume(CHEERS_AUDIO_DEFAULT_VOLUME);
+setPushAudioVolume(PUSH_AUDIO_DEFAULT_VOLUME);
 
 const playBgm = () => {
   bgmAudio
@@ -238,4 +292,16 @@ window.addEventListener(SIGNBOARD_UP_AUDIO_EVENT_NAME, () => {
 
 window.addEventListener(SIGNBOARD_DOWN_AUDIO_EVENT_NAME, () => {
   playEffect(signboardDownAudio);
+});
+
+window.addEventListener(REACH_PUSH_BUTTON_MOVIE_STARTED_EVENT_NAME, () => {
+  if (pushAudioTimeoutId !== null) {
+    window.clearTimeout(pushAudioTimeoutId);
+    pushAudioTimeoutId = null;
+  }
+
+  pushAudioTimeoutId = window.setTimeout(() => {
+    playEffect(pushAudio);
+    pushAudioTimeoutId = null;
+  }, REACH_PUSH_SOUND_DELAY_MS);
 });

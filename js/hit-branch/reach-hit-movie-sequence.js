@@ -1,5 +1,6 @@
 const REACH_CHANGE_MOVIE_PAUSE_MS = 3500;
 const ENTER_KEY = 'Enter';
+const REACH_PUSH_BUTTON_MOVIE_STARTED_EVENT_NAME = 'slot:reach-push-button-movie-started';
 
 // 当たりリーチ後の動画演出を管理するコントローラーを生成します。
 export const createReachHitMovieSequenceController = ({
@@ -79,6 +80,10 @@ export const createReachHitMovieSequenceController = ({
 
     isRunning = true;
 
+    if (typeof window.pauseBgm === 'function') {
+      window.pauseBgm();
+    }
+
     reachChangeMovie.currentTime = 0;
     reachChangeMovie.hidden = false;
     safePlayMovie(reachChangeMovie);
@@ -98,6 +103,7 @@ export const createReachHitMovieSequenceController = ({
     pushButtonMovie.currentTime = 0;
     pushButtonMovie.hidden = false;
     safePlayMovie(pushButtonMovie);
+    window.dispatchEvent(new CustomEvent(REACH_PUSH_BUTTON_MOVIE_STARTED_EVENT_NAME));
 
     await waitForEnterOnPushButtonMovie();
 
@@ -119,6 +125,10 @@ export const createReachHitMovieSequenceController = ({
 
     if (!isRunning) {
       return false;
+    }
+
+    if (typeof window.resumeBgmWithFadeIn === 'function') {
+      window.resumeBgmWithFadeIn();
     }
 
     reset();
