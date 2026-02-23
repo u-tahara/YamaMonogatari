@@ -6,6 +6,7 @@ import { createPremiumHitMovieController } from './hit-branch/route-premium-hit/
 import { setReachCutinMovieVolume } from './reach-cutin-effect.js';
 import {
   ONEMORE_BONUS_TRIGGERED_EVENT_NAME,
+  ONEMORE_EFFECT_FINISHED_EVENT_NAME,
   resetOnemoreEffect,
   showOnemoreEffect,
 } from './hit-branch/route-non-premium-hit/onemore-effect.js';
@@ -140,6 +141,23 @@ let previousStartKeyPressed = false;
 let premiumRedirectTimeoutId = null;
 let mainTitleShakeTimeoutId = null;
 let shouldForcePremiumHitOnNextSpin = false;
+let isSpinStartLocked = false;
+
+const unlockSpinStart = () => {
+  isSpinStartLocked = false;
+};
+
+const lockSpinStartUntilOnemoreEffectFinished = () => {
+  isSpinStartLocked = true;
+};
+
+const lockSpinStartUntilMainTitleShakeFinished = () => {
+  isSpinStartLocked = true;
+
+  window.setTimeout(() => {
+    unlockSpinStart();
+  }, MAIN_TITLE_SHAKE_DURATION_MS);
+};
 
 const reachHitMovieSequenceController = createReachHitMovieSequenceController({
   reachChangeMovie,
@@ -197,9 +215,11 @@ const startMainTitleShake = () => {
 const triggerOnemoreBonus = () => {
   shouldForcePremiumHitOnNextSpin = true;
   startMainTitleShake();
+  lockSpinStartUntilMainTitleShakeFinished();
 };
 
 window.addEventListener(ONEMORE_BONUS_TRIGGERED_EVENT_NAME, triggerOnemoreBonus);
+window.addEventListener(ONEMORE_EFFECT_FINISHED_EVENT_NAME, unlockSpinStart);
 
 const startSevenBounce = () => {
   const reels = document.querySelectorAll('.js-slot-reel');
@@ -463,7 +483,7 @@ const stopSpin = () => {
 
 // 回転初期化・当たり外れ決定・イベント通知を行って回転を開始します。
 const startSpin = () => {
-  if (spinIntervalId || slotReels.length === 0) {
+  if (isSpinStartLocked || spinIntervalId || slotReels.length === 0) {
     return;
   }
 
@@ -621,6 +641,7 @@ const runNonPremiumHitCelebration = async () => {
     reel.classList.remove('js-hit-z-spin-target');
   });
 
+  lockSpinStartUntilOnemoreEffectFinished();
   showOnemoreEffect();
 };
 

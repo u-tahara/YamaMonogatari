@@ -3,6 +3,7 @@ const ONEMORE_EFFECT_DISPLAY_DELAY_MS = 1000;
 const ONEMORE_AUDIO_DEFAULT_VOLUME = 0.6;
 const ONEMORE_BONUS_TRIGGER_PROBABILITY = 0.5;
 export const ONEMORE_BONUS_TRIGGERED_EVENT_NAME = 'slot:onemore-bonus-triggered';
+export const ONEMORE_EFFECT_FINISHED_EVENT_NAME = 'slot:onemore-effect-finished';
 
 let onemoreEffectDelayTimeoutId = null;
 let onemoreEffectHideTimeoutId = null;
@@ -96,6 +97,8 @@ export const showOnemoreEffect = () => {
       if (shouldTriggerOnemoreBonus()) {
         window.dispatchEvent(new Event(ONEMORE_BONUS_TRIGGERED_EVENT_NAME));
       }
+
+      window.dispatchEvent(new Event(ONEMORE_EFFECT_FINISHED_EVENT_NAME));
 
       onemoreEffectHideTimeoutId = null;
     }, ONEMORE_EFFECT_DURATION_MS);
