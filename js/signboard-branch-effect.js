@@ -22,6 +22,19 @@ const hideBaseSignboard = (signboardElement) => {
   signboardElement.style.opacity = '0';
 };
 
+const slideOutBaseSignboard = async (signboardElement) => {
+  if (!signboardElement) {
+    return;
+  }
+
+  await animateSignboardMovement(signboardElement, [
+    { transform: 'translateY(0)', opacity: 1 },
+    { transform: 'translateY(140%)', opacity: 1 },
+  ]);
+
+  hideBaseSignboard(signboardElement);
+};
+
 const showBaseSignboard = (signboardElement) => {
   if (!signboardElement) {
     return;
@@ -82,7 +95,7 @@ export const runSignboardBranchEffect = async ({ detail, effectType, imageType, 
     return;
   }
 
-  hideBaseSignboard(mainSignboard);
+  await slideOutBaseSignboard(mainSignboard);
   signboardEffectImage.hidden = false;
 
   await animateSignboardMovement(signboardEffectImage, [
