@@ -4,6 +4,7 @@ const STOP_BUTTON_AUDIO_EVENT_NAME = 'slot:stop-button-pressed';
 const REEL_STOP_AUDIO_EVENT_NAME = 'slot:reel-stop-confirmed';
 const SIGNBOARD_UP_AUDIO_EVENT_NAME = 'slot:signboard-up';
 const SIGNBOARD_DOWN_AUDIO_EVENT_NAME = 'slot:signboard-down';
+const REACH_SUZU_BACKGROUND_AUDIO_EVENT_NAME = 'slot:hit-effect-reach-suzu-background';
 const EFFECT_AUDIO_VOLUME = 0.3;
 const HELP_AUDIO_DEFAULT_VOLUME = 1;
 const SIGNBOARD_AUDIO_DEFAULT_VOLUME = 0.3;
@@ -15,6 +16,7 @@ const PREMIUM_BLACKOUT_MOVIE_DEFAULT_VOLUME = 0.4;
 const PREMIUM_CHANGE_MOVIE_DEFAULT_VOLUME = 0.5;
 const CHEERS_AUDIO_DEFAULT_VOLUME = 0.6;
 const PUSH_AUDIO_DEFAULT_VOLUME = 0.5;
+const SHINE_AUDIO_DEFAULT_VOLUME = 0.5;
 const REACH_PUSH_SOUND_DELAY_MS = 800;
 const BGM_FADE_IN_DEFAULT_DURATION_MS = 1200;
 const BGM_FADE_IN_FRAME_MS = 50;
@@ -32,6 +34,7 @@ const signboardUpAudio = new Audio('./audio/up.mp3');
 const signboardDownAudio = new Audio('./audio/down.mp3');
 const cheersAudio = new Audio('./audio/cheers.mp3');
 const pushAudio = new Audio('./audio/push.mp3');
+const shineAudio = new Audio('./audio/shine.mp3');
 
 let bgmFadeInIntervalId = null;
 let pushAudioTimeoutId = null;
@@ -157,6 +160,14 @@ const setPushAudioVolume = (volume) => {
   return pushAudio.volume;
 };
 
+const setShineAudioVolume = (volume) => {
+  const normalizedVolume = Number.isFinite(volume) ? Math.min(1, Math.max(0, volume)) : SHINE_AUDIO_DEFAULT_VOLUME;
+
+  shineAudio.volume = normalizedVolume;
+
+  return shineAudio.volume;
+};
+
 const playCheersAudio = () => {
   playEffect(cheersAudio);
 };
@@ -218,6 +229,7 @@ window.setPremiumBlackoutMovieVolume = setPremiumBlackoutMovieVolume;
 window.setPremiumChangeMovieVolume = setPremiumChangeMovieVolume;
 window.setCheersAudioVolume = setCheersAudioVolume;
 window.setPushAudioVolume = setPushAudioVolume;
+window.setShineAudioVolume = setShineAudioVolume;
 window.playCheersAudio = playCheersAudio;
 window.pauseBgm = pauseBgm;
 window.stopBgm = stopBgm;
@@ -237,6 +249,7 @@ setPremiumBlackoutMovieVolume(PREMIUM_BLACKOUT_MOVIE_DEFAULT_VOLUME);
 setPremiumChangeMovieVolume(PREMIUM_CHANGE_MOVIE_DEFAULT_VOLUME);
 setCheersAudioVolume(CHEERS_AUDIO_DEFAULT_VOLUME);
 setPushAudioVolume(PUSH_AUDIO_DEFAULT_VOLUME);
+setShineAudioVolume(SHINE_AUDIO_DEFAULT_VOLUME);
 
 const playBgm = () => {
   bgmAudio
@@ -304,4 +317,8 @@ window.addEventListener(REACH_PUSH_BUTTON_MOVIE_STARTED_EVENT_NAME, () => {
     playEffect(pushAudio);
     pushAudioTimeoutId = null;
   }, REACH_PUSH_SOUND_DELAY_MS);
+});
+
+window.addEventListener(REACH_SUZU_BACKGROUND_AUDIO_EVENT_NAME, () => {
+  playEffect(shineAudio);
 });
