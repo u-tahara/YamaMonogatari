@@ -2,8 +2,11 @@ const LEVER_ON_AUDIO_EVENT_NAME = 'slot:lever-on';
 const LEVER_ON_CUTIN_CENTER_EVENT_NAME = 'slot:lever-on-cutin-center';
 const STOP_BUTTON_AUDIO_EVENT_NAME = 'slot:stop-button-pressed';
 const REEL_STOP_AUDIO_EVENT_NAME = 'slot:reel-stop-confirmed';
+const SIGNBOARD_UP_AUDIO_EVENT_NAME = 'slot:signboard-up';
+const SIGNBOARD_DOWN_AUDIO_EVENT_NAME = 'slot:signboard-down';
 const EFFECT_AUDIO_VOLUME = 0.3;
 const HELP_AUDIO_DEFAULT_VOLUME = 1;
+const SIGNBOARD_AUDIO_DEFAULT_VOLUME = 0.3;
 const LEVER_ON_CUTIN_MOVIE_DEFAULT_VOLUME = 0.3;
 const REACH_CHARACTER_GROUP_DEFAULT_VOLUME = 1;
 const REACH_CHANGE_MOVIE_DEFAULT_VOLUME = 0.6;
@@ -19,6 +22,8 @@ const leverAudio = new Audio('./audio/lever.mp3');
 const buttonAudio = new Audio('./audio/button.mp3');
 const stopAudio = new Audio('./audio/stop.mp3');
 const helpAudio = new Audio('./audio/help.wav');
+const signboardUpAudio = new Audio('./audio/up.mp3');
+const signboardDownAudio = new Audio('./audio/down.mp3');
 
 
 const setLeverOnCutinMovieVolume = (volume) => {
@@ -115,7 +120,17 @@ const setHelpAudioVolume = (volume) => {
   return helpAudio.volume;
 };
 
+const setSignboardAudioVolume = (volume) => {
+  const normalizedVolume = Number.isFinite(volume) ? Math.min(1, Math.max(0, volume)) : SIGNBOARD_AUDIO_DEFAULT_VOLUME;
+
+  signboardUpAudio.volume = normalizedVolume;
+  signboardDownAudio.volume = normalizedVolume;
+
+  return normalizedVolume;
+};
+
 window.setHelpAudioVolume = setHelpAudioVolume;
+window.setSignboardAudioVolume = setSignboardAudioVolume;
 window.setLeverOnCutinMovieVolume = setLeverOnCutinMovieVolume;
 window.setReachCharacterGroupVolume = setReachCharacterGroupVolume;
 window.setReachChangeMovieVolume = setReachChangeMovieVolume;
@@ -127,6 +142,7 @@ window.setPremiumChangeMovieVolume = setPremiumChangeMovieVolume;
   effectAudio.volume = EFFECT_AUDIO_VOLUME;
 });
 setHelpAudioVolume(HELP_AUDIO_DEFAULT_VOLUME);
+setSignboardAudioVolume(SIGNBOARD_AUDIO_DEFAULT_VOLUME);
 setLeverOnCutinMovieVolume(LEVER_ON_CUTIN_MOVIE_DEFAULT_VOLUME);
 setReachCharacterGroupVolume(REACH_CHARACTER_GROUP_DEFAULT_VOLUME);
 setReachChangeMovieVolume(REACH_CHANGE_MOVIE_DEFAULT_VOLUME);
@@ -180,4 +196,12 @@ window.addEventListener(STOP_BUTTON_AUDIO_EVENT_NAME, () => {
 
 window.addEventListener(REEL_STOP_AUDIO_EVENT_NAME, () => {
   playEffect(stopAudio);
+});
+
+window.addEventListener(SIGNBOARD_UP_AUDIO_EVENT_NAME, () => {
+  playEffect(signboardUpAudio);
+});
+
+window.addEventListener(SIGNBOARD_DOWN_AUDIO_EVENT_NAME, () => {
+  playEffect(signboardDownAudio);
 });

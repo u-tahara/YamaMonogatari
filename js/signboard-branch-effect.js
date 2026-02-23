@@ -1,4 +1,6 @@
 const LEVER_ON_EFFECT_FINISHED_EVENT_NAME = 'slot:lever-on-effect-finished';
+const SIGNBOARD_UP_AUDIO_EVENT_NAME = 'slot:signboard-up';
+const SIGNBOARD_DOWN_AUDIO_EVENT_NAME = 'slot:signboard-down';
 const SIGNBOARD_SLIDE_DURATION_MS = 400;
 const SIGNBOARD_VISIBLE_MS = 1000;
 
@@ -98,6 +100,7 @@ export const runSignboardBranchEffect = async ({ detail, effectType, imageType, 
 
   await slideOutBaseSignboard(mainSignboard);
   signboardEffectContainer.hidden = false;
+  window.dispatchEvent(new CustomEvent(SIGNBOARD_UP_AUDIO_EVENT_NAME));
 
   await animateSignboardMovement(signboardEffectContainer, [
     { transform: 'translateY(140%)' },
@@ -110,6 +113,7 @@ export const runSignboardBranchEffect = async ({ detail, effectType, imageType, 
     { transform: 'translateY(0)' },
     { transform: 'translateY(140%)' },
   ]);
+  window.dispatchEvent(new CustomEvent(SIGNBOARD_DOWN_AUDIO_EVENT_NAME));
 
   signboardEffectContainer.hidden = true;
 
