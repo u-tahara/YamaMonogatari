@@ -75,7 +75,8 @@ const animateSignboardMovement = async (signboardEffectImage, keyframes) => {
 // 看板分岐時の専用スライド演出を実行します。
 export const runSignboardBranchEffect = async ({ detail, effectType, imageType, logMessage }) => {
   const mainSignboard = document.querySelector('.js-main-signboard');
-  const signboardEffectImage = document.querySelector('.js-signboard-branch-effect');
+  const signboardEffectContainer = document.querySelector('.js-signboard-branch-effect');
+  const signboardEffectImage = document.querySelector('.js-signboard-branch-effect-image');
   const cutinMovie = document.querySelector('.js-lever-on-cutin-movie-effect');
   const isSignboardImageReady = setSignboardImage(signboardEffectImage, imageType);
 
@@ -83,7 +84,7 @@ export const runSignboardBranchEffect = async ({ detail, effectType, imageType, 
     cutinMovie.hidden = true;
   }
 
-  if (!signboardEffectImage || !isSignboardImageReady) {
+  if (!signboardEffectContainer || !signboardEffectImage || !isSignboardImageReady) {
     window.dispatchEvent(
       new CustomEvent(LEVER_ON_EFFECT_FINISHED_EVENT_NAME, {
         detail: {
@@ -96,21 +97,21 @@ export const runSignboardBranchEffect = async ({ detail, effectType, imageType, 
   }
 
   await slideOutBaseSignboard(mainSignboard);
-  signboardEffectImage.hidden = false;
+  signboardEffectContainer.hidden = false;
 
-  await animateSignboardMovement(signboardEffectImage, [
+  await animateSignboardMovement(signboardEffectContainer, [
     { transform: 'translateY(140%)' },
     { transform: 'translateY(0)' },
   ]);
 
   await wait(SIGNBOARD_VISIBLE_MS);
 
-  await animateSignboardMovement(signboardEffectImage, [
+  await animateSignboardMovement(signboardEffectContainer, [
     { transform: 'translateY(0)' },
     { transform: 'translateY(140%)' },
   ]);
 
-  signboardEffectImage.hidden = true;
+  signboardEffectContainer.hidden = true;
 
   await animateSignboardMovement(mainSignboard, [
     { transform: 'translateY(140%)', opacity: 1 },
