@@ -1,4 +1,4 @@
-// 7図柄当たり時の暗転→変化動画演出を管理するコントローラーを生成します。
+// 7図柄当たり時のプレミア動画演出を管理するコントローラーを生成します。
 export const createPremiumHitMovieController = ({
   blackoutMovie,
   changeMovie,
@@ -67,27 +67,11 @@ export const createPremiumHitMovieController = ({
   };
 
   const run = async () => {
-    if (!blackoutMovie || !changeMovie || isRunning) {
+    if (!changeMovie || isRunning) {
       return false;
     }
 
     isRunning = true;
-
-    showMovie(blackoutMovie);
-    safePlayMovie(blackoutMovie);
-
-    await new Promise((resolve) => {
-      const handleEnded = () => {
-        blackoutMovie.removeEventListener('ended', handleEnded);
-        resolve();
-      };
-
-      blackoutMovie.addEventListener('ended', handleEnded);
-    });
-
-    if (!isRunning) {
-      return false;
-    }
 
     showMovie(changeMovie);
     safePlayMovie(changeMovie);
