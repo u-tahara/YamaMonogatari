@@ -4,54 +4,15 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>山物語 | Yama Extra</title>
-    <style>
-      body {
-        margin: 0;
-        min-height: 100vh;
-        display: grid;
-        place-items: center;
-        background: #000;
-        color: #fff;
-        font-family: sans-serif;
-      }
-
-      .p-yama-extra {
-        width: min(92vw, 960px);
-        display: grid;
-        gap: 16px;
-        justify-items: center;
-      }
-
-      .p-yama-extra__movie {
-        width: 100%;
-        border: 2px solid #fff;
-        border-radius: 8px;
-      }
-
-      .p-yama-extra__button {
-        appearance: none;
-        border: 1px solid #fff;
-        background: transparent;
-        color: #fff;
-        padding: 10px 16px;
-        border-radius: 999px;
-        cursor: pointer;
-      }
-    </style>
+    <link rel="stylesheet" href="css/style.css" />
   </head>
   <body>
     <main class="p-yama-extra">
-      <h1>Yama Extra</h1>
-      <video
-        class="p-yama-extra__movie js-yama-extra-movie"
-        src="./movie/yama-extra.webm"
-        autoplay
-        muted
-        loop
-        controls
-        playsinline
-      ></video>
-      <button type="button" class="p-yama-extra__button js-back-to-index-button">index.htmlに戻る</button>
+      <img class="p-yama-extra__background" src="./img/suzu-background/suzu.png" alt="背景">
+      <p class="p-yama-extra__description">
+        おめでとうございます！<br>
+        スタッフからステッカーを受け取ってください！
+      </p>
     </main>
 
     <script>

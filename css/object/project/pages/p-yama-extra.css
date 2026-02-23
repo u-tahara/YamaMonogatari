@@ -1,0 +1,32 @@
+.p-yama-extra {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+}
+
+.p-yama-extra__background {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100vw;
+    height: 100vh;
+    object-fit: fill;
+    z-index: -1;
+}
+
+.p-yama-extra__description {
+    position: fixed;
+    bottom: 5%;
+    left: 3%;
+    width: 1200px;
+    padding: 20px;
+    border-radius: 220px;
+    background: #3af734;
+    color: #fff;
+    font-size: 48px;
+    font-weight: 700;
+    flex-wrap: nowrap;
+    text-align: center;
+    z-index: 1;
+}
