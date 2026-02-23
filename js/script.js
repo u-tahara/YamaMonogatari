@@ -546,11 +546,11 @@ const runNonPremiumHitCelebration = async () => {
     .map((number, index) => (number === alignedNumber ? index : -1))
     .filter((index) => index !== -1);
 
+  await wait(NON_PREMIUM_HIT_Z_SPIN_DELAY_MS);
+
   if (typeof window.playExcitingAudio === 'function') {
     window.playExcitingAudio();
   }
-
-  await wait(NON_PREMIUM_HIT_Z_SPIN_DELAY_MS);
 
   alignedIndexes.forEach((index) => {
     const reel = slotReels[index];
