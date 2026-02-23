@@ -615,6 +615,8 @@ const wait = (ms) => new Promise((resolve) => {
 });
 
 const runNonPremiumHitCelebration = async () => {
+  lockSpinStartUntilOnemoreEffectFinished();
+
   const alignedNumber = currentDisplayedNumbers[CENTER_SLOT_INDEX];
   const alignedIndexes = currentDisplayedNumbers
     .map((number, index) => (number === alignedNumber ? index : -1))
@@ -651,8 +653,6 @@ const runNonPremiumHitCelebration = async () => {
 
     reel.classList.remove('js-hit-z-spin-target');
   });
-
-  lockSpinStartUntilOnemoreEffectFinished();
   showOnemoreEffect();
 };
 
