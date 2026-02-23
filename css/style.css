@@ -63,7 +63,7 @@
 }
 
 .c-onemore-effect.js-onemore-playing {
-  animation: onemore-pop 1400ms ease-in-out forwards;
+  animation: onemore-pop 2400ms ease-in-out forwards;
 }
 
 .c-onemore-effect[hidden] {
