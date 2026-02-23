@@ -13,6 +13,7 @@ const REACH_CHANGE_MOVIE_DEFAULT_VOLUME = 0.6;
 const PUSH_BUTTON_MOVIE_DEFAULT_VOLUME = 0.2;
 const PREMIUM_BLACKOUT_MOVIE_DEFAULT_VOLUME = 0.4;
 const PREMIUM_CHANGE_MOVIE_DEFAULT_VOLUME = 0.5;
+const CHEERS_AUDIO_DEFAULT_VOLUME = 0.6;
 
 const bgmAudio = new Audio('./audio/bgm.mp3');
 bgmAudio.loop = true;
@@ -24,6 +25,7 @@ const stopAudio = new Audio('./audio/stop.mp3');
 const helpAudio = new Audio('./audio/help.wav');
 const signboardUpAudio = new Audio('./audio/up.mp3');
 const signboardDownAudio = new Audio('./audio/down.mp3');
+const cheersAudio = new Audio('./audio/cheers.mp3');
 
 
 const setLeverOnCutinMovieVolume = (volume) => {
@@ -129,6 +131,24 @@ const setSignboardAudioVolume = (volume) => {
   return normalizedVolume;
 };
 
+
+const setCheersAudioVolume = (volume) => {
+  const normalizedVolume = Number.isFinite(volume) ? Math.min(1, Math.max(0, volume)) : CHEERS_AUDIO_DEFAULT_VOLUME;
+
+  cheersAudio.volume = normalizedVolume;
+
+  return cheersAudio.volume;
+};
+
+const playCheersAudio = () => {
+  playEffect(cheersAudio);
+};
+
+const stopBgm = () => {
+  bgmAudio.pause();
+  bgmAudio.currentTime = 0;
+};
+
 window.setHelpAudioVolume = setHelpAudioVolume;
 window.setSignboardAudioVolume = setSignboardAudioVolume;
 window.setLeverOnCutinMovieVolume = setLeverOnCutinMovieVolume;
@@ -137,6 +157,9 @@ window.setReachChangeMovieVolume = setReachChangeMovieVolume;
 window.setPushButtonMovieVolume = setPushButtonMovieVolume;
 window.setPremiumBlackoutMovieVolume = setPremiumBlackoutMovieVolume;
 window.setPremiumChangeMovieVolume = setPremiumChangeMovieVolume;
+window.setCheersAudioVolume = setCheersAudioVolume;
+window.playCheersAudio = playCheersAudio;
+window.stopBgm = stopBgm;
 
 [leverAudio, buttonAudio, stopAudio].forEach((effectAudio) => {
   effectAudio.volume = EFFECT_AUDIO_VOLUME;
@@ -149,6 +172,7 @@ setReachChangeMovieVolume(REACH_CHANGE_MOVIE_DEFAULT_VOLUME);
 setPushButtonMovieVolume(PUSH_BUTTON_MOVIE_DEFAULT_VOLUME);
 setPremiumBlackoutMovieVolume(PREMIUM_BLACKOUT_MOVIE_DEFAULT_VOLUME);
 setPremiumChangeMovieVolume(PREMIUM_CHANGE_MOVIE_DEFAULT_VOLUME);
+setCheersAudioVolume(CHEERS_AUDIO_DEFAULT_VOLUME);
 
 const playBgm = () => {
   bgmAudio
