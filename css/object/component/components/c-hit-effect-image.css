@@ -14,7 +14,14 @@
 }
 
 .c-hit-effect-image--signboard {
-  width: 30vw;
+  top: auto;
+  left: auto;
+  right: 10%;
+  bottom: -8%;
+  width: 22%;
+  transform: translateY(140%);
+  z-index: 122;
+  will-change: transform;
 }
 .c-hit-effect-image--lever-on-cutin-movie {
     width: 100%;
