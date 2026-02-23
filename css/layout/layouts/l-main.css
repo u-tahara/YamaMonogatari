@@ -96,6 +96,11 @@
     width: 100%;
 }
 
+
+.l-main__title.js-main-title-shaking {
+    animation: main-title-shake 360ms ease-in-out 3;
+}
+
 .l-main__container {
     position: fixed;
     top: 50%;

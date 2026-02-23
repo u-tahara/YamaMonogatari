@@ -1,6 +1,8 @@
 const ONEMORE_EFFECT_DURATION_MS = 2400;
 const ONEMORE_EFFECT_DISPLAY_DELAY_MS = 1000;
 const ONEMORE_AUDIO_DEFAULT_VOLUME = 0.6;
+const ONEMORE_BONUS_TRIGGER_PROBABILITY = 0.5;
+export const ONEMORE_BONUS_TRIGGERED_EVENT_NAME = 'slot:onemore-bonus-triggered';
 
 let onemoreEffectDelayTimeoutId = null;
 let onemoreEffectHideTimeoutId = null;
@@ -8,6 +10,7 @@ let onemoreEffectHideTimeoutId = null;
 const onemoreAudio = new Audio('./audio/onemore.wav');
 
 const getOnemoreEffectElement = () => document.querySelector('.js-onemore-effect');
+const shouldTriggerOnemoreBonus = () => Math.random() < ONEMORE_BONUS_TRIGGER_PROBABILITY;
 
 const normalizeVolume = (volume) => {
   if (!Number.isFinite(volume)) {
@@ -89,6 +92,11 @@ export const showOnemoreEffect = () => {
     onemoreEffectHideTimeoutId = window.setTimeout(() => {
       onemoreEffect.classList.remove('js-onemore-playing');
       onemoreEffect.hidden = true;
+
+      if (shouldTriggerOnemoreBonus()) {
+        window.dispatchEvent(new Event(ONEMORE_BONUS_TRIGGERED_EVENT_NAME));
+      }
+
       onemoreEffectHideTimeoutId = null;
     }, ONEMORE_EFFECT_DURATION_MS);
 
