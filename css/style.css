@@ -11,17 +11,41 @@
   position: fixed;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%);
   z-index: 100;
-  padding: 12px 24px;
-  border: 2px solid #ffffff;
-  border-radius: 8px;
-  background-color: rgba(0, 0, 0, 0.8);
-  color: #ffef6a;
-  font-size: 32px;
-  font-weight: 700;
-  letter-spacing: 0.08em;
+  width: min(56vw, 420px);
+  transform: translate(-180%, -50%);
+  opacity: 0;
   pointer-events: none;
+}
+
+.c-reach-popup.js-reach-popup-playing {
+  animation: reach-popup-slide 1300ms ease-in-out forwards;
+}
+
+@keyframes reach-popup-slide {
+  0% {
+    transform: translate(-180%, -50%);
+    opacity: 0;
+  }
+
+  15% {
+    opacity: 1;
+  }
+
+  38% {
+    transform: translate(-50%, -50%);
+    opacity: 1;
+  }
+
+  62% {
+    transform: translate(-50%, -50%);
+    opacity: 1;
+  }
+
+  100% {
+    transform: translate(80%, -50%);
+    opacity: 0;
+  }
 }
 
 .c-reach-popup[hidden] {
