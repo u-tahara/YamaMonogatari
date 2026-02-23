@@ -158,21 +158,28 @@ const clearPremiumRedirectTimer = () => {
   premiumRedirectTimeoutId = null;
 };
 
-const startCenterSevenBounce = () => {
-  const centerReel = document.querySelector('.js-slot-reel-center');
-  const centerCell = document.querySelector('.js-center-slot-current-cell');
+const startSevenBounce = () => {
+  const reels = document.querySelectorAll('.js-slot-reel');
 
-  if (!centerReel || !centerCell) {
+  if (reels.length === 0) {
     return;
   }
 
-  centerReel.classList.remove('js-center-seven-bounce-target');
-  centerCell.classList.remove('js-center-seven-bounce');
+  reels.forEach((reel) => {
+    const currentCell = reel.querySelector('.js-slot-current-cell');
 
-  void centerCell.offsetWidth;
+    if (!currentCell) {
+      return;
+    }
 
-  centerReel.classList.add('js-center-seven-bounce-target');
-  centerCell.classList.add('js-center-seven-bounce');
+    reel.classList.remove('js-seven-bounce-target');
+    currentCell.classList.remove('js-seven-bounce');
+
+    void currentCell.offsetWidth;
+
+    reel.classList.add('js-seven-bounce-target');
+    currentCell.classList.add('js-seven-bounce');
+  });
 };
 
 const startPremiumPostFadeOutSequence = () => {
@@ -181,7 +188,7 @@ const startPremiumPostFadeOutSequence = () => {
       window.playCheersAudio();
     }
 
-    startCenterSevenBounce();
+    startSevenBounce();
 
     clearPremiumRedirectTimer();
     premiumRedirectTimeoutId = window.setTimeout(() => {

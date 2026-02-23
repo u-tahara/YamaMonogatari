@@ -167,7 +167,7 @@
 }
 
 
-@keyframes center-seven-bounce {
+@keyframes seven-bounce {
     0% {
         transform: translateY(0) scale(1.6);
     }
@@ -191,7 +191,7 @@
     }
 }
 
-.js-center-seven-bounce-target .js-center-seven-bounce .l-main__slot-number-image {
-    animation: center-seven-bounce 900ms ease-out 6;
+.js-seven-bounce-target .js-seven-bounce .l-main__slot-number-image {
+    animation: seven-bounce 900ms ease-out 6;
     transform-origin: center bottom;
 }
