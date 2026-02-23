@@ -50,6 +50,11 @@ export const runLeverOnCutInEffect = async ({ detail, effectType, color, logMess
   const cutinMovie = document.querySelector('.js-lever-on-cutin-movie-effect');
   const leftBirdImage = document.querySelector('.js-main-bird-left');
   const rightBirdImage = document.querySelector('.js-main-bird-right');
+  const canPauseBgm = typeof window.pauseBgm === 'function';
+
+  if (canPauseBgm) {
+    window.pauseBgm();
+  }
 
   if (signboardImage) {
     signboardImage.hidden = true;
@@ -79,6 +84,7 @@ export const runLeverOnCutInEffect = async ({ detail, effectType, color, logMess
       cutinMovie.currentTime = 0;
     });
   }
+
 
   window.dispatchEvent(
     new CustomEvent(LEVER_ON_EFFECT_FINISHED_EVENT_NAME, {
