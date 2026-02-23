@@ -144,9 +144,17 @@ const playCheersAudio = () => {
   playEffect(cheersAudio);
 };
 
+const pauseBgm = () => {
+  bgmAudio.pause();
+};
+
 const stopBgm = () => {
   bgmAudio.pause();
   bgmAudio.currentTime = 0;
+};
+
+const resumeBgm = () => {
+  playBgm();
 };
 
 window.setHelpAudioVolume = setHelpAudioVolume;
@@ -159,7 +167,9 @@ window.setPremiumBlackoutMovieVolume = setPremiumBlackoutMovieVolume;
 window.setPremiumChangeMovieVolume = setPremiumChangeMovieVolume;
 window.setCheersAudioVolume = setCheersAudioVolume;
 window.playCheersAudio = playCheersAudio;
+window.pauseBgm = pauseBgm;
 window.stopBgm = stopBgm;
+window.resumeBgm = resumeBgm;
 
 [leverAudio, buttonAudio, stopAudio].forEach((effectAudio) => {
   effectAudio.volume = EFFECT_AUDIO_VOLUME;
