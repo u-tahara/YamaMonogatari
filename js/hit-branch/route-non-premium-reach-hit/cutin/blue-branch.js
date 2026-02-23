@@ -1,48 +1,14 @@
+import { playReachCutinMovieEffect } from '../../../reach-cutin-effect.js';
+
 const REACH_HIT_EFFECT_FINISHED_EVENT_NAME = 'slot:reach-hit-effect-finished';
-const EFFECT_VISIBLE_MS = 1000;
 
-// リーチ後カットイン演出（青）分岐の処理です。
+// リーチ後カットイン演出（blue）分岐の処理です。
 export const runReachCutInBlueBranch = (detail) => {
-  const cutinImage = document.querySelector('.js-reach-cutin-hit-effect');
-  const signboardImage = document.querySelector('.js-signboard-hit-effect');
-  const characterGroupVideo = document.querySelector('.js-reach-character-group-effect');
-
-  if (signboardImage) {
-    signboardImage.hidden = true;
-  }
-
-  if (characterGroupVideo) {
-    characterGroupVideo.hidden = true;
-  }
-
-  if (!cutinImage) {
-    window.dispatchEvent(
-      new CustomEvent(REACH_HIT_EFFECT_FINISHED_EVENT_NAME, {
-        detail: {
-          ...detail,
-          effectType: 'reach-cutin-blue',
-        },
-      }),
-    );
-    return;
-  }
-
-  // TODO: 後続対応用（青）
-  cutinImage.src = './img/smoke-cutin/blue.png';
-  cutinImage.hidden = false;
-
-  window.setTimeout(() => {
-    cutinImage.hidden = true;
-
-    window.dispatchEvent(
-      new CustomEvent(REACH_HIT_EFFECT_FINISHED_EVENT_NAME, {
-        detail: {
-          ...detail,
-          effectType: 'reach-cutin-blue',
-        },
-      }),
-    );
-  }, EFFECT_VISIBLE_MS);
-
-  console.log('リーチ後当たり演出: カットイン（青）');
+  playReachCutinMovieEffect({
+    detail,
+    eventName: REACH_HIT_EFFECT_FINISHED_EVENT_NAME,
+    effectType: 'reach-cutin-blue',
+    color: 'blue',
+    logMessage: 'リーチ後当たり演出: カットイン（blue）',
+  });
 };
