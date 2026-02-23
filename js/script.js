@@ -51,6 +51,9 @@ const SLOT_NUMBER_IMAGE_NAMES = {
 };
 const PREMIUM_HIT_NUMBER = 7;
 const PREMIUM_HIT_PROBABILITY = 0.1;
+const PREMIUM_FADE_OUT_COMPLETED_WAIT_MS = 1000;
+const PREMIUM_BOUNCE_TO_REDIRECT_MS = 5000;
+const PREMIUM_REDIRECT_PATH = './YamaExtra.html';
 
 const SIGNBOARD_INITIAL_COUNT = 25;
 const FINISHED_PAGE_PATH = './finished.html';
@@ -123,6 +126,7 @@ let previousButtonPressed = {
 };
 let previousArrowKeyPressed = STOP_ARROW_KEYS.map(() => false);
 let previousStartKeyPressed = false;
+let premiumRedirectTimeoutId = null;
 
 const reachHitMovieSequenceController = createReachHitMovieSequenceController({
   reachChangeMovie,
@@ -133,9 +137,58 @@ const premiumHitMovieController = createPremiumHitMovieController({
   blackoutMovie: premiumBlackoutMovie,
   changeMovie: premiumChangeMovie,
   onChangeStarted: () => {
+    if (typeof window.stopBgm === 'function') {
+      window.stopBgm();
+    }
+
     completePremiumHit();
   },
+  onFadeOutCompleted: () => {
+    startPremiumPostFadeOutSequence();
+  },
 });
+
+
+const clearPremiumRedirectTimer = () => {
+  if (premiumRedirectTimeoutId === null) {
+    return;
+  }
+
+  window.clearTimeout(premiumRedirectTimeoutId);
+  premiumRedirectTimeoutId = null;
+};
+
+const startCenterSevenBounce = () => {
+  const centerReel = document.querySelector('.js-slot-reel-center');
+  const centerCell = document.querySelector('.js-center-slot-current-cell');
+
+  if (!centerReel || !centerCell) {
+    return;
+  }
+
+  centerReel.classList.remove('js-center-seven-bounce-target');
+  centerCell.classList.remove('js-center-seven-bounce');
+
+  void centerCell.offsetWidth;
+
+  centerReel.classList.add('js-center-seven-bounce-target');
+  centerCell.classList.add('js-center-seven-bounce');
+};
+
+const startPremiumPostFadeOutSequence = () => {
+  window.setTimeout(() => {
+    if (typeof window.playCheersAudio === 'function') {
+      window.playCheersAudio();
+    }
+
+    startCenterSevenBounce();
+
+    clearPremiumRedirectTimer();
+    premiumRedirectTimeoutId = window.setTimeout(() => {
+      window.location.href = PREMIUM_REDIRECT_PATH;
+    }, PREMIUM_BOUNCE_TO_REDIRECT_MS);
+  }, PREMIUM_FADE_OUT_COMPLETED_WAIT_MS);
+};
 
 const completePremiumHit = () => {
   stopSpin();
@@ -376,6 +429,7 @@ const startSpin = () => {
   resetHitPopup();
   reachHitMovieSequenceController.reset();
   premiumHitMovieController.reset();
+  clearPremiumRedirectTimer();
   const isHit = judgeSpinResult();
   spinResultNumbers = isHit ? createHitNumbers() : createMissNumbers(SLOT_COUNT);
 

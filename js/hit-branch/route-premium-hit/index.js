@@ -3,6 +3,7 @@ export const createPremiumHitMovieController = ({
   blackoutMovie,
   changeMovie,
   onChangeStarted,
+  onFadeOutCompleted,
   onCompleted,
 }) => {
   let isRunning = false;
@@ -97,6 +98,11 @@ export const createPremiumHitMovieController = ({
       hideMovie(blackoutMovie, { useFadeOut: true }),
       hideMovie(changeMovie, { useFadeOut: true }),
     ]);
+
+    if (typeof onFadeOutCompleted === 'function') {
+      onFadeOutCompleted();
+    }
+
     isRunning = false;
 
     if (typeof onCompleted === 'function') {

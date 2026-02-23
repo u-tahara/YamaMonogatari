@@ -165,3 +165,33 @@
     user-select: none;
     pointer-events: none;
 }
+
+
+@keyframes center-seven-bounce {
+    0% {
+        transform: translateY(0) scale(1.6);
+    }
+    20% {
+        transform: translateY(-2.2rem) scale(1.76);
+    }
+    40% {
+        transform: translateY(0) scale(1.6);
+    }
+    58% {
+        transform: translateY(-1.2rem) scale(1.68);
+    }
+    76% {
+        transform: translateY(0) scale(1.6);
+    }
+    88% {
+        transform: translateY(-0.6rem) scale(1.63);
+    }
+    100% {
+        transform: translateY(0) scale(1.6);
+    }
+}
+
+.js-center-seven-bounce-target .js-center-seven-bounce .l-main__slot-number-image {
+    animation: center-seven-bounce 900ms ease-out 6;
+    transform-origin: center bottom;
+}
