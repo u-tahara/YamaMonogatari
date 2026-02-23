@@ -48,8 +48,8 @@
     position: fixed;
     bottom: -3%;
     right: 10%;
-    width: 400px;
-    height: 400px;
+    width: 20%;
+    aspect-ratio: 1 / 1;
     z-index: 121;
 }
 .l-main__signboard-image {
@@ -59,13 +59,15 @@
 }
 .l-main__signboard-number {
     position: absolute;
-    top: 25%;
-    right: 3%;
+    top: 23%;
+    right: 5%;
     transform: translate(-50%, -50%);
-    font-size: 85px;
-    font-weight: 700;
+    font-size: 90px;
     color: #fff;
-    text-shadow: 2px 2px 0 #000, -2px 2px 0 #000, 2px -2px 0 #000, -2px -2px 0 #000;
+    font-family: "sicrusk", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    -webkit-text-stroke: #058a26 3px;
 }
 
 .l-main__frontground {
