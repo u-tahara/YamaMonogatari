@@ -218,8 +218,19 @@ const triggerOnemoreBonus = () => {
   lockSpinStartUntilMainTitleShakeFinished();
 };
 
+const unlockSpinStartWhenOnemoreBonusCompleted = () => {
+  if (shouldForcePremiumHitOnNextSpin) {
+    return;
+  }
+
+  unlockSpinStart();
+};
+
 window.addEventListener(ONEMORE_BONUS_TRIGGERED_EVENT_NAME, triggerOnemoreBonus);
-window.addEventListener(ONEMORE_EFFECT_FINISHED_EVENT_NAME, unlockSpinStart);
+window.addEventListener(
+  ONEMORE_EFFECT_FINISHED_EVENT_NAME,
+  unlockSpinStartWhenOnemoreBonusCompleted,
+);
 
 const startSevenBounce = () => {
   const reels = document.querySelectorAll('.js-slot-reel');
