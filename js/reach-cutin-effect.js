@@ -1,5 +1,5 @@
 const REACH_CUTIN_MOVIE_BASE_PATH = './movie';
-let reachCutinMovieVolume = 0.5;
+let reachCutinMovieVolume = 1;
 
 const clampVolume = (value) => Math.min(1, Math.max(0, value));
 
