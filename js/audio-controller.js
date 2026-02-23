@@ -17,6 +17,7 @@ const PREMIUM_CHANGE_MOVIE_DEFAULT_VOLUME = 0.5;
 const CHEERS_AUDIO_DEFAULT_VOLUME = 0.6;
 const PUSH_AUDIO_DEFAULT_VOLUME = 0.5;
 const SHINE_AUDIO_DEFAULT_VOLUME = 0.5;
+const EXCITING_AUDIO_DEFAULT_VOLUME = 0.6;
 const REACH_PUSH_SOUND_DELAY_MS = 800;
 const BGM_FADE_IN_DEFAULT_DURATION_MS = 1200;
 const BGM_FADE_IN_FRAME_MS = 50;
@@ -35,6 +36,7 @@ const signboardDownAudio = new Audio('./audio/down.mp3');
 const cheersAudio = new Audio('./audio/cheers.mp3');
 const pushAudio = new Audio('./audio/push.mp3');
 const shineAudio = new Audio('./audio/shine.mp3');
+const excitingAudio = new Audio('./audio/exciting.mp3');
 
 let bgmFadeInIntervalId = null;
 let pushAudioTimeoutId = null;
@@ -168,8 +170,20 @@ const setShineAudioVolume = (volume) => {
   return shineAudio.volume;
 };
 
+const setExcitingAudioVolume = (volume) => {
+  const normalizedVolume = Number.isFinite(volume) ? Math.min(1, Math.max(0, volume)) : EXCITING_AUDIO_DEFAULT_VOLUME;
+
+  excitingAudio.volume = normalizedVolume;
+
+  return excitingAudio.volume;
+};
+
 const playCheersAudio = () => {
   playEffect(cheersAudio);
+};
+
+const playExcitingAudio = () => {
+  playEffect(excitingAudio);
 };
 
 const pauseBgm = () => {
@@ -230,7 +244,9 @@ window.setPremiumChangeMovieVolume = setPremiumChangeMovieVolume;
 window.setCheersAudioVolume = setCheersAudioVolume;
 window.setPushAudioVolume = setPushAudioVolume;
 window.setShineAudioVolume = setShineAudioVolume;
+window.setExcitingAudioVolume = setExcitingAudioVolume;
 window.playCheersAudio = playCheersAudio;
+window.playExcitingAudio = playExcitingAudio;
 window.pauseBgm = pauseBgm;
 window.stopBgm = stopBgm;
 window.resumeBgm = resumeBgm;
@@ -250,6 +266,7 @@ setPremiumChangeMovieVolume(PREMIUM_CHANGE_MOVIE_DEFAULT_VOLUME);
 setCheersAudioVolume(CHEERS_AUDIO_DEFAULT_VOLUME);
 setPushAudioVolume(PUSH_AUDIO_DEFAULT_VOLUME);
 setShineAudioVolume(SHINE_AUDIO_DEFAULT_VOLUME);
+setExcitingAudioVolume(EXCITING_AUDIO_DEFAULT_VOLUME);
 
 const playBgm = () => {
   bgmAudio

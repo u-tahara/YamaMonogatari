@@ -8,6 +8,7 @@ import { setReachCutinMovieVolume } from './reach-cutin-effect.js';
 const slotReels = document.querySelectorAll('.js-slot-reel');
 const reachPopup = document.querySelector('.js-reach-popup');
 const hitPopup = document.querySelector('.js-hit-popup');
+const onemoreEffect = document.querySelector('.js-onemore-effect');
 const reachChangeMovie = document.querySelector('.js-reach-change-movie');
 const pushButtonMovie = document.querySelector('.js-push-button-movie');
 const premiumBlackoutMovie = document.querySelector('.js-premium-blackout-movie');
@@ -20,6 +21,8 @@ const STOP_MIN_CYCLES = 4;
 const REACH_POPUP_DELAY_MS = 300;
 const REACH_POPUP_VISIBLE_MS = 1000;
 const HIT_POPUP_VISIBLE_MS = 1000;
+const NON_PREMIUM_HIT_Z_SPIN_DURATION_MS = 900;
+const ONEMORE_EFFECT_DURATION_MS = 1400;
 const START_BUTTON_INDEX = 13;
 const STOP_BUTTON_INDEXES = [6, 1, 0]; // 左, 真ん中, 右
 const STOP_ARROW_KEYS = ['ArrowLeft', 'ArrowDown', 'ArrowRight']; // 左, 真ん中, 右
@@ -118,6 +121,7 @@ let areReelsStopEnabled = true;
 let reachPopupTimeoutId = null;
 let reachPopupHideTimeoutId = null;
 let hitPopupHideTimeoutId = null;
+let onemoreEffectTimeoutId = null;
 let currentDisplayedNumbers = Array.from({ length: slotReels.length }, () => getRandomSlotNumber());
 let reelStepQueues = Array.from({ length: slotReels.length }, () => Promise.resolve());
 let reelStepToken = 0;
@@ -438,6 +442,7 @@ const startSpin = () => {
   clearReachPopupTimer();
   hideReachPopup();
   resetHitPopup();
+  resetOnemoreEffect();
   reachHitMovieSequenceController.reset();
   premiumHitMovieController.reset();
   clearPremiumRedirectTimer();
@@ -511,8 +516,12 @@ const completeSlotStop = (buttonOrder) => {
     const isPremiumHit = isPremiumHitNumbers(spinResultNumbers);
     const isSevenAligned = currentDisplayedNumbers.every((number) => number === PREMIUM_HIT_NUMBER);
 
-    if (!isPremiumHit || isSevenAligned) {
+    if (isPremiumHit && isSevenAligned) {
       showHitPopup();
+    }
+
+    if (!isPremiumHit) {
+      runNonPremiumHitCelebration();
     }
   }
 
@@ -520,7 +529,10 @@ const completeSlotStop = (buttonOrder) => {
 
   if (isAllSlotsStopped) {
     stopSpin();
-    decrementSpinCountAfterFinish();
+
+    if (!currentSpinDetail?.isHit) {
+      decrementSpinCountAfterFinish();
+    }
   }
 };
 
@@ -528,6 +540,83 @@ const completeSlotStop = (buttonOrder) => {
 const wait = (ms) => new Promise((resolve) => {
   window.setTimeout(resolve, ms);
 });
+
+const resetOnemoreEffect = () => {
+  if (onemoreEffectTimeoutId !== null) {
+    window.clearTimeout(onemoreEffectTimeoutId);
+    onemoreEffectTimeoutId = null;
+  }
+
+  if (!onemoreEffect) {
+    return;
+  }
+
+  onemoreEffect.classList.remove('js-onemore-playing');
+  onemoreEffect.hidden = true;
+};
+
+const showOnemoreEffect = () => {
+  if (!onemoreEffect) {
+    return;
+  }
+
+  if (onemoreEffectTimeoutId !== null) {
+    window.clearTimeout(onemoreEffectTimeoutId);
+    onemoreEffectTimeoutId = null;
+  }
+
+  onemoreEffect.classList.remove('js-onemore-playing');
+  onemoreEffect.hidden = false;
+
+  void onemoreEffect.offsetWidth;
+
+  onemoreEffect.classList.add('js-onemore-playing');
+
+  onemoreEffectTimeoutId = window.setTimeout(() => {
+    onemoreEffect.classList.remove('js-onemore-playing');
+    onemoreEffect.hidden = true;
+    onemoreEffectTimeoutId = null;
+  }, ONEMORE_EFFECT_DURATION_MS);
+};
+
+const runNonPremiumHitCelebration = async () => {
+  const alignedNumber = currentDisplayedNumbers[CENTER_SLOT_INDEX];
+  const alignedIndexes = currentDisplayedNumbers
+    .map((number, index) => (number === alignedNumber ? index : -1))
+    .filter((index) => index !== -1);
+
+  if (typeof window.playExcitingAudio === 'function') {
+    window.playExcitingAudio();
+  }
+
+  alignedIndexes.forEach((index) => {
+    const reel = slotReels[index];
+
+    if (!reel) {
+      return;
+    }
+
+    reel.classList.remove('js-hit-z-spin-target');
+
+    void reel.offsetWidth;
+
+    reel.classList.add('js-hit-z-spin-target');
+  });
+
+  await wait(NON_PREMIUM_HIT_Z_SPIN_DURATION_MS);
+
+  alignedIndexes.forEach((index) => {
+    const reel = slotReels[index];
+
+    if (!reel) {
+      return;
+    }
+
+    reel.classList.remove('js-hit-z-spin-target');
+  });
+
+  showOnemoreEffect();
+};
 
 // 指定リールを演出付きで目標数字まで回し、停止確定します。
 const stopSlotWithCycle = async (buttonOrder, targetNumber) => {
