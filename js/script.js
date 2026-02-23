@@ -25,7 +25,7 @@ const STOP_CYCLE_INTERVAL_MS = Math.max(0, SPIN_INTERVAL_MS - REEL_STEP_DURATION
 const STOP_SLOW_CYCLE_INTERVAL_MS = 160;
 const STOP_MIN_CYCLES = 4;
 const REACH_POPUP_DELAY_MS = 300;
-const REACH_POPUP_VISIBLE_MS = 1000;
+const REACH_POPUP_VISIBLE_MS = 1300;
 const HIT_POPUP_VISIBLE_MS = 1000;
 const NON_PREMIUM_HIT_Z_SPIN_DURATION_MS = 900;
 const NON_PREMIUM_HIT_Z_SPIN_DELAY_MS = 1000;
@@ -430,6 +430,7 @@ const clearReachPopupTimer = () => {
 // リーチポップアップを非表示にします。
 const hideReachPopup = () => {
   if (reachPopup) {
+    reachPopup.classList.remove('js-reach-popup-playing');
     reachPopup.hidden = true;
   }
 };
@@ -458,7 +459,10 @@ const showReachPopupWithDelay = () => {
   centerStopLocked = true;
 
   reachPopupTimeoutId = window.setTimeout(() => {
+    reachPopup.classList.remove('js-reach-popup-playing');
     reachPopup.hidden = false;
+    void reachPopup.offsetWidth;
+    reachPopup.classList.add('js-reach-popup-playing');
     reachPopupTimeoutId = null;
 
     reachPopupHideTimeoutId = window.setTimeout(() => {
