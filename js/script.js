@@ -67,6 +67,13 @@ const PREMIUM_BOUNCE_TO_REDIRECT_MS = 5000;
 const PREMIUM_REDIRECT_PATH = './YamaExtra.html';
 const MAIN_TITLE_SHAKE_CLASS_NAME = 'js-main-title-shaking';
 const MAIN_TITLE_SHAKE_DURATION_MS = 1200;
+const REACH_MISS_CUTIN_BLUE_UNCHANGE_RATE = 0.05;
+const REACH_MISS_CUTIN_GREEN_UNCHANGE_RATE = 0.1;
+const REACH_MISS_CUTIN_RED_UNCHANGE_RATE = 0.7;
+const REACH_MISS_CUTIN_GOLD_UNCHANGE_RATE = 1;
+const REACH_MISS_CHARACTER_GROUP_MANY_UNCHANGE_RATE = 0.4;
+const REACH_MISS_CHARACTER_GROUP_FEW_UNCHANGE_RATE = 0.3;
+const REACH_MISS_CHARACTER_GROUP_COMMENT_UNCHANGE_RATE = 0.2;
 
 const SIGNBOARD_INITIAL_COUNT = 25;
 const FINISHED_PAGE_PATH = './finished.html';
@@ -570,6 +577,44 @@ const isReachState = () => {
   return leftNumber !== undefined && leftNumber === rightNumber;
 };
 
+// 外れ時のリーチ演出種別ごとの変身演出発生率を返します。
+const getReachMissUnchangeRate = (effectType) => {
+  switch (effectType) {
+    case 'reach-cutin-blue':
+      return REACH_MISS_CUTIN_BLUE_UNCHANGE_RATE;
+    case 'reach-cutin-green':
+      return REACH_MISS_CUTIN_GREEN_UNCHANGE_RATE;
+    case 'reach-cutin-red':
+      return REACH_MISS_CUTIN_RED_UNCHANGE_RATE;
+    case 'reach-cutin-gold':
+      return REACH_MISS_CUTIN_GOLD_UNCHANGE_RATE;
+    case 'reach-character-group-many':
+      return REACH_MISS_CHARACTER_GROUP_MANY_UNCHANGE_RATE;
+    case 'reach-character-group-few':
+      return REACH_MISS_CHARACTER_GROUP_FEW_UNCHANGE_RATE;
+    case 'reach-character-group-comment':
+      return REACH_MISS_CHARACTER_GROUP_COMMENT_UNCHANGE_RATE;
+    default:
+      return 0;
+  }
+};
+
+// 外れ時にリーチ後の変身演出を再生するかを判定します。
+const shouldRunReachMissMovieSequence = () => {
+  const numbers = currentSpinDetail?.numbers;
+
+  if (!Array.isArray(numbers) || numbers.length < 3) {
+    return false;
+  }
+
+  if (numbers[LEFT_SLOT_INDEX] !== numbers[RIGHT_SLOT_INDEX]) {
+    return false;
+  }
+
+  const unchangeRate = getReachMissUnchangeRate(currentSpinDetail?.effectType);
+  return Math.random() < unchangeRate;
+};
+
 // 固定停止順のうち、次に停止できるリール番号を返します。
 const getNextRequiredStopSlotIndex = () =>
   FIXED_STOP_SEQUENCE.find((slotIndex) => !slotStopped[slotIndex] && !slotStopping[slotIndex]);
@@ -735,13 +780,13 @@ const stopSlotByButtonOrder = (buttonOrder) => {
     return;
   }
 
-  const shouldRunReachHitMovie =
+  const shouldRunReachMovieSequence =
     buttonOrder === CENTER_SLOT_INDEX &&
-    currentSpinDetail?.isHit &&
     !isPremiumHitNumbers(spinResultNumbers) &&
-    !reachHitMovieSequenceController.isRunning();
+    !reachHitMovieSequenceController.isRunning() &&
+    (currentSpinDetail?.isHit || shouldRunReachMissMovieSequence());
 
-  if (shouldRunReachHitMovie) {
+  if (shouldRunReachMovieSequence) {
     window.dispatchEvent(new Event(STOP_BUTTON_AUDIO_EVENT_NAME));
     reachHitMovieSequenceController.run().then((isCompleted) => {
       if (!isCompleted) {
@@ -865,11 +910,25 @@ const releaseArrowKeyInput = (event) => {
 
 // ゲームパッド入力を監視し、開始・停止操作を処理し続けます。
 
-window.addEventListener(REACH_HIT_EFFECT_FINISHED_EVENT_NAME, () => {
+window.addEventListener(REACH_HIT_EFFECT_FINISHED_EVENT_NAME, (event) => {
+  if (currentSpinDetail) {
+    currentSpinDetail = {
+      ...currentSpinDetail,
+      ...event.detail,
+    };
+  }
+
   centerStopLocked = false;
 });
 
-window.addEventListener(REACH_MISS_EFFECT_FINISHED_EVENT_NAME, () => {
+window.addEventListener(REACH_MISS_EFFECT_FINISHED_EVENT_NAME, (event) => {
+  if (currentSpinDetail) {
+    currentSpinDetail = {
+      ...currentSpinDetail,
+      ...event.detail,
+    };
+  }
+
   centerStopLocked = false;
 });
 
