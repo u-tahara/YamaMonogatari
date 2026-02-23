@@ -171,3 +171,18 @@
     animation: seven-bounce 1500ms ease-out 6;
     transform-origin: center bottom;
 }
+
+
+.js-hit-z-spin-target {
+    transform-style: preserve-3d;
+    perspective: 1000px;
+}
+
+.js-hit-z-spin-target .js-slot-current-cell {
+    transform-origin: center center;
+}
+
+.js-hit-z-spin-target .js-slot-current-cell .l-main__slot-number-image {
+    animation: hit-reel-z-spin 900ms ease-in-out 1;
+    backface-visibility: hidden;
+}

@@ -103,3 +103,31 @@
         transform: translateY(20%) scale(1.1);
     }
 }
+
+@keyframes hit-reel-z-spin {
+    0% {
+        transform: rotateY(0deg);
+    }
+    100% {
+        transform: rotateY(360deg);
+    }
+}
+
+@keyframes onemore-pop {
+    0% {
+        transform: translate(-50%, -50%) scale(0.2);
+        opacity: 0;
+    }
+    20% {
+        transform: translate(-50%, -50%) scale(1.08);
+        opacity: 1;
+    }
+    55% {
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 1;
+    }
+    100% {
+        transform: translate(-50%, -50%) scale(0.4);
+        opacity: 0;
+    }
+}
