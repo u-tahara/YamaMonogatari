@@ -5,6 +5,7 @@ const REEL_STOP_AUDIO_EVENT_NAME = 'slot:reel-stop-confirmed';
 const SIGNBOARD_UP_AUDIO_EVENT_NAME = 'slot:signboard-up';
 const SIGNBOARD_DOWN_AUDIO_EVENT_NAME = 'slot:signboard-down';
 const REACH_SUZU_BACKGROUND_AUDIO_EVENT_NAME = 'slot:hit-effect-reach-suzu-background';
+const REACH_POPUP_AUDIO_EVENT_NAME = 'slot:reach-popup-shown';
 const EFFECT_AUDIO_VOLUME = 0.3;
 const HELP_AUDIO_DEFAULT_VOLUME = 1;
 const SIGNBOARD_AUDIO_DEFAULT_VOLUME = 0.3;
@@ -19,6 +20,7 @@ const PUSH_AUDIO_DEFAULT_VOLUME = 0.5;
 const PUSH_WAV_AUDIO_DEFAULT_VOLUME = 1;
 const SHINE_AUDIO_DEFAULT_VOLUME = 0.5;
 const EXCITING_AUDIO_DEFAULT_VOLUME = 0.6;
+const REACH_AUDIO_DEFAULT_VOLUME = 0.5;
 const REACH_PUSH_SOUND_DELAY_MS = 800;
 const PUSH_WAV_DELAY_MS = 500;
 const BGM_FADE_IN_DEFAULT_DURATION_MS = 1200;
@@ -40,6 +42,7 @@ const pushAudio = new Audio('./audio/push.mp3');
 const pushWavAudio = new Audio('./audio/push.wav');
 const shineAudio = new Audio('./audio/shine.mp3');
 const excitingAudio = new Audio('./audio/exciting.mp3');
+const reachAudio = new Audio('./audio/reach.mp3');
 
 let bgmFadeInIntervalId = null;
 let pushAudioTimeoutId = null;
@@ -191,6 +194,14 @@ const setExcitingAudioVolume = (volume) => {
   return excitingAudio.volume;
 };
 
+const setReachAudioVolume = (volume) => {
+  const normalizedVolume = Number.isFinite(volume) ? Math.min(1, Math.max(0, volume)) : REACH_AUDIO_DEFAULT_VOLUME;
+
+  reachAudio.volume = normalizedVolume;
+
+  return reachAudio.volume;
+};
+
 const playCheersAudio = () => {
   playEffect(cheersAudio);
 };
@@ -259,6 +270,7 @@ window.setPushAudioVolume = setPushAudioVolume;
 window.setPushWavAudioVolume = setPushWavAudioVolume;
 window.setShineAudioVolume = setShineAudioVolume;
 window.setExcitingAudioVolume = setExcitingAudioVolume;
+window.setReachAudioVolume = setReachAudioVolume;
 window.playCheersAudio = playCheersAudio;
 window.playExcitingAudio = playExcitingAudio;
 window.pauseBgm = pauseBgm;
@@ -282,6 +294,7 @@ setPushAudioVolume(PUSH_AUDIO_DEFAULT_VOLUME);
 setPushWavAudioVolume(PUSH_WAV_AUDIO_DEFAULT_VOLUME);
 setShineAudioVolume(SHINE_AUDIO_DEFAULT_VOLUME);
 setExcitingAudioVolume(EXCITING_AUDIO_DEFAULT_VOLUME);
+setReachAudioVolume(REACH_AUDIO_DEFAULT_VOLUME);
 
 const playBgm = () => {
   bgmAudio
@@ -363,4 +376,8 @@ window.addEventListener(REACH_PUSH_BUTTON_MOVIE_STARTED_EVENT_NAME, () => {
 
 window.addEventListener(REACH_SUZU_BACKGROUND_AUDIO_EVENT_NAME, () => {
   playEffect(shineAudio);
+});
+
+window.addEventListener(REACH_POPUP_AUDIO_EVENT_NAME, () => {
+  playEffect(reachAudio);
 });
