@@ -39,6 +39,7 @@ const RIGHT_SLOT_INDEX = 2;
 const FIXED_STOP_SEQUENCE = [LEFT_SLOT_INDEX, RIGHT_SLOT_INDEX, CENTER_SLOT_INDEX]; // 左 → 右 → 真ん中
 const SPIN_START_EVENT_NAME = 'slot:spin-start';
 const REACH_POPUP_FINISHED_EVENT_NAME = 'slot:reach-popup-finished';
+const REACH_POPUP_AUDIO_EVENT_NAME = 'slot:reach-popup-shown';
 const REACH_HIT_EFFECT_FINISHED_EVENT_NAME = 'slot:reach-hit-effect-finished';
 const REACH_MISS_EFFECT_FINISHED_EVENT_NAME = 'slot:reach-miss-effect-finished';
 const LEVER_ON_EFFECT_FINISHED_EVENT_NAME = 'slot:lever-on-effect-finished';
@@ -463,6 +464,7 @@ const showReachPopupWithDelay = () => {
     reachPopup.hidden = false;
     void reachPopup.offsetWidth;
     reachPopup.classList.add('js-reach-popup-playing');
+    window.dispatchEvent(new Event(REACH_POPUP_AUDIO_EVENT_NAME));
     reachPopupTimeoutId = null;
 
     reachPopupHideTimeoutId = window.setTimeout(() => {
