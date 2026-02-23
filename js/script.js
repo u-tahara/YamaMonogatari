@@ -578,6 +578,10 @@ const stopSlotByButtonOrder = (buttonOrder) => {
     return;
   }
 
+  if (reachHitMovieSequenceController.isRunning()) {
+    return;
+  }
+
   if (currentSpinDetail?.isHit && isPremiumHitNumbers(spinResultNumbers)) {
     return;
   }
