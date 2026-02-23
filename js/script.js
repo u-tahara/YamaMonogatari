@@ -190,6 +190,24 @@ const premiumHitMovieController = createPremiumHitMovieController({
   },
 });
 
+const REACH_CHANGE_MOVIE_SRC = './movie/change.webm';
+const REACH_MISS_UNCHANGE_MOVIE_SRC = './movie/unchange.webm';
+
+const setReachChangeMovieSourceBySpinResult = (isHit) => {
+  if (!reachChangeMovie) {
+    return;
+  }
+
+  const nextMovieSource = isHit ? REACH_CHANGE_MOVIE_SRC : REACH_MISS_UNCHANGE_MOVIE_SRC;
+
+  if (reachChangeMovie.getAttribute('src') === nextMovieSource) {
+    return;
+  }
+
+  reachChangeMovie.setAttribute('src', nextMovieSource);
+  reachChangeMovie.load();
+};
+
 
 const clearPremiumRedirectTimer = () => {
   if (premiumRedirectTimeoutId === null) {
@@ -787,6 +805,7 @@ const stopSlotByButtonOrder = (buttonOrder) => {
     (currentSpinDetail?.isHit || shouldRunReachMissMovieSequence());
 
   if (shouldRunReachMovieSequence) {
+    setReachChangeMovieSourceBySpinResult(currentSpinDetail?.isHit);
     window.dispatchEvent(new Event(STOP_BUTTON_AUDIO_EVENT_NAME));
     reachHitMovieSequenceController.run().then((isCompleted) => {
       if (!isCompleted) {
