@@ -14,15 +14,22 @@
 }
 
 .c-hit-effect-image--signboard {
-  top: auto;
-  left: auto;
-  right: 10%;
-  bottom: -8%;
-  width: 22%;
-  transform: translateY(140%);
-  z-index: 122;
-  will-change: transform;
+    position: fixed;
+    bottom: -8%;
+    right: 10%;
+    width: 22%;
+    aspect-ratio: 1 / 1;
+    z-index: 121;
 }
+.c-hit-effect-image--signboard[hidden] {
+  display: none;
+}
+.c-hit-effect-image--signboard-image {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
 .c-hit-effect-image--lever-on-cutin-movie {
     width: 100%;
     height: 120%;
