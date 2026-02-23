@@ -80,12 +80,18 @@ export const createReachHitMovieSequenceController = ({
 
     isRunning = true;
 
-    if (typeof window.pauseBgm === 'function') {
-      window.pauseBgm();
-    }
-
     reachChangeMovie.currentTime = 0;
     reachChangeMovie.hidden = false;
+
+    const pauseBgmOnReachChangeMoviePlay = () => {
+      if (typeof window.pauseBgm === 'function') {
+        window.pauseBgm();
+      }
+    };
+
+    reachChangeMovie.addEventListener('play', pauseBgmOnReachChangeMoviePlay, {
+      once: true,
+    });
     safePlayMovie(reachChangeMovie);
 
     await new Promise((resolve) => {
