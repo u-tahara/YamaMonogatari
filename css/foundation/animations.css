@@ -79,3 +79,27 @@
         opacity: 1;
     }
 }
+
+@keyframes seven-bounce {
+    0% {
+        transform: translateY(20%) scale(1.1);
+    }
+    20% {
+        transform: translateY(-10%) scale(1.2);
+    }
+    40% {
+        transform: translateY(20%) scale(1.1);
+    }
+    58% {
+        transform: translateY(-5%) scale(1.2);
+    }
+    76% {
+        transform: translateY(20%) scale(1.1);
+    }
+    88% {
+        transform: translateY(-5%) scale(1.15);
+    }
+    100% {
+        transform: translateY(20%) scale(1.1);
+    }
+}
