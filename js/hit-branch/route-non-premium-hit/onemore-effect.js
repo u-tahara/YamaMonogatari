@@ -5,7 +5,7 @@ const ONEMORE_AUDIO_DEFAULT_VOLUME = 0.6;
 let onemoreEffectDelayTimeoutId = null;
 let onemoreEffectHideTimeoutId = null;
 
-const onemoreAudio = new Audio('./audio/onemore.mp3');
+const onemoreAudio = new Audio('./audio/onemore.wav');
 
 const getOnemoreEffectElement = () => document.querySelector('.js-onemore-effect');
 
