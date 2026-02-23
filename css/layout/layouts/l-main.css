@@ -60,7 +60,9 @@
 .l-main__signboard-number {
     position: absolute;
     top: 23%;
-    right: 5%;
+    right: 8%;
+    width: 20%;
+    text-align: center;
     transform: translate(-50%, -50%);
     font-size: 90px;
     color: #fff;
