@@ -458,8 +458,6 @@ const startSpin = () => {
 
     if (isPremiumHitNumbers(spinResultNumbers)) {
       premiumHitMovieController.run();
-    } else {
-      areReelsStopEnabled = true;
     }
   } else {
     dispatchMissEvent(detail);
