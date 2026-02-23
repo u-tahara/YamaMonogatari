@@ -16,9 +16,11 @@ const PREMIUM_BLACKOUT_MOVIE_DEFAULT_VOLUME = 0.4;
 const PREMIUM_CHANGE_MOVIE_DEFAULT_VOLUME = 0.5;
 const CHEERS_AUDIO_DEFAULT_VOLUME = 0.6;
 const PUSH_AUDIO_DEFAULT_VOLUME = 0.5;
+const PUSH_WAV_AUDIO_DEFAULT_VOLUME = 0.5;
 const SHINE_AUDIO_DEFAULT_VOLUME = 0.5;
 const EXCITING_AUDIO_DEFAULT_VOLUME = 0.6;
 const REACH_PUSH_SOUND_DELAY_MS = 800;
+const PUSH_WAV_DELAY_MS = 500;
 const BGM_FADE_IN_DEFAULT_DURATION_MS = 1200;
 const BGM_FADE_IN_FRAME_MS = 50;
 const REACH_PUSH_BUTTON_MOVIE_STARTED_EVENT_NAME = 'slot:reach-push-button-movie-started';
@@ -35,11 +37,13 @@ const signboardUpAudio = new Audio('./audio/up.mp3');
 const signboardDownAudio = new Audio('./audio/down.mp3');
 const cheersAudio = new Audio('./audio/cheers.mp3');
 const pushAudio = new Audio('./audio/push.mp3');
+const pushWavAudio = new Audio('./audio/push.wav');
 const shineAudio = new Audio('./audio/shine.mp3');
 const excitingAudio = new Audio('./audio/exciting.mp3');
 
 let bgmFadeInIntervalId = null;
 let pushAudioTimeoutId = null;
+let pushWavAudioTimeoutId = null;
 
 
 const setLeverOnCutinMovieVolume = (volume) => {
@@ -158,8 +162,17 @@ const setPushAudioVolume = (volume) => {
   const normalizedVolume = Number.isFinite(volume) ? Math.min(1, Math.max(0, volume)) : PUSH_AUDIO_DEFAULT_VOLUME;
 
   pushAudio.volume = normalizedVolume;
+  pushWavAudio.volume = normalizedVolume;
 
   return pushAudio.volume;
+};
+
+const setPushWavAudioVolume = (volume) => {
+  const normalizedVolume = Number.isFinite(volume) ? Math.min(1, Math.max(0, volume)) : PUSH_WAV_AUDIO_DEFAULT_VOLUME;
+
+  pushWavAudio.volume = normalizedVolume;
+
+  return pushWavAudio.volume;
 };
 
 const setShineAudioVolume = (volume) => {
@@ -243,6 +256,7 @@ window.setPremiumBlackoutMovieVolume = setPremiumBlackoutMovieVolume;
 window.setPremiumChangeMovieVolume = setPremiumChangeMovieVolume;
 window.setCheersAudioVolume = setCheersAudioVolume;
 window.setPushAudioVolume = setPushAudioVolume;
+window.setPushWavAudioVolume = setPushWavAudioVolume;
 window.setShineAudioVolume = setShineAudioVolume;
 window.setExcitingAudioVolume = setExcitingAudioVolume;
 window.playCheersAudio = playCheersAudio;
@@ -265,6 +279,7 @@ setPremiumBlackoutMovieVolume(PREMIUM_BLACKOUT_MOVIE_DEFAULT_VOLUME);
 setPremiumChangeMovieVolume(PREMIUM_CHANGE_MOVIE_DEFAULT_VOLUME);
 setCheersAudioVolume(CHEERS_AUDIO_DEFAULT_VOLUME);
 setPushAudioVolume(PUSH_AUDIO_DEFAULT_VOLUME);
+setPushWavAudioVolume(PUSH_WAV_AUDIO_DEFAULT_VOLUME);
 setShineAudioVolume(SHINE_AUDIO_DEFAULT_VOLUME);
 setExcitingAudioVolume(EXCITING_AUDIO_DEFAULT_VOLUME);
 
@@ -330,9 +345,19 @@ window.addEventListener(REACH_PUSH_BUTTON_MOVIE_STARTED_EVENT_NAME, () => {
     pushAudioTimeoutId = null;
   }
 
+  if (pushWavAudioTimeoutId !== null) {
+    window.clearTimeout(pushWavAudioTimeoutId);
+    pushWavAudioTimeoutId = null;
+  }
+
   pushAudioTimeoutId = window.setTimeout(() => {
     playEffect(pushAudio);
     pushAudioTimeoutId = null;
+
+    pushWavAudioTimeoutId = window.setTimeout(() => {
+      playEffect(pushWavAudio);
+      pushWavAudioTimeoutId = null;
+    }, PUSH_WAV_DELAY_MS);
   }, REACH_PUSH_SOUND_DELAY_MS);
 });
 
