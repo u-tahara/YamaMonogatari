@@ -30,6 +30,7 @@ const HIT_POPUP_VISIBLE_MS = 1000;
 const NON_PREMIUM_HIT_Z_SPIN_DURATION_MS = 900;
 const NON_PREMIUM_HIT_Z_SPIN_DELAY_MS = 1000;
 const START_BUTTON_INDEX = 13;
+const ADVANCE_EFFECT_BUTTON_INDEX = 4;
 const STOP_BUTTON_INDEXES = [6, 1, 0]; // 左, 真ん中, 右
 const STOP_ARROW_KEYS = ['ArrowLeft', 'ArrowDown', 'ArrowRight']; // 左, 真ん中, 右
 const START_SPIN_KEYS = [' ', 'Spacebar'];
@@ -142,6 +143,7 @@ let reelStepQueues = Array.from({ length: slotReels.length }, () => Promise.reso
 let reelStepToken = 0;
 let previousButtonPressed = {
   start: false,
+  advance: false,
   stop: STOP_BUTTON_INDEXES.map(() => false),
 };
 let previousArrowKeyPressed = STOP_ARROW_KEYS.map(() => false);
@@ -967,6 +969,14 @@ const watchControllerInput = () => {
   const activeGamepad = Array.from(gamepads).find(Boolean);
 
   if (activeGamepad) {
+    const advancePressed = isButtonPressed(activeGamepad, ADVANCE_EFFECT_BUTTON_INDEX);
+
+    if (advancePressed && !previousButtonPressed.advance) {
+      reachHitMovieSequenceController.handleAdvanceInput();
+    }
+
+    previousButtonPressed.advance = advancePressed;
+
     const startPressed = isStartPressed(activeGamepad);
 
     if (startPressed && !previousButtonPressed.start && !spinIntervalId) {
@@ -987,6 +997,7 @@ const watchControllerInput = () => {
   } else {
     previousButtonPressed = {
       start: false,
+      advance: false,
       stop: STOP_BUTTON_INDEXES.map(() => false),
     };
   }

@@ -62,14 +62,28 @@ export const createReachHitMovieSequenceController = ({
       pendingResolver = resolve;
     });
 
+  const handleAdvanceInput = () => {
+    if (!isAwaitingEnter) {
+      return false;
+    }
+
+    isAwaitingEnter = false;
+    resolvePending();
+    return true;
+  };
+
   const handleEnterKeyDown = (event) => {
-    if (event.key !== ENTER_KEY || !isAwaitingEnter) {
+    if (event.key !== ENTER_KEY) {
+      return false;
+    }
+
+    const hasHandled = handleAdvanceInput();
+
+    if (!hasHandled) {
       return false;
     }
 
     event.preventDefault();
-    isAwaitingEnter = false;
-    resolvePending();
     return true;
   };
 
@@ -142,6 +156,7 @@ export const createReachHitMovieSequenceController = ({
   };
 
   return {
+    handleAdvanceInput,
     handleEnterKeyDown,
     isRunning: () => isRunning,
     reset,
