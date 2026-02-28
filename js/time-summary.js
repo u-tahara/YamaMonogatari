@@ -9,7 +9,7 @@ const TIME_VALUES = {
   nonPremiumHitZSpinDurationMs: 900, // 通常当たり時のZ回転演出時間
   premiumFadeOutCompletedWaitMs: 1000, // プレミア演出フェード完了後の待機
   premiumBounceToRedirectMs: 5000, // プレミア演出後に遷移するまでの時間
-  premiumHitMovieStartDelayMs: 1000, // プレミア当たり時にボタン押下後から動画再生開始までの待機
+  premiumHitMovieStartDelayMs: 700, // プレミア当たり時にボタン押下後から動画再生開始までの待機
   mainTitleShakeDurationMs: 1200, // メインタイトルのシェイク演出時間
   onemoreEffectDisplayDelayMs: 1000, // ONE MORE演出表示開始までの待機
   onemoreEffectDurationMs: 2400, // ONE MORE演出の表示時間
