@@ -397,10 +397,14 @@ window.addEventListener(REACH_SUZU_BACKGROUND_AUDIO_EVENT_NAME, () => {
 });
 
 
-window.addEventListener(REACH_CHANGE_MOVIE_REPLAYED_EVENT_NAME, () => {
+window.addEventListener(REACH_CHANGE_MOVIE_REPLAYED_EVENT_NAME, (event) => {
   if (changedAudioTimeoutId !== null) {
     window.clearTimeout(changedAudioTimeoutId);
     changedAudioTimeoutId = null;
+  }
+
+  if (event.detail?.isHit === false) {
+    return;
   }
 
   changedAudioTimeoutId = window.setTimeout(() => {

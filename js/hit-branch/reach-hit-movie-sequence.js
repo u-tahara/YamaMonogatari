@@ -65,6 +65,7 @@ export const createReachHitMovieSequenceController = ({
       pendingResolver = resolve;
     });
 
+
   const handleAdvanceInput = () => {
     if (!isAwaitingEnter) {
       return false;
@@ -135,8 +136,16 @@ export const createReachHitMovieSequenceController = ({
     }
 
     stopAndHideMovie(pushButtonMovie);
+
+    const isHitChangeMovie = reachChangeMovie.getAttribute('src')?.includes('change.webm') ?? false;
+
+
     safePlayMovie(reachChangeMovie);
-    window.dispatchEvent(new CustomEvent(REACH_CHANGE_MOVIE_REPLAYED_EVENT_NAME));
+    window.dispatchEvent(
+      new CustomEvent(REACH_CHANGE_MOVIE_REPLAYED_EVENT_NAME, {
+        detail: { isHit: isHitChangeMovie },
+      }),
+    );
 
     await new Promise((resolve) => {
       const handleEnded = () => {

@@ -67,6 +67,7 @@ const PREMIUM_HIT_NUMBER = 7;
 const PREMIUM_HIT_PROBABILITY = getProbabilityValue('createHitNumbersPremium');
 const PREMIUM_FADE_OUT_COMPLETED_WAIT_MS = getTimeValue('premiumFadeOutCompletedWaitMs');
 const PREMIUM_BOUNCE_TO_REDIRECT_MS = getTimeValue('premiumBounceToRedirectMs');
+const FINISHED_REDIRECT_DELAY_MS = getTimeValue('finishedRedirectDelayMs');
 const PREMIUM_REDIRECT_PATH = './YamaExtra.html';
 const MAIN_TITLE_SHAKE_CLASS_NAME = 'js-main-title-shaking';
 const MAIN_TITLE_SHAKE_DURATION_MS = getTimeValue('mainTitleShakeDurationMs');
@@ -96,7 +97,9 @@ const decrementSpinCountAfterFinish = () => {
   updateSignboardNumber();
 
   if (remainingSpinCount === 0) {
-    window.location.href = FINISHED_PAGE_PATH;
+    window.setTimeout(() => {
+      window.location.href = FINISHED_PAGE_PATH;
+    }, FINISHED_REDIRECT_DELAY_MS);
   }
 };
 // 1〜9の範囲でランダムなスロット数字を返します。

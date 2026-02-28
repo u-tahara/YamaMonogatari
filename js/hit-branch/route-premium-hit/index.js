@@ -10,6 +10,7 @@ export const createPremiumHitMovieController = ({
 }) => {
   let isRunning = false;
   const PREMIUM_FADE_OUT_DURATION_MS = getTimeValue('premiumFadeOutDurationMs');
+  const PREMIUM_HIT_MOVIE_START_DELAY_MS = getTimeValue('premiumHitMovieStartDelayMs');
   const PREMIUM_FADE_OUT_CLASS_NAME = 'js-premium-movie-fade-out';
 
   const wait = (ms) => new Promise((resolve) => {
@@ -75,6 +76,12 @@ export const createPremiumHitMovieController = ({
     }
 
     isRunning = true;
+
+    await wait(PREMIUM_HIT_MOVIE_START_DELAY_MS);
+
+    if (!isRunning) {
+      return false;
+    }
 
     showMovie(changeMovie);
     safePlayMovie(changeMovie);
