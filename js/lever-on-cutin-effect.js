@@ -1,8 +1,11 @@
+import { getTimeValue } from './time-summary.js';
+
 const LEVER_ON_EFFECT_FINISHED_EVENT_NAME = 'slot:lever-on-effect-finished';
 const LEVER_ON_CUTIN_CENTER_EVENT_NAME = 'slot:lever-on-cutin-center';
-const EFFECT_VISIBLE_MS = 3000;
-const BIRD_CENTER_REACHED_MS = 850;
-const BIRD_RESET_FADE_IN_MS = 300;
+
+const EFFECT_VISIBLE_MS = getTimeValue('leverOnCutinVisibleMs');
+const BIRD_CENTER_REACHED_MS = getTimeValue('leverOnCutinBirdCenterReachedMs');
+const BIRD_RESET_FADE_IN_MS = getTimeValue('leverOnCutinBirdResetFadeInMs');
 const LEVER_ON_CUTIN_MOVIE_PLAYBACK_RATE = 1.3;
 
 const wait = (ms) =>

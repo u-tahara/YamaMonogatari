@@ -1,9 +1,10 @@
 import { runMissReachLeverOnSignboardBranch } from './branches/signboard-branch.js';
 import { runMissReachLeverOnCutInBranch } from './branches/cutin-branch.js';
 import { runMissReachLeverOnNoEffectBranch } from './branches/no-effect-branch.js';
+import { getProbabilityValue } from '../../probability-summary.js';
 
-const SIGNBOARD_RATE = 0.2;
-const CUT_IN_RATE = 0.25;
+const SIGNBOARD_RATE = getProbabilityValue('routeMissReachLeverOnSignboard');
+const CUT_IN_RATE = getProbabilityValue('routeMissReachLeverOnCutIn');
 
 // 外れ時のリーチ分岐向けレバーオン演出を分岐します。
 export const routeMissReachLeverOn = (detail) => {

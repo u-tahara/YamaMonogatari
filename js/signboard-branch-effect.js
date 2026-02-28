@@ -1,8 +1,11 @@
+import { getTimeValue } from './time-summary.js';
+
 const LEVER_ON_EFFECT_FINISHED_EVENT_NAME = 'slot:lever-on-effect-finished';
 const SIGNBOARD_UP_AUDIO_EVENT_NAME = 'slot:signboard-up';
 const SIGNBOARD_DOWN_AUDIO_EVENT_NAME = 'slot:signboard-down';
-const SIGNBOARD_SLIDE_DURATION_MS = 400;
-const SIGNBOARD_VISIBLE_MS = 1000;
+
+const SIGNBOARD_SLIDE_DURATION_MS = getTimeValue('signboardSlideDurationMs');
+const SIGNBOARD_VISIBLE_MS = getTimeValue('signboardVisibleMs');
 
 const wait = (ms) =>
   new Promise((resolve) => {

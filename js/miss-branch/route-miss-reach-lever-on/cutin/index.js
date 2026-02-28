@@ -3,11 +3,12 @@ import { runMissCutInBlueBranch } from '../../route-miss-no-reach/cutin/blue-bra
 import { runMissCutInGreenBranch } from '../../route-miss-no-reach/cutin/green-branch.js';
 import { runMissCutInRedBranch } from '../../route-miss-no-reach/cutin/red-branch.js';
 import { runMissCutInGoldBranch } from '../../route-miss-no-reach/cutin/gold-branch.js';
+import { getProbabilityValue } from '../../../probability-summary.js';
 
-const CUT_IN_WHITE_RATE = 0.4;
-const CUT_IN_BLUE_RATE = 0.35;
-const CUT_IN_GREEN_RATE = 0.14;
-const CUT_IN_RED_RATE = 0.1;
+const CUT_IN_WHITE_RATE = getProbabilityValue('routeMissReachLeverOnCutInWhite');
+const CUT_IN_BLUE_RATE = getProbabilityValue('routeMissReachLeverOnCutInBlue');
+const CUT_IN_GREEN_RATE = getProbabilityValue('routeMissReachLeverOnCutInGreen');
+const CUT_IN_RED_RATE = getProbabilityValue('routeMissReachLeverOnCutInRed');
 
 // 外れ時リーチ分岐のレバーオン向けカットイン演出内の分岐を行います。
 export const routeMissReachLeverOnCutInBranch = (detail) => {

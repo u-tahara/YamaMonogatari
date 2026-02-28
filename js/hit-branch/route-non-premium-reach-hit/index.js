@@ -2,10 +2,11 @@ import { runReachCutInBranch } from './branches/reach-cutin-branch.js';
 import { runReachCharacterGroupBranch } from './branches/reach-character-group-branch.js';
 import { runReachSuzuBackgroundBranch } from './branches/reach-suzu-background-branch.js';
 import { runReachNoEffectBranch } from './branches/reach-no-effect-branch.js';
+import { getProbabilityValue } from '../../probability-summary.js';
 
-const REACH_CUT_IN_RATE = 0.65;
-const REACH_CHARACTER_GROUP_RATE = 0.25;
-const REACH_SUZU_BACKGROUND_RATE = 0.05;
+const REACH_CUT_IN_RATE = getProbabilityValue('routeNonPremiumReachHitCutIn');
+const REACH_CHARACTER_GROUP_RATE = getProbabilityValue('routeNonPremiumReachHitCharacterGroup');
+const REACH_SUZU_BACKGROUND_RATE = getProbabilityValue('routeNonPremiumReachHitSuzuBackground');
 
 // リーチポップアップ表示後の当たり演出分岐を行います。
 export const routeNonPremiumReachHit = (detail) => {

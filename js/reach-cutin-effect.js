@@ -1,5 +1,8 @@
+import { getVolumeValue } from './volume-summary.js';
+
 const REACH_CUTIN_MOVIE_BASE_PATH = './movie';
-let reachCutinMovieVolume = 1;
+
+let reachCutinMovieVolume = getVolumeValue('reachCutinMovie');
 
 const clampVolume = (value) => Math.min(1, Math.max(0, value));
 

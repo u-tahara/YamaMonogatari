@@ -4,6 +4,8 @@ import './audio-controller.js';
 import { createReachHitMovieSequenceController } from './hit-branch/reach-hit-movie-sequence.js';
 import { createPremiumHitMovieController } from './hit-branch/route-premium-hit/index.js';
 import { setReachCutinMovieVolume } from './reach-cutin-effect.js';
+import { getProbabilityValue } from './probability-summary.js';
+import { getTimeValue } from './time-summary.js';
 import {
   ONEMORE_BONUS_TRIGGERED_EVENT_NAME,
   ONEMORE_EFFECT_FINISHED_EVENT_NAME,
@@ -19,16 +21,16 @@ const pushButtonMovie = document.querySelector('.js-push-button-movie');
 const premiumBlackoutMovie = document.querySelector('.js-premium-blackout-movie');
 const premiumChangeMovie = document.querySelector('.js-premium-change-movie');
 const mainTitle = document.querySelector('.js-main-title');
-const REEL_STEP_DURATION_MS = 60;
-const SPIN_INTERVAL_MS = 80;
+const REEL_STEP_DURATION_MS = getTimeValue('reelStepDurationMs');
+const SPIN_INTERVAL_MS = getTimeValue('spinIntervalMs');
 const STOP_CYCLE_INTERVAL_MS = Math.max(0, SPIN_INTERVAL_MS - REEL_STEP_DURATION_MS);
-const STOP_SLOW_CYCLE_INTERVAL_MS = 160;
+const STOP_SLOW_CYCLE_INTERVAL_MS = getTimeValue('stopSlowCycleIntervalMs');
 const STOP_MIN_CYCLES = 4;
-const REACH_POPUP_DELAY_MS = 300;
-const REACH_POPUP_VISIBLE_MS = 1300;
-const HIT_POPUP_VISIBLE_MS = 1000;
-const NON_PREMIUM_HIT_Z_SPIN_DURATION_MS = 900;
-const NON_PREMIUM_HIT_Z_SPIN_DELAY_MS = 1000;
+const REACH_POPUP_DELAY_MS = getTimeValue('reachPopupDelayMs');
+const REACH_POPUP_VISIBLE_MS = getTimeValue('reachPopupVisibleMs');
+const HIT_POPUP_VISIBLE_MS = getTimeValue('hitPopupVisibleMs');
+const NON_PREMIUM_HIT_Z_SPIN_DURATION_MS = getTimeValue('nonPremiumHitZSpinDurationMs');
+const NON_PREMIUM_HIT_Z_SPIN_DELAY_MS = getTimeValue('nonPremiumHitZSpinDelayMs');
 const START_BUTTON_INDEX = 13;
 const ADVANCE_EFFECT_BUTTON_INDEX = 7;
 const STOP_BUTTON_INDEXES = [6, 0, 1]; // 左, 真ん中, 右
@@ -62,19 +64,19 @@ const SLOT_NUMBER_IMAGE_NAMES = {
   9: 'nine',
 };
 const PREMIUM_HIT_NUMBER = 7;
-const PREMIUM_HIT_PROBABILITY = 0.1;
-const PREMIUM_FADE_OUT_COMPLETED_WAIT_MS = 1000;
-const PREMIUM_BOUNCE_TO_REDIRECT_MS = 5000;
+const PREMIUM_HIT_PROBABILITY = getProbabilityValue('createHitNumbersPremium');
+const PREMIUM_FADE_OUT_COMPLETED_WAIT_MS = getTimeValue('premiumFadeOutCompletedWaitMs');
+const PREMIUM_BOUNCE_TO_REDIRECT_MS = getTimeValue('premiumBounceToRedirectMs');
 const PREMIUM_REDIRECT_PATH = './YamaExtra.html';
 const MAIN_TITLE_SHAKE_CLASS_NAME = 'js-main-title-shaking';
-const MAIN_TITLE_SHAKE_DURATION_MS = 1200;
-const REACH_MISS_CUTIN_BLUE_UNCHANGE_RATE = 0.05;
-const REACH_MISS_CUTIN_GREEN_UNCHANGE_RATE = 0.1;
-const REACH_MISS_CUTIN_RED_UNCHANGE_RATE = 0.7;
-const REACH_MISS_CUTIN_GOLD_UNCHANGE_RATE = 1;
-const REACH_MISS_CHARACTER_GROUP_MANY_UNCHANGE_RATE = 0.4;
-const REACH_MISS_CHARACTER_GROUP_FEW_UNCHANGE_RATE = 0.3;
-const REACH_MISS_CHARACTER_GROUP_COMMENT_UNCHANGE_RATE = 0.2;
+const MAIN_TITLE_SHAKE_DURATION_MS = getTimeValue('mainTitleShakeDurationMs');
+const REACH_MISS_CUTIN_BLUE_UNCHANGE_RATE = getProbabilityValue('reachMissUnchangeBlue');
+const REACH_MISS_CUTIN_GREEN_UNCHANGE_RATE = getProbabilityValue('reachMissUnchangeGreen');
+const REACH_MISS_CUTIN_RED_UNCHANGE_RATE = getProbabilityValue('reachMissUnchangeRed');
+const REACH_MISS_CUTIN_GOLD_UNCHANGE_RATE = getProbabilityValue('reachMissUnchangeGold');
+const REACH_MISS_CHARACTER_GROUP_MANY_UNCHANGE_RATE = getProbabilityValue('reachMissUnchangeCharacterGroupMany');
+const REACH_MISS_CHARACTER_GROUP_FEW_UNCHANGE_RATE = getProbabilityValue('reachMissUnchangeCharacterGroupFew');
+const REACH_MISS_CHARACTER_GROUP_COMMENT_UNCHANGE_RATE = getProbabilityValue('reachMissUnchangeCharacterGroupComment');
 
 const SIGNBOARD_INITIAL_COUNT = 25;
 const FINISHED_PAGE_PATH = './finished.html';
@@ -101,7 +103,7 @@ const decrementSpinCountAfterFinish = () => {
 const getRandomSlotNumber = () => Math.floor(Math.random() * 9) + 1;
 
 // 当たり判定を行い、一定確率で true を返します。
-const judgeSpinResult = () => Math.random() < 1 / 13.7;
+const judgeSpinResult = () => Math.random() < getProbabilityValue('judgeSpinResult');
 
 // 3リールすべて同じ数字になる当たり用の配列を生成します。
 
