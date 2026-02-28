@@ -1,125 +1,30 @@
 const TIME_VALUES = {
-  reelStepDurationMs: 60,
-  spinIntervalMs: 80,
-  stopSlowCycleIntervalMs: 160,
-  reachPopupDelayMs: 300,
-  reachPopupVisibleMs: 1300,
-  hitPopupVisibleMs: 1000,
-  nonPremiumHitZSpinDelayMs: 1000,
-  nonPremiumHitZSpinDurationMs: 900,
-  premiumFadeOutCompletedWaitMs: 1000,
-  premiumBounceToRedirectMs: 5000,
-  mainTitleShakeDurationMs: 1200,
-  onemoreEffectDisplayDelayMs: 1000,
-  onemoreEffectDurationMs: 2400,
-  signboardVisibleMs: 1000,
-  signboardSlideDurationMs: 400,
-  leverOnCutinVisibleMs: 3000,
-  leverOnCutinBirdCenterReachedMs: 850,
-  leverOnCutinBirdResetFadeInMs: 300,
-  bgmFadeInDefaultDurationMs: 1200,
-  reachPushSoundDelayMs: 800,
-  pushWavDelayMs: 500,
-  changedAudioDelayMs: 10000,
-  reachChangeMoviePauseMs: 3400,
-  suzuBackgroundVisibleMs: 3000,
-  premiumFadeOutDurationMs: 320,
-  bgmFadeInFrameMs: 50,
+  reelStepDurationMs: 60, // リール数字更新の1ステップ間隔
+  spinIntervalMs: 80, // リール回転中の数字更新インターバル
+  stopSlowCycleIntervalMs: 160, // 停止減速中の更新インターバル
+  reachPopupDelayMs: 300, // リーチポップアップ表示までの待機時間
+  reachPopupVisibleMs: 1300, // リーチポップアップ表示時間
+  hitPopupVisibleMs: 1000, // HITポップアップ表示時間
+  nonPremiumHitZSpinDelayMs: 1000, // 通常当たり時のZ回転開始前待機
+  nonPremiumHitZSpinDurationMs: 900, // 通常当たり時のZ回転演出時間
+  premiumFadeOutCompletedWaitMs: 1000, // プレミア演出フェード完了後の待機
+  premiumBounceToRedirectMs: 5000, // プレミア演出後に遷移するまでの時間
+  mainTitleShakeDurationMs: 1200, // メインタイトルのシェイク演出時間
+  onemoreEffectDisplayDelayMs: 1000, // ONE MORE演出表示開始までの待機
+  onemoreEffectDurationMs: 2400, // ONE MORE演出の表示時間
+  signboardVisibleMs: 1000, // 看板演出の表示時間
+  signboardSlideDurationMs: 400, // 看板スライド演出時間
+  leverOnCutinVisibleMs: 3000, // レバーオンカットイン表示時間
+  leverOnCutinBirdCenterReachedMs: 850, // レバーオンカットイン鳥の中央到達時間
+  leverOnCutinBirdResetFadeInMs: 300, // レバーオンカットイン鳥のリセットフェード時間
+  bgmFadeInDefaultDurationMs: 1200, // BGMフェードインのデフォルト時間
+  reachPushSoundDelayMs: 800, // リーチ開始後のpush音再生遅延
+  pushWavDelayMs: 500, // push.wav再生までの待機
+  changedAudioDelayMs: 10000, // changed音の再生遅延
+  reachChangeMoviePauseMs: 3400, // change/unchange動画を一時停止する時間
+  suzuBackgroundVisibleMs: 3000, // スズ背景演出の表示時間
+  premiumFadeOutDurationMs: 320, // プレミア演出フェードアウト時間
+  bgmFadeInFrameMs: 50, // BGMフェードイン制御のフレーム間隔
 };
 
 export const getTimeValue = (key) => TIME_VALUES[key];
-
-// 時間（ミリ秒）を管理している関数と値の一覧を返します。
-// すべて ms 単位で統一し、演出の待機・表示・遷移時間を把握しやすくしています。
-export const getTimeSummary = () => [
-  {
-    // リールの数字更新周期
-    functionName: 'startSpin',
-    durationMs: 80,
-    description: 'リール数字を更新するインターバル（SPIN_INTERVAL_MS）。',
-  },
-  {
-    // リーチポップアップの表示遅延
-    functionName: 'showReachPopupWithDelay',
-    durationMs: 300,
-    description: 'リーチポップアップを出すまでの待機時間。',
-  },
-  {
-    // リーチポップアップの表示時間
-    functionName: 'showReachPopupWithDelay',
-    durationMs: 1300,
-    description: 'リーチポップアップを表示する時間。',
-  },
-  {
-    // HIT ポップアップ表示時間
-    functionName: 'showHitPopup',
-    durationMs: 1000,
-    description: 'HIT ポップアップを表示する時間。',
-  },
-  {
-    // 非プレミア当たりの Z 回転開始前待機
-    functionName: 'completeSlotStop',
-    durationMs: 1000,
-    description: 'Z 回転演出開始前の待機時間。',
-  },
-  {
-    // 非プレミア当たりの Z 回転時間
-    functionName: 'completeSlotStop',
-    durationMs: 900,
-    description: 'Z 回転演出の継続時間。',
-  },
-  {
-    // プレミア後の遷移待機
-    functionName: 'startPremiumPostFadeOutSequence',
-    durationMs: 5000,
-    description: 'プレミア演出後、YamaExtra へ遷移するまでの時間。',
-  },
-  {
-    // メインタイトル揺れ時間
-    functionName: 'lockSpinStartUntilMainTitleShakeFinished',
-    durationMs: 1200,
-    description: 'タイトルのシェイク演出時間。',
-  },
-  {
-    // ワンモア演出の表示遅延
-    functionName: 'showOnemoreEffect',
-    durationMs: 1000,
-    description: 'ワンモア演出を表示開始するまでの待機時間。',
-  },
-  {
-    // ワンモア演出の表示時間
-    functionName: 'showOnemoreEffect',
-    durationMs: 2400,
-    description: 'ワンモア演出を表示する時間。',
-  },
-  {
-    // 看板演出表示時間
-    functionName: 'playSignboardBranchEffect',
-    durationMs: 1000,
-    description: '看板演出を表示する時間。',
-  },
-  {
-    // レバーオンカットイン表示時間
-    functionName: 'playLeverOnCutinEffect',
-    durationMs: 3000,
-    description: 'レバーオンカットイン演出の表示時間。',
-  },
-  {
-    // BGM フェードイン時間
-    functionName: 'resumeBgmWithFadeIn',
-    durationMs: 1200,
-    description: 'BGM を徐々に上げるデフォルト時間。',
-  },
-  {
-    // PUSH 系 SE の再生遅延
-    functionName: 'audio-controller (REACH_PUSH_SOUND_DELAY_MS)',
-    durationMs: 800,
-    description: 'リーチ開始後に push 音を鳴らすまでの待機時間。',
-  },
-  {
-    // 変化音の再生遅延
-    functionName: 'audio-controller (CHANGED_AUDIO_DELAY_MS)',
-    durationMs: 10000,
-    description: 'changed 音を再生するまでの待機時間。',
-  },
-];
