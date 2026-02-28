@@ -11,6 +11,15 @@ const isSmartphoneOrTablet = () => {
   return isIPhone || isIPad || isAndroidMobile || isAndroidTablet || isIPadOS;
 };
 
+const isIndexPage = () => {
+  const path = window.location.pathname;
+  return path.endsWith('/index.html') || path === '/' || path === '';
+};
+
 if (isSmartphoneOrTablet()) {
   document.documentElement.classList.add('js-mobile-device');
+
+  if (isIndexPage()) {
+    window.location.replace('mobile.html');
+  }
 }
