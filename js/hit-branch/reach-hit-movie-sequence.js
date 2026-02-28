@@ -1,4 +1,4 @@
-const REACH_CHANGE_MOVIE_PAUSE_MS = 3500;
+const REACH_CHANGE_MOVIE_PAUSE_MS = 3400;
 const ENTER_KEY = 'Enter';
 const REACH_PUSH_BUTTON_MOVIE_STARTED_EVENT_NAME = 'slot:reach-push-button-movie-started';
 
