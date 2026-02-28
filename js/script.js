@@ -511,6 +511,10 @@ const showReachPopupWithDelay = () => {
 
 // 停止していないリールだけを1ステップずつ回転させます。
 const spinSlotNumbers = () => {
+  if (currentSpinDetail?.isHit && isPremiumHitNumbers(spinResultNumbers)) {
+    return;
+  }
+
   slotReels.forEach((_, index) => {
     if (slotStopped[index] || slotStopping[index]) {
       return;
