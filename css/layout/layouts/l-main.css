@@ -1,24 +1,26 @@
 .l-main {
     display: flex;
     flex-direction: column;
-    width: 100vw;
     height: 100vh;
+    aspect-ratio: 16 / 9;
     align-items: center;
     position: relative;
+    overflow: hidden;
 }
 
 .l-main__background {
     position: fixed;
     top: 0;
-    left: 0;
-    width: 100vw;
+    left: 50%;
+    transform: translateX(-50%);
     height: 100vh;
+    aspect-ratio: 16 / 9;
     object-fit: fill;
     z-index: -1;
 }
 
 .l-main__bird {
-    position: fixed;
+    position: absolute;
     top: -3%;
     width: 27%;
     height: auto;
@@ -45,7 +47,7 @@
 }
 
 .l-main__signboard {
-    position: fixed;
+    position: absolute;
     bottom: -8%;
     right: 10%;
     width: 22%;
@@ -59,12 +61,13 @@
 }
 .l-main__signboard-number {
     position: absolute;
-    top: 12%;
+    top: 33%;
     right: 8%;
     width: 20%;
+    margin: 0;
     text-align: center;
     transform: translate(-50%, -50%);
-    font-size: 90px;
+    font-size: 500%;
     color: #fff;
     font-family: "sicrusk", sans-serif;
     font-weight: 400;
@@ -75,21 +78,23 @@
 .l-main__frontground {
     position: fixed;
     top: 0;
-    left: 0;
-    width: 100vw;
+    left: 50%;
+    transform: translateX(-50%);
     height: 100vh;
+    aspect-ratio: 16 / 9;
     object-fit: fill;
     z-index: 120;
 }
 
 .l-main__title {
-    position: fixed;
+    position: absolute;
     top: 0;
     left: 50%;
     transform: translateX(-50%);
     width: 20%;
     margin: 0;
     z-index: 121;
+    pointer-events: none;
 }
 
 .l-main__title img {
@@ -102,7 +107,7 @@
 }
 
 .l-main__container {
-    position: fixed;
+    position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
