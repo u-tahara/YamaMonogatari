@@ -1,13 +1,14 @@
 import { routeMissNoReach } from './miss-branch/route-miss-no-reach/index.js';
 import { routeMissReach } from './miss-branch/route-miss-reach/index.js';
 import { routeMissReachLeverOn } from './miss-branch/route-miss-reach-lever-on/index.js';
+import { getProbabilityValue } from './probability-summary.js';
 
 export const MISS_EVENT_NAME = 'slot:miss';
 const REACH_POPUP_FINISHED_EVENT_NAME = 'slot:reach-popup-finished';
 const SLOT_NUMBER_MIN = 1;
 const SLOT_NUMBER_MAX = 9;
 const PREMIUM_HIT_NUMBER = 7;
-const MISS_REACH_PROBABILITY = 0.3;
+const MISS_REACH_PROBABILITY = getProbabilityValue('shouldShowMissReach');
 const LEFT_SLOT_INDEX = 0;
 const RIGHT_SLOT_INDEX = 2;
 

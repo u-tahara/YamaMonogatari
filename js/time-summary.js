@@ -1,3 +1,34 @@
+const TIME_VALUES = {
+  reelStepDurationMs: 60,
+  spinIntervalMs: 80,
+  stopSlowCycleIntervalMs: 160,
+  reachPopupDelayMs: 300,
+  reachPopupVisibleMs: 1300,
+  hitPopupVisibleMs: 1000,
+  nonPremiumHitZSpinDelayMs: 1000,
+  nonPremiumHitZSpinDurationMs: 900,
+  premiumFadeOutCompletedWaitMs: 1000,
+  premiumBounceToRedirectMs: 5000,
+  mainTitleShakeDurationMs: 1200,
+  onemoreEffectDisplayDelayMs: 1000,
+  onemoreEffectDurationMs: 2400,
+  signboardVisibleMs: 1000,
+  signboardSlideDurationMs: 400,
+  leverOnCutinVisibleMs: 3000,
+  leverOnCutinBirdCenterReachedMs: 850,
+  leverOnCutinBirdResetFadeInMs: 300,
+  bgmFadeInDefaultDurationMs: 1200,
+  reachPushSoundDelayMs: 800,
+  pushWavDelayMs: 500,
+  changedAudioDelayMs: 10000,
+  reachChangeMoviePauseMs: 3400,
+  suzuBackgroundVisibleMs: 3000,
+  premiumFadeOutDurationMs: 320,
+  bgmFadeInFrameMs: 50,
+};
+
+export const getTimeValue = (key) => TIME_VALUES[key];
+
 // 時間（ミリ秒）を管理している関数と値の一覧を返します。
 // すべて ms 単位で統一し、演出の待機・表示・遷移時間を把握しやすくしています。
 export const getTimeSummary = () => [

@@ -1,9 +1,10 @@
 import { runReachCharacterGroupManyBranch } from './many-branch.js';
 import { runReachCharacterGroupFewBranch } from './few-branch.js';
 import { runReachCharacterGroupCommentBranch } from './comment-branch.js';
+import { getProbabilityValue } from '../../../probability-summary.js';
 
-const CHARACTER_GROUP_MANY_RATE = 0.4;
-const CHARACTER_GROUP_FEW_RATE = 0.2;
+const CHARACTER_GROUP_MANY_RATE = getProbabilityValue('routeReachCharacterGroupMany');
+const CHARACTER_GROUP_FEW_RATE = getProbabilityValue('routeReachCharacterGroupFew');
 
 // リーチ後キャラ群演出内の分岐を行います。
 export const routeReachCharacterGroupBranch = (detail) => {

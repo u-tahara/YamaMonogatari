@@ -1,3 +1,6 @@
+import { getTimeValue } from './time-summary.js';
+import { getVolumeValue } from './volume-summary.js';
+
 const LEVER_ON_AUDIO_EVENT_NAME = 'slot:lever-on';
 const LEVER_ON_CUTIN_CENTER_EVENT_NAME = 'slot:lever-on-cutin-center';
 const STOP_BUTTON_AUDIO_EVENT_NAME = 'slot:stop-button-pressed';
@@ -6,33 +9,33 @@ const SIGNBOARD_UP_AUDIO_EVENT_NAME = 'slot:signboard-up';
 const SIGNBOARD_DOWN_AUDIO_EVENT_NAME = 'slot:signboard-down';
 const REACH_SUZU_BACKGROUND_AUDIO_EVENT_NAME = 'slot:hit-effect-reach-suzu-background';
 const REACH_POPUP_AUDIO_EVENT_NAME = 'slot:reach-popup-shown';
-const EFFECT_AUDIO_VOLUME = 0.3;
-const HELP_AUDIO_DEFAULT_VOLUME = 1;
-const SIGNBOARD_AUDIO_DEFAULT_VOLUME = 0.3;
-const LEVER_ON_CUTIN_MOVIE_DEFAULT_VOLUME = 0.3;
-const REACH_CHARACTER_GROUP_DEFAULT_VOLUME = 1;
-const REACH_CHANGE_MOVIE_DEFAULT_VOLUME = 0.6;
-const PUSH_BUTTON_MOVIE_DEFAULT_VOLUME = 0.2;
-const PREMIUM_BLACKOUT_MOVIE_DEFAULT_VOLUME = 0.4;
-const PREMIUM_CHANGE_MOVIE_DEFAULT_VOLUME = 0.5;
-const CHEERS_AUDIO_DEFAULT_VOLUME = 0.6;
-const PUSH_AUDIO_DEFAULT_VOLUME = 0.5;
-const PUSH_WAV_AUDIO_DEFAULT_VOLUME = 1;
-const SHINE_AUDIO_DEFAULT_VOLUME = 0.5;
-const EXCITING_AUDIO_DEFAULT_VOLUME = 0.6;
-const REACH_AUDIO_DEFAULT_VOLUME = 0.5;
-const CHANGED_AUDIO_DEFAULT_VOLUME = 1;
-const REACH_PUSH_SOUND_DELAY_MS = 800;
-const PUSH_WAV_DELAY_MS = 500;
-const BGM_FADE_IN_DEFAULT_DURATION_MS = 1200;
-const BGM_FADE_IN_FRAME_MS = 50;
+const EFFECT_AUDIO_VOLUME = getVolumeValue('effectAudio');
+const HELP_AUDIO_DEFAULT_VOLUME = getVolumeValue('helpAudio');
+const SIGNBOARD_AUDIO_DEFAULT_VOLUME = getVolumeValue('signboardAudio');
+const LEVER_ON_CUTIN_MOVIE_DEFAULT_VOLUME = getVolumeValue('leverOnCutinMovie');
+const REACH_CHARACTER_GROUP_DEFAULT_VOLUME = getVolumeValue('reachCharacterGroup');
+const REACH_CHANGE_MOVIE_DEFAULT_VOLUME = getVolumeValue('reachChangeMovie');
+const PUSH_BUTTON_MOVIE_DEFAULT_VOLUME = getVolumeValue('pushButtonMovie');
+const PREMIUM_BLACKOUT_MOVIE_DEFAULT_VOLUME = getVolumeValue('premiumBlackoutMovie');
+const PREMIUM_CHANGE_MOVIE_DEFAULT_VOLUME = getVolumeValue('premiumChangeMovie');
+const CHEERS_AUDIO_DEFAULT_VOLUME = getVolumeValue('cheersAudio');
+const PUSH_AUDIO_DEFAULT_VOLUME = getVolumeValue('pushAudio');
+const PUSH_WAV_AUDIO_DEFAULT_VOLUME = getVolumeValue('pushWavAudio');
+const SHINE_AUDIO_DEFAULT_VOLUME = getVolumeValue('shineAudio');
+const EXCITING_AUDIO_DEFAULT_VOLUME = getVolumeValue('excitingAudio');
+const REACH_AUDIO_DEFAULT_VOLUME = getVolumeValue('reachAudio');
+const CHANGED_AUDIO_DEFAULT_VOLUME = getVolumeValue('changedAudio');
+const REACH_PUSH_SOUND_DELAY_MS = getTimeValue('reachPushSoundDelayMs');
+const PUSH_WAV_DELAY_MS = getTimeValue('pushWavDelayMs');
+const BGM_FADE_IN_DEFAULT_DURATION_MS = getTimeValue('bgmFadeInDefaultDurationMs');
+const BGM_FADE_IN_FRAME_MS = getTimeValue('bgmFadeInFrameMs');
 const REACH_PUSH_BUTTON_MOVIE_STARTED_EVENT_NAME = 'slot:reach-push-button-movie-started';
 const REACH_CHANGE_MOVIE_REPLAYED_EVENT_NAME = 'slot:reach-change-movie-replayed';
-const CHANGED_AUDIO_DELAY_MS = 10000;
+const CHANGED_AUDIO_DELAY_MS = getTimeValue('changedAudioDelayMs');
 
 const bgmAudio = new Audio('./audio/bgm.mp3');
 bgmAudio.loop = true;
-bgmAudio.volume = 0.07;
+bgmAudio.volume = getVolumeValue('bgmDefault');
 
 const leverAudio = new Audio('./audio/lever.mp3');
 const buttonAudio = new Audio('./audio/button.mp3');
@@ -245,7 +248,7 @@ const resumeBgmWithFadeIn = (durationMs = BGM_FADE_IN_DEFAULT_DURATION_MS) => {
   const normalizedDurationMs = Number.isFinite(durationMs) && durationMs > 0
     ? durationMs
     : BGM_FADE_IN_DEFAULT_DURATION_MS;
-  const targetVolume = 0.07;
+  const targetVolume = getVolumeValue('bgmDefault');
   const stepCount = Math.max(1, Math.ceil(normalizedDurationMs / BGM_FADE_IN_FRAME_MS));
   const volumeStep = targetVolume / stepCount;
 

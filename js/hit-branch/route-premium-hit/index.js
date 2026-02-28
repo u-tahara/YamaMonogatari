@@ -1,3 +1,5 @@
+import { getTimeValue } from '../../time-summary.js';
+
 // 7図柄当たり時のプレミア動画演出を管理するコントローラーを生成します。
 export const createPremiumHitMovieController = ({
   blackoutMovie,
@@ -7,7 +9,7 @@ export const createPremiumHitMovieController = ({
   onCompleted,
 }) => {
   let isRunning = false;
-  const PREMIUM_FADE_OUT_DURATION_MS = 320;
+  const PREMIUM_FADE_OUT_DURATION_MS = getTimeValue('premiumFadeOutDurationMs');
   const PREMIUM_FADE_OUT_CLASS_NAME = 'js-premium-movie-fade-out';
 
   const wait = (ms) => new Promise((resolve) => {

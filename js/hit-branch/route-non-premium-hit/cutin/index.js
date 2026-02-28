@@ -3,11 +3,12 @@ import { runCutInBlueBranch } from './blue-branch.js';
 import { runCutInGreenBranch } from './green-branch.js';
 import { runCutInRedBranch } from './red-branch.js';
 import { runCutInGoldBranch } from './gold-branch.js';
+import { getProbabilityValue } from '../../../probability-summary.js';
 
-const CUT_IN_WHITE_RATE = 0.05;
-const CUT_IN_BLUE_RATE = 0.15;
-const CUT_IN_GREEN_RATE = 0.4;
-const CUT_IN_RED_RATE = 0.35;
+const CUT_IN_WHITE_RATE = getProbabilityValue('routeNonPremiumHitCutInWhite');
+const CUT_IN_BLUE_RATE = getProbabilityValue('routeNonPremiumHitCutInBlue');
+const CUT_IN_GREEN_RATE = getProbabilityValue('routeNonPremiumHitCutInGreen');
+const CUT_IN_RED_RATE = getProbabilityValue('routeNonPremiumHitCutInRed');
 
 // カットイン演出内の分岐を行います。
 export const routeCutInBranch = (detail) => {

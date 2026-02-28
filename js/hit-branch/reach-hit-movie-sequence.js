@@ -1,4 +1,6 @@
-const REACH_CHANGE_MOVIE_PAUSE_MS = 3400;
+import { getTimeValue } from '../time-summary.js';
+
+const REACH_CHANGE_MOVIE_PAUSE_MS = getTimeValue('reachChangeMoviePauseMs');
 const ENTER_KEY = 'Enter';
 const REACH_PUSH_BUTTON_MOVIE_STARTED_EVENT_NAME = 'slot:reach-push-button-movie-started';
 const REACH_CHANGE_MOVIE_REPLAYED_EVENT_NAME = 'slot:reach-change-movie-replayed';

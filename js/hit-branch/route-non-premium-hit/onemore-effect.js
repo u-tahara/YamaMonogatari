@@ -1,7 +1,11 @@
-const ONEMORE_EFFECT_DURATION_MS = 2400;
-const ONEMORE_EFFECT_DISPLAY_DELAY_MS = 1000;
-const ONEMORE_AUDIO_DEFAULT_VOLUME = 0.6;
-const ONEMORE_BONUS_TRIGGER_PROBABILITY = 0.5;
+import { getProbabilityValue } from '../../probability-summary.js';
+import { getTimeValue } from '../../time-summary.js';
+import { getVolumeValue } from '../../volume-summary.js';
+
+const ONEMORE_EFFECT_DURATION_MS = getTimeValue('onemoreEffectDurationMs');
+const ONEMORE_EFFECT_DISPLAY_DELAY_MS = getTimeValue('onemoreEffectDisplayDelayMs');
+const ONEMORE_AUDIO_DEFAULT_VOLUME = getVolumeValue('onemoreAudio');
+const ONEMORE_BONUS_TRIGGER_PROBABILITY = getProbabilityValue('shouldTriggerOnemoreBonus');
 export const ONEMORE_BONUS_TRIGGERED_EVENT_NAME = 'slot:onemore-bonus-triggered';
 export const ONEMORE_EFFECT_FINISHED_EVENT_NAME = 'slot:onemore-effect-finished';
 

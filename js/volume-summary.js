@@ -1,3 +1,27 @@
+const VOLUME_VALUES = {
+  effectAudio: 0.3,
+  bgmDefault: 0.07,
+  reachCutinMovie: 1,
+  leverOnCutinMovie: 0.3,
+  reachCharacterGroup: 1,
+  reachChangeMovie: 0.6,
+  pushButtonMovie: 0.2,
+  premiumBlackoutMovie: 0.4,
+  premiumChangeMovie: 0.5,
+  helpAudio: 1,
+  signboardAudio: 0.3,
+  cheersAudio: 0.6,
+  pushAudio: 0.5,
+  pushWavAudio: 1,
+  shineAudio: 0.5,
+  excitingAudio: 0.6,
+  changedAudio: 1,
+  reachAudio: 0.5,
+  onemoreAudio: 0.6,
+};
+
+export const getVolumeValue = (key) => VOLUME_VALUES[key];
+
 // 音量を管理している関数とデフォルト値の一覧を返します。
 // 0.0〜1.0 の範囲で扱う想定です。
 export const getVolumeSummary = () => [

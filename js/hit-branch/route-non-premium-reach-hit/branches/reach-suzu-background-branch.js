@@ -1,5 +1,8 @@
+import { getTimeValue } from '../../../../time-summary.js';
+
 const REACH_HIT_EFFECT_FINISHED_EVENT_NAME = 'slot:reach-hit-effect-finished';
-const EFFECT_VISIBLE_MS = 3000;
+
+const EFFECT_VISIBLE_MS = getTimeValue('suzuBackgroundVisibleMs');
 
 // リーチ後スズ背景演出の分岐先処理です。
 export const runReachSuzuBackgroundBranch = (detail) => {
