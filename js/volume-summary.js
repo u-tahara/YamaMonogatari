@@ -15,7 +15,7 @@ const VOLUME_VALUES = {
   pushWavAudio: 1, // push.wavの音量
   shineAudio: 0.5, // shine.mp3の音量
   excitingAudio: 0.6, // exciting.mp3の音量
-  changedAudio: 1, // changed.mp3の音量
+  changedAudio: 1, // changed.wavの音量
   reachAudio: 0.5, // reach.mp3の音量
   onemoreAudio: 0.6, // onemore.wavの音量
 };

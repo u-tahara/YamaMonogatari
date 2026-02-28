@@ -49,7 +49,7 @@ const pushWavAudio = new Audio('./audio/push.wav');
 const shineAudio = new Audio('./audio/shine.mp3');
 const excitingAudio = new Audio('./audio/exciting.mp3');
 const reachAudio = new Audio('./audio/reach.mp3');
-const changedAudio = new Audio('./audio/changed.mp3');
+const changedAudio = new Audio('./audio/changed.wav');
 
 let bgmFadeInIntervalId = null;
 let pushAudioTimeoutId = null;

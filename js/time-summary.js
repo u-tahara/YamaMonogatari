@@ -3,7 +3,7 @@ const TIME_VALUES = {
   spinIntervalMs: 80, // リール回転中の数字更新インターバル
   stopSlowCycleIntervalMs: 160, // 停止減速中の更新インターバル
   reachPopupDelayMs: 300, // リーチポップアップ表示までの待機時間
-  reachPopupVisibleMs: 1300, // リーチポップアップ表示時間
+  reachPopupVisibleMs: 1500, // リーチポップアップ表示時間
   hitPopupVisibleMs: 1000, // HITポップアップ表示時間
   nonPremiumHitZSpinDelayMs: 1000, // 通常当たり時のZ回転開始前待機
   nonPremiumHitZSpinDurationMs: 900, // 通常当たり時のZ回転演出時間
@@ -20,7 +20,7 @@ const TIME_VALUES = {
   bgmFadeInDefaultDurationMs: 1200, // BGMフェードインのデフォルト時間
   reachPushSoundDelayMs: 800, // リーチ開始後のpush音再生遅延
   pushWavDelayMs: 500, // push.wav再生までの待機
-  changedAudioDelayMs: 10000, // changed音の再生遅延
+  changedAudioDelayMs: 5000, // changed音の再生遅延
   reachChangeMoviePauseMs: 3400, // change/unchange動画を一時停止する時間
   suzuBackgroundVisibleMs: 3000, // スズ背景演出の表示時間
   premiumFadeOutDurationMs: 320, // プレミア演出フェードアウト時間
