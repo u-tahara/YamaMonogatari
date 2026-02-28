@@ -374,7 +374,7 @@ const renderReel = (slotIndex) => {
 
     const numberImage = document.createElement('img');
     numberImage.className = 'l-main__slot-number-image';
-    numberImage.src = `./img/number/${imageName}.png`;
+    numberImage.src = `./img/number/${imageName}.webp`;
     numberImage.alt = String(number);
     cell.append(numberImage);
   };
