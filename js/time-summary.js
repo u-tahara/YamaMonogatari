@@ -9,6 +9,7 @@ const TIME_VALUES = {
   nonPremiumHitZSpinDurationMs: 900, // 通常当たり時のZ回転演出時間
   premiumFadeOutCompletedWaitMs: 1000, // プレミア演出フェード完了後の待機
   premiumBounceToRedirectMs: 5000, // プレミア演出後に遷移するまでの時間
+  premiumHitMovieStartDelayMs: 1000, // プレミア当たり時にボタン押下後から動画再生開始までの待機
   mainTitleShakeDurationMs: 1200, // メインタイトルのシェイク演出時間
   onemoreEffectDisplayDelayMs: 1000, // ONE MORE演出表示開始までの待機
   onemoreEffectDurationMs: 2400, // ONE MORE演出の表示時間
@@ -24,6 +25,7 @@ const TIME_VALUES = {
   reachChangeMoviePauseMs: 3400, // change/unchange動画を一時停止する時間
   suzuBackgroundVisibleMs: 3000, // スズ背景演出の表示時間
   premiumFadeOutDurationMs: 320, // プレミア演出フェードアウト時間
+  finishedRedirectDelayMs: 3000, // 残り回転回数0回到達後に終了画面へ遷移するまでの待機
   bgmFadeInFrameMs: 50, // BGMフェードイン制御のフレーム間隔
 };
 
