@@ -11,13 +11,14 @@
     <main class="p-yama-extra">
       <img class="p-yama-extra__background" src="./img/suzu-background/suzu.webp" alt="背景">
       <p class="p-yama-extra__description">
-        また挑戦してね！
+        また挑戦してね！<br>
+        エンターキーで再チャレンジ！
       </p>
     </main>
 
     <script>
       const pressedKeys = new Set();
-      const yamaShortcutKeys = new Set(['KeyY', 'KeyA']);
+      const yamaShortcutKeys = new Set(['Enter']);
 
       const navigateToIndexIfShortcutPressed = () => {
         const isShortcutPressed = [...yamaShortcutKeys].every((keyCode) => pressedKeys.has(keyCode));
