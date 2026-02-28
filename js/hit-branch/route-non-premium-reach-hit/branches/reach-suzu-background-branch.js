@@ -1,4 +1,4 @@
-import { getTimeValue } from '../../../../time-summary.js';
+import { getTimeValue } from '../../../../js/time-summary.js';
 
 const REACH_HIT_EFFECT_FINISHED_EVENT_NAME = 'slot:reach-hit-effect-finished';
 
