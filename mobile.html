@@ -4,18 +4,132 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/x-icon" href="img/common/favicon.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>山物語 | 推奨環境</title>
+    <title>山物語</title>
+    <script src="js/mobile.js"></script>
     <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="css/mobile.css" />
+    
+    <script>
+      // Adobe Fontsの読み込み
+      (function(d) {
+        var config = {
+          kitId: 'nbu8hgu',
+          scriptTimeout: 3000,
+          async: true
+        },
+        h=d.documentElement,t=setTimeout(function(){h.className=h.className.replace(/\bwf-loading\b/g,"")+" wf-inactive";},config.scriptTimeout),tk=d.createElement("script"),f=false,s=d.getElementsByTagName("script")[0],a;h.className+=" wf-loading";tk.src='https://use.typekit.net/'+config.kitId+'.js';tk.async=true;tk.onload=tk.onreadystatechange=function(){a=this.readyState;if(f||a&&a!="complete"&&a!="loaded")return;f=true;clearTimeout(t);try{Typekit.load(config)}catch(e){}};s.parentNode.insertBefore(tk,s)
+      })(document);
+    </script>
   </head>
   <body>
-    <main class="l-mobile">
-      <div class="l-mobile__group">
-        <img class="l-mobile__logo" src="./img/common/logo.webp" alt="山物語">
-        <p class="l-mobile__text">
-          このサイトはPCを推奨しております。<br>
-          PC端末で開きなおしてください。
-        </p>
+    <main class="l-main">
+      <img class="l-main__background" src="./img/common/background.webp" alt="背景画像">
+      <h1 class="l-main__title js-main-title"><img src="./img/common/logo.webp" alt="山物語"></h1>
+      <img class="l-main__bird l-main__bird--left js-main-bird-left" src="./img/common/bird.webp" alt="鳥装飾">
+      <img class="l-main__bird l-main__bird--right js-main-bird-right" src="./img/common/bird.webp" alt="鳥装飾">
+      <div class="l-main__signboard js-main-signboard">
+        <img class="l-main__signboard-image" src="./img/signboard/signboard.webp" alt="看板画像">
+        <p class="l-main__signboard-number js-signboard-number">25</p>
+      </div>
+      <img class="l-main__frontground" src="./img/common/frontground.webp" alt="前景画像">
+      <div class="c-hit-effect-image--signboard js-signboard-branch-effect" hidden>
+        <img class="c-hit-effect-image--signboard-image js-signboard-branch-effect-image" src="./img/signboard/signboard-high.webp" alt="看板演出">
+      </div>
+      <video
+        class="c-hit-effect-image c-hit-effect-image--reach-change-movie js-reach-change-movie"
+        src="./movie/change.webm"
+        aria-label="リーチ後変化演出"
+        playsinline
+        preload="auto"
+        hidden
+      ></video>
+      <video
+        class="c-hit-effect-image c-hit-effect-image--push-button-movie js-push-button-movie"
+        src="./movie/push-button.webm"
+        aria-label="プッシュボタン演出"
+        playsinline
+        preload="auto"
+        hidden
+      ></video>
+      <video
+        class="c-hit-effect-image c-hit-effect-image--premium-blackout-movie js-premium-blackout-movie"
+        src="./movie/blackout.mp4"
+        aria-label="プレミア当たり暗転演出"
+        playsinline
+        preload="auto"
+        hidden
+      ></video>
+      <video
+        class="c-hit-effect-image c-hit-effect-image--premium-change-movie js-premium-change-movie"
+        src="./movie/yama-extra.webm"
+        aria-label="プレミア当たり追加演出"
+        playsinline
+        preload="auto"
+        hidden
+      ></video>
+      <img
+        class="c-hit-effect-image c-hit-effect-image--suzu-background js-reach-suzu-background-effect"
+        src="./img/suzu-background/suzu.webp"
+        alt="スズ背景演出"
+        hidden
+      >
+      <div class="l-main__container">
+        <div class="l-main__slot">
+          <div class="l-main__slot-window js-slot-window js-slot-window-left" aria-hidden="true">
+            <div class="l-main__slot-reel js-slot-reel">
+              <div class="l-main__slot-cell js-slot-cell"></div>
+              <div class="l-main__slot-cell js-slot-cell js-slot-current-cell"></div>
+              <div class="l-main__slot-cell js-slot-cell"></div>
+            </div>
+          </div>
+          <div class="l-main__slot-window js-slot-window js-slot-window-center" aria-hidden="true">
+            <div class="l-main__slot-reel js-slot-reel js-slot-reel-center">
+              <div class="l-main__slot-cell js-slot-cell"></div>
+              <div class="l-main__slot-cell js-slot-cell js-slot-current-cell"></div>
+              <div class="l-main__slot-cell js-slot-cell"></div>
+            </div>
+          </div>
+          <div class="l-main__slot-window js-slot-window js-slot-window-right" aria-hidden="true">
+            <div class="l-main__slot-reel js-slot-reel">
+              <div class="l-main__slot-cell js-slot-cell"></div>
+              <div class="l-main__slot-cell js-slot-cell js-slot-current-cell"></div>
+              <div class="l-main__slot-cell js-slot-cell"></div>
+            </div>
+          </div>
+
+          <video
+            class="c-hit-effect-image c-hit-effect-image--lever-on-cutin-movie js-lever-on-cutin-movie-effect"
+            src="./movie/white.webm"
+            aria-label="レバーオンカットイン動画演出"
+            muted
+            playsinline
+            preload="auto"
+            hidden
+          ></video>
+          <video
+            class="c-hit-effect-image c-hit-effect-image--reach-cutin js-reach-cutin-hit-effect"
+            src="./movie/reach-white.webm"
+            aria-label="リーチ後カットイン動画演出"
+            playsinline
+            preload="auto"
+            hidden
+          ></video>
+          <video
+            class="c-hit-effect-image c-hit-effect-image--character-group js-reach-character-group-effect"
+            src="./movie/character-group.webm"
+            aria-label="キャラ群演出"
+            muted
+            playsinline
+            preload="auto"
+            hidden
+          ></video>
+        </div>
+        <img class="c-reach-popup js-reach-popup" src="./img/common/reach.webp" alt="リーチ演出" hidden>
+        <div class="c-hit-popup js-hit-popup" aria-live="polite" hidden>当たり！</div>
+        <img class="c-onemore-effect js-onemore-effect" src="./img/onemore/onemore.webp" alt="onemore演出" hidden>
       </div>
     </main>
+
+    <script type="module" src="js/script.js"></script>
   </body>
 </html>

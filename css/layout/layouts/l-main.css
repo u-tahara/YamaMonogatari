@@ -9,11 +9,11 @@
 }
 
 .l-main__background {
-    position: fixed;
+    position: absolute;
     top: 0;
     left: 50%;
     transform: translateX(-50%);
-    height: 100vh;
+    height: 100%;
     aspect-ratio: 16 / 9;
     object-fit: fill;
     z-index: -1;
@@ -76,14 +76,15 @@
 }
 
 .l-main__frontground {
-    position: fixed;
+    position: absolute;
     top: 0;
     left: 50%;
     transform: translateX(-50%);
-    height: 100vh;
+    height: 100%;
     aspect-ratio: 16 / 9;
     object-fit: fill;
     z-index: 120;
+    pointer-events: none;
 }
 
 .l-main__title {

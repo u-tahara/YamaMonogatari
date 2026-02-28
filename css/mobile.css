@@ -1,0 +1,11 @@
+.l-main {
+    height: calc(100vh - 5%);
+}
+
+.l-main__slot {
+    width: 90%;
+}
+
+.l-main__slot-window {
+    --reel-cell-height: 5rem;
+}
