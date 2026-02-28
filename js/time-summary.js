@@ -21,7 +21,7 @@ const TIME_VALUES = {
   bgmFadeInDefaultDurationMs: 1200, // BGMフェードインのデフォルト時間
   reachPushSoundDelayMs: 800, // リーチ開始後のpush音再生遅延
   pushWavDelayMs: 500, // push.wav再生までの待機
-  changedAudioDelayMs: 5000, // changed音の再生遅延
+  changedAudioDelayMs: 4000, // changed音の再生遅延
   reachChangeMoviePauseMs: 3400, // change/unchange動画を一時停止する時間
   suzuBackgroundVisibleMs: 3000, // スズ背景演出の表示時間
   premiumFadeOutDurationMs: 320, // プレミア演出フェードアウト時間
