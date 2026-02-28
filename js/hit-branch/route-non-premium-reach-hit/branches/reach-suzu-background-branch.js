@@ -35,7 +35,7 @@ export const runReachSuzuBackgroundBranch = (detail) => {
     return;
   }
 
-  suzuBackgroundImage.src = './img/suzu-background/suzu.png';
+  suzuBackgroundImage.src = './img/suzu-background/suzu.webp';
   suzuBackgroundImage.hidden = false;
 
   window.setTimeout(() => {

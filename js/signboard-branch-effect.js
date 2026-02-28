@@ -55,7 +55,7 @@ const setSignboardImage = (signboardEffectImage, imageType) => {
     return false;
   }
 
-  signboardEffectImage.src = `./img/signboard/signboard-${imageFileType}.png`;
+  signboardEffectImage.src = `./img/signboard/signboard-${imageFileType}.webp`;
   return true;
 };
 
