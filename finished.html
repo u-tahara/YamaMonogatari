@@ -2,24 +2,43 @@
 <html lang="ja">
   <head>
     <meta charset="UTF-8" />
+        <link rel="icon" type="image/x-icon" href="img/common/favicon.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>山物語 | 終了</title>
+    <title>山物語 | 残念！</title>
+    <link rel="stylesheet" href="css/style.css" />
   </head>
   <body>
-    <main>
-      <h1>遊技終了</h1>
-      <p>規定回数が終了しました。</p>
-      <button type="button" class="js-back-to-index-button">index.htmlに戻る</button>
+    <main class="p-yama-extra">
+      <img class="p-yama-extra__background" src="./img/suzu-background/suzu.png" alt="背景">
+      <p class="p-yama-extra__description">
+        また挑戦してね！
+      </p>
     </main>
 
     <script>
-      const backToIndexButton = document.querySelector('.js-back-to-index-button');
+      const pressedKeys = new Set();
+      const yamaShortcutKeys = new Set(['KeyY', 'KeyA']);
 
-      if (backToIndexButton) {
-        backToIndexButton.addEventListener('click', () => {
+      const navigateToIndexIfShortcutPressed = () => {
+        const isShortcutPressed = [...yamaShortcutKeys].every((keyCode) => pressedKeys.has(keyCode));
+
+        if (isShortcutPressed) {
           window.location.href = './index.html';
-        });
-      }
+        }
+      };
+
+      window.addEventListener('keydown', (event) => {
+        pressedKeys.add(event.code);
+        navigateToIndexIfShortcutPressed();
+      });
+
+      window.addEventListener('keyup', (event) => {
+        pressedKeys.delete(event.code);
+      });
+
+      window.addEventListener('blur', () => {
+        pressedKeys.clear();
+      });
     </script>
   </body>
 </html>

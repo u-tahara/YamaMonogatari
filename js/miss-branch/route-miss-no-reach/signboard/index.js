@@ -5,7 +5,7 @@ import { runMissSignboardChanceBranch } from './chance-branch.js';
 
 const SIGNBOARD_VERY_HOT_RATE = 0.01;
 const SIGNBOARD_HOT_RATE = 0.01;
-const SIGNBOARD_SLIGHTLY_HOT_RATE = 0.3;
+const SIGNBOARD_SLIGHTLY_HOT_RATE = 0.25;
 
 // 看板演出内の分岐を行います。
 export const routeMissSignboardBranch = (detail) => {
