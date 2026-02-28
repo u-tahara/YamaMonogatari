@@ -13,13 +13,13 @@ const isSmartphoneOrTablet = () => {
 
 const isIndexPage = () => {
   const path = window.location.pathname;
-  return path.endsWith('/index.html') || path === '/' || path === '';
+  return path.endsWith('/') || path === '/' || path === '';
 };
 
 if (isSmartphoneOrTablet()) {
   document.documentElement.classList.add('js-mobile-device');
 
   if (isIndexPage()) {
-    window.location.replace('mobile.html');
+    window.location.replace('mobile-beta.html');
   }
 }

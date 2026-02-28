@@ -1,5 +1,9 @@
+body {
+    align-items: start;
+}
+
 .l-main {
-    height: calc(100vh - 5%);
+    height: calc(100vh - 15%);
 }
 
 .l-main__slot {
@@ -8,4 +12,16 @@
 
 .l-main__slot-window {
     --reel-cell-height: 5rem;
+}
+
+.l-main__signboard-number {
+    font-size: 1.5rem;
+    -webkit-text-stroke: #058a26 1px;
+}
+
+.p-yama-extra__description {
+    width: 50%;
+    font-size: 2rem;
+    color: #fff;
+    text-shadow: 2px 2px 4px #000;
 }
