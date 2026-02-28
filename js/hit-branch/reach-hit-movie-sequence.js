@@ -1,6 +1,7 @@
 const REACH_CHANGE_MOVIE_PAUSE_MS = 3400;
 const ENTER_KEY = 'Enter';
 const REACH_PUSH_BUTTON_MOVIE_STARTED_EVENT_NAME = 'slot:reach-push-button-movie-started';
+const REACH_CHANGE_MOVIE_REPLAYED_EVENT_NAME = 'slot:reach-change-movie-replayed';
 
 // 当たりリーチ後の動画演出を管理するコントローラーを生成します。
 export const createReachHitMovieSequenceController = ({
@@ -133,6 +134,7 @@ export const createReachHitMovieSequenceController = ({
 
     stopAndHideMovie(pushButtonMovie);
     safePlayMovie(reachChangeMovie);
+    window.dispatchEvent(new CustomEvent(REACH_CHANGE_MOVIE_REPLAYED_EVENT_NAME));
 
     await new Promise((resolve) => {
       const handleEnded = () => {

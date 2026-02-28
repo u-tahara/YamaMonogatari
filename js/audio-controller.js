@@ -21,11 +21,14 @@ const PUSH_WAV_AUDIO_DEFAULT_VOLUME = 1;
 const SHINE_AUDIO_DEFAULT_VOLUME = 0.5;
 const EXCITING_AUDIO_DEFAULT_VOLUME = 0.6;
 const REACH_AUDIO_DEFAULT_VOLUME = 0.5;
+const CHANGED_AUDIO_DEFAULT_VOLUME = 1;
 const REACH_PUSH_SOUND_DELAY_MS = 800;
 const PUSH_WAV_DELAY_MS = 500;
 const BGM_FADE_IN_DEFAULT_DURATION_MS = 1200;
 const BGM_FADE_IN_FRAME_MS = 50;
 const REACH_PUSH_BUTTON_MOVIE_STARTED_EVENT_NAME = 'slot:reach-push-button-movie-started';
+const REACH_CHANGE_MOVIE_REPLAYED_EVENT_NAME = 'slot:reach-change-movie-replayed';
+const CHANGED_AUDIO_DELAY_MS = 10000;
 
 const bgmAudio = new Audio('./audio/bgm.mp3');
 bgmAudio.loop = true;
@@ -43,10 +46,12 @@ const pushWavAudio = new Audio('./audio/push.wav');
 const shineAudio = new Audio('./audio/shine.mp3');
 const excitingAudio = new Audio('./audio/exciting.mp3');
 const reachAudio = new Audio('./audio/reach.mp3');
+const changedAudio = new Audio('./audio/changed.mp3');
 
 let bgmFadeInIntervalId = null;
 let pushAudioTimeoutId = null;
 let pushWavAudioTimeoutId = null;
+let changedAudioTimeoutId = null;
 
 
 const setLeverOnCutinMovieVolume = (volume) => {
@@ -194,6 +199,14 @@ const setExcitingAudioVolume = (volume) => {
   return excitingAudio.volume;
 };
 
+const setChangedAudioVolume = (volume) => {
+  const normalizedVolume = Number.isFinite(volume) ? Math.min(1, Math.max(0, volume)) : CHANGED_AUDIO_DEFAULT_VOLUME;
+
+  changedAudio.volume = normalizedVolume;
+
+  return changedAudio.volume;
+};
+
 const setReachAudioVolume = (volume) => {
   const normalizedVolume = Number.isFinite(volume) ? Math.min(1, Math.max(0, volume)) : REACH_AUDIO_DEFAULT_VOLUME;
 
@@ -270,6 +283,7 @@ window.setPushAudioVolume = setPushAudioVolume;
 window.setPushWavAudioVolume = setPushWavAudioVolume;
 window.setShineAudioVolume = setShineAudioVolume;
 window.setExcitingAudioVolume = setExcitingAudioVolume;
+window.setChangedAudioVolume = setChangedAudioVolume;
 window.setReachAudioVolume = setReachAudioVolume;
 window.playCheersAudio = playCheersAudio;
 window.playExcitingAudio = playExcitingAudio;
@@ -294,6 +308,7 @@ setPushAudioVolume(PUSH_AUDIO_DEFAULT_VOLUME);
 setPushWavAudioVolume(PUSH_WAV_AUDIO_DEFAULT_VOLUME);
 setShineAudioVolume(SHINE_AUDIO_DEFAULT_VOLUME);
 setExcitingAudioVolume(EXCITING_AUDIO_DEFAULT_VOLUME);
+setChangedAudioVolume(CHANGED_AUDIO_DEFAULT_VOLUME);
 setReachAudioVolume(REACH_AUDIO_DEFAULT_VOLUME);
 
 const playBgm = () => {
@@ -376,6 +391,19 @@ window.addEventListener(REACH_PUSH_BUTTON_MOVIE_STARTED_EVENT_NAME, () => {
 
 window.addEventListener(REACH_SUZU_BACKGROUND_AUDIO_EVENT_NAME, () => {
   playEffect(shineAudio);
+});
+
+
+window.addEventListener(REACH_CHANGE_MOVIE_REPLAYED_EVENT_NAME, () => {
+  if (changedAudioTimeoutId !== null) {
+    window.clearTimeout(changedAudioTimeoutId);
+    changedAudioTimeoutId = null;
+  }
+
+  changedAudioTimeoutId = window.setTimeout(() => {
+    playEffect(changedAudio);
+    changedAudioTimeoutId = null;
+  }, CHANGED_AUDIO_DELAY_MS);
 });
 
 window.addEventListener(REACH_POPUP_AUDIO_EVENT_NAME, () => {
