@@ -14,6 +14,9 @@ import {
 } from './hit-branch/route-non-premium-hit/onemore-effect.js';
 
 const slotReels = document.querySelectorAll('.js-slot-reel');
+const leftSlotWindow = document.querySelector('.js-slot-window-left');
+const rightSlotWindow = document.querySelector('.js-slot-window-right');
+const centerSlotWindow = document.querySelector('.js-slot-window-center');
 const reachPopup = document.querySelector('.js-reach-popup');
 const hitPopup = document.querySelector('.js-hit-popup');
 const reachChangeMovie = document.querySelector('.js-reach-change-movie');
@@ -898,6 +901,24 @@ const watchArrowKeyInput = (event) => {
 };
 
 // スペースキー入力でリール回転開始操作を行います。
+const handleTapStopInput = (buttonOrder) => {
+  if (buttonOrder === CENTER_SLOT_INDEX && reachHitMovieSequenceController.handleAdvanceInput()) {
+    return;
+  }
+
+  stopSlotByButtonOrder(buttonOrder);
+};
+
+const bindSlotTapStop = (slotWindowElement, buttonOrder) => {
+  if (!slotWindowElement) {
+    return;
+  }
+
+  slotWindowElement.addEventListener('click', () => {
+    handleTapStopInput(buttonOrder);
+  });
+};
+
 const watchStartKeyInput = (event) => {
   if (!START_SPIN_KEYS.includes(event.key)) {
     return;
@@ -1026,3 +1047,7 @@ window.addEventListener('keydown', watchArrowKeyInput);
 window.addEventListener('keydown', watchStartKeyInput);
 window.addEventListener('keyup', releaseArrowKeyInput);
 window.addEventListener('keyup', releaseStartKeyInput);
+
+bindSlotTapStop(leftSlotWindow, LEFT_SLOT_INDEX);
+bindSlotTapStop(rightSlotWindow, RIGHT_SLOT_INDEX);
+bindSlotTapStop(centerSlotWindow, CENTER_SLOT_INDEX);

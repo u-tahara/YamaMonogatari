@@ -11,6 +11,6 @@ const isSmartphoneOrTablet = () => {
   return isIPhone || isIPad || isAndroidMobile || isAndroidTablet || isIPadOS;
 };
 
-if (isSmartphoneOrTablet() && !window.location.pathname.endsWith('/mobile.html')) {
-  window.location.replace('./mobile.html');
+if (isSmartphoneOrTablet()) {
+  document.documentElement.classList.add('js-mobile-device');
 }
