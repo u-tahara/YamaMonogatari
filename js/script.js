@@ -902,6 +902,11 @@ const watchArrowKeyInput = (event) => {
 
 // スペースキー入力でリール回転開始操作を行います。
 const handleTapStopInput = (buttonOrder) => {
+  if (buttonOrder === CENTER_SLOT_INDEX && !spinIntervalId) {
+    startSpin();
+    return;
+  }
+
   if (buttonOrder === CENTER_SLOT_INDEX && reachHitMovieSequenceController.handleAdvanceInput()) {
     return;
   }
